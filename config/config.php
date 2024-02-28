@@ -8,9 +8,9 @@ if (strpos($_SERVER["HTTP_HOST"], "localhost") !== false) {
     define("CHARSET", "UTF8");
 } else {
     define("SERVIDOR", "localhost");
-    define("BANCO", "u296776918_cursoswill");
-    define("USUARIO", "u296776918_will");
-    define("SENHA", "Previsivel1");
+    define("BANCO", "u296776918_invtrackDB");
+    define("USUARIO", "u296776918_userInvtrack");
+    define("SENHA", "Previsivel123");
     define("CHARSET", "UTF8");
 }
 
