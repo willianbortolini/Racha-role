@@ -1,0 +1,45 @@
+# Desativar a exposição de informações sensíveis do PHP nos cabeçalhos de resposta
+php_flag expose_php off
+
+# Desabilitar a função "eval" no PHP (se possível)
+php_flag eval 0
+
+# Impedir o acesso direto ao arquivo php.ini
+<Files "php.ini">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Impedir o carregamento de arquivos .ht* a partir de requisições externas
+<Files ~ "^\.ht">
+Order allow,deny
+Deny from all
+</Files>
+
+#protege o htaccess
+<files ~ "^.*\.([Hh][Tt][Aa])">
+order allow,deny
+deny from all
+satisfy all
+</files>
+
+<LimitExcept GET POST>
+    Deny from all
+    </LimitExcept>
+
+#impede que acesse as pastas
+Options -Indexes
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+<Files "credentials_google.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+
+ 
+

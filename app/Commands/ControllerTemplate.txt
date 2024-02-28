@@ -1,0 +1,94 @@
+<?php
+
+namespace app\controllers;
+
+use app\core\Controller;
+use app\util\UtilService;
+use app\models\service\{{ModelName}}Service;
+use app\core\Flash;
+use app\models\service\Service;
+
+class {{ModelName}}Controller extends Controller
+{
+    private $tabela = "{{tableName}}";
+    private $campo = "{{tableName}}_id";
+    private $usuario;
+
+    //verifica se tem usuario logado(somente para telas que exigem)
+    /*public function __construct()
+    {
+        $this->usuario = UtilService::getUsuario();
+        if (!$this->usuario) {
+            $this->redirect(URL_BASE  . "login");
+            exit;
+        }
+    }*/
+
+    public function index()
+    {
+        $dados["{{tableName}}"] = Service::lista($this->tabela);
+        $dados["view"] = "{{ModelName}}/Show";
+        $this->load("templateBootstrap", $dados);
+    }
+
+    public function edit($id)
+    {
+        $dados["{{tableName}}"] = Service::get($this->tabela, $this->campo, $id);
+        $dados["view"] = "{{ModelName}}/Edit";
+        $this->load("templateBootstrap", $dados);
+    }
+
+    public function create()
+    {
+        $dados["{{tableName}}"] = Flash::getForm();
+        $dados["view"] = "{{ModelName}}/Edit";
+        $this->load("templateBootstrap", $dados);
+    }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
+            $csrfToken = $_POST['csrf_token'];
+            if ($csrfToken === $_SESSION['csrf_token']) {
+                $id = $_POST['id'];
+                
+                // Excluir a imagem, se existir               
+{{excluiImagem}}
+                // Excluir
+                {{ModelName}}Service::excluir($this->tabela, $this->campo, $id);
+            }
+        }
+    }
+
+    public function save()
+    {
+        $csrfToken = $_POST['csrf_token'];
+        if ($csrfToken === $_SESSION['csrf_token']) {
+            ${{modelName}} = new \stdClass();
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+                if (isset($_POST["{{tableName}}_id"]) && is_numeric($_POST["{{tableName}}_id"]) && $_POST["{{tableName}}_id"] > 0) {                  
+                    ${{modelName}}->{{tableName}}_id = $_POST["{{tableName}}_id"];                    
+                } else {
+                    ${{modelName}}->{{tableName}}_id = 0;                         
+                }
+                {{fieldDoController}}                
+               
+            }
+
+
+            Flash::setForm(${{modelName}});
+            if ({{ModelName}}Service::salvar(${{modelName}}, $this->campo, $this->tabela) > 1) //se é maior que um inseriu novo 
+            {
+                $this->redirect(URL_BASE   . "{{ModelName}}");
+            } else {
+                if (!${{modelName}}->{{tableName}}_id) {
+                    $this->redirect(URL_BASE   . "{{ModelName}}/create");
+                } else {
+                    $this->redirect(URL_BASE   . "{{ModelName}}/edit/" . ${{modelName}}->{{tableName}}_id);
+                }
+            }
+        }
+    }
+
+}

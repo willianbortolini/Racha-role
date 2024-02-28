@@ -1,0 +1,26 @@
+{
+  "background_color": "#ffffff",
+  "description": "Cursos online.",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "cursoswill",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "cursoswill",
+  "start_url": "https://cursoswill.site",
+  "theme_color": "#ffffff",
+  "categories": [
+    "utilities"
+  ],
+  "screenshots": [],
+  "icons": [
+    {
+      "src": "/logoApp.png",
+      "sizes": "500x500",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [],
+  "id": "Cursos online.",
+  "iarc_rating_id": "18"
+}

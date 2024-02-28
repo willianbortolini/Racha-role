@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <title>Data Collector</title>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #ACBDC6;
+        color: white;
+        text-align: center;
+    }
+
+    .primeiro-plano {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: #0B232A;
+        border-radius: 15px;
+    }
+
+    .fundo {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        margin: 10px;
+        max-width: 500px;
+    }
+
+    .botao-captura {
+        padding: 10px 20px;
+        background-color: #007bff;
+        border: none;
+        border-top: 2px solid white;
+        border-radius: 50px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        outline: none;
+        width: 100%;
+    }
+
+    .div-quantidade {
+        margin-top: auto;
+        border-top: 2px solid #3E5F79;
+        border-radius: 10px;
+        margin: 5px;
+    }
+
+    .footer {
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+
+
+    .titulo {
+        margin-bottom: 5px;
+        font-size: small;
+        font-weight: 600;
+    }
+
+    .video {
+        border: 2px dashed orange;
+        height: 200px;
+        margin: 5px;
+        border-radius: 10px;
+    }
+
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .action-button {
+        width: 45px;
+        height: 45px;
+        background-color: #0B232A;
+        border: 2px solid #99CEE4;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+
+    .qtd-button {
+        width: 50px;
+        height: 50px;
+        background-color: #0B232A;
+        border: 2px solid #3E5F79;
+        border-radius: 20%;
+        cursor: pointer;
+        color: #3E5F79;
+        font-size: x-large;
+        font-weight: 700;
+    }
+
+    .qtd-button .fas {
+        font-size: 1.2em;
+        color: #3E5F79;
+        font-size: large;
+    }
+
+    .action-text {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    .fas {
+        font-size: 1.2em;
+        color: #99CEE4;
+    }
+
+    .progress-bar {
+        border: 1px solid #99CEE4;
+        height: 10px;
+        border-radius: 10px;
+        margin: 0px 10px;
+    }
+
+    .progress-fill {
+        background-color: white;
+        width: 60%;
+        height: 8px;
+        border-radius: 8px;
+        margin: 1px;
+    }
+
+    .tabela-ean {
+        flex-grow: 1;
+        overflow-y: auto;
+        width: 100%;
+        overflow-x: auto;
+        padding: 5%;
+    }
+
+    table {
+        width: 90%;
+        border-collapse: collapse;
+    }
+
+    td {
+        padding: 5px;
+        text-align: center;
+        border-top: 1px solid #99CEE4;
+        border-bottom: 1px solid #99CEE4;
+    }
+
+    tr:first-child td {
+        border-top: none;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .qtd-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 25%;
+        height: 50px;
+        background-color: white;
+        border: 2px solid #3E5F79;
+        border-radius: 50px;
+        cursor: pointer;
+        color: #0B232A;
+        font-size: x-large;
+        font-weight: 700;
+    }
+</style>
+
+<body>
+
+    <div class="fundo">
+        <div class="titulo">
+            COLETOR DE DADOS
+        </div>
+        <div class="primeiro-plano">
+            <div class="video">
+
+            </div>
+            <div class="box-aprova">
+                <div class="action-bar">
+                    <button class="action-button" id="cancel-button">
+                        <i class="fas fa-times"></i> <!-- Ícone de X -->
+                    </button>
+                    <span class="action-text">13423234233423</span>
+                    <button class="action-button" id="validate-button">
+                        <i class="fas fa-check"></i> <!-- Ícone de validar -->
+                    </button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill">
+                    </div>
+                </div>
+            </div>
+            <div class="tabela-ean">
+                <table>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            34234234234
+                        </td>
+                        <td>
+                            312
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="div-quantidade">
+
+                <div class="action-bar">
+                    <button class="qtd-button">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="qtd-button">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <span class="qtd-text">1</span>
+                    <button class="qtd-button">
+                        6
+                    </button>
+                    <button class="qtd-button">
+                        1
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button class="botao-captura">ESCANEAR</button>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+
+</html>

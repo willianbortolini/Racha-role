@@ -1,0 +1,5 @@
+{
+  "swVersion": "1.0.14",
+  "swCodigo": "11119",
+  "swURL": "https://w9b2.com/controle_de_versao/monitor_horas/monitor_hora_1.0.14.ino.nodemcu.bin"
+}

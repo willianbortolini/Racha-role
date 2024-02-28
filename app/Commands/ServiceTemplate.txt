@@ -1,0 +1,23 @@
+<?php
+
+namespace app\models\service;
+
+use app\models\validacao\{{ModelName}}Validacao;
+use app\models\dao\{{ModelName}}Dao;
+use app\util\UtilService;
+
+class {{ModelName}}Service
+{
+    public static function salvar(${{modelName}}, $campo, $tabela)
+    {
+        $validacao = {{ModelName}}Validacao::salvar(${{modelName}});
+{{salvaImagemService}}
+        return Service::salvar(${{modelName}}, $campo, $validacao->listaErros(), $tabela);
+
+    }  
+
+    public static function excluir($tabela, $campo, $id)
+    {
+        Service::excluir($tabela, $campo, $id);
+    }
+}

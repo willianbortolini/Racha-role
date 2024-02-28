@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de Códigos de Barras EAN-13</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #barcode-scanner {
+            width: 90%;
+            height: 390px;
+            margin: 0 auto;
+        }
+
+        video {
+            width: 100%;
+            height: 390px;
+            margin: 0 auto;
+        }
+
+        #flash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: none;
+            opacity: 0.6;
+        }
+
+
+        #most-frequent-code {
+            margin-top: 20px;
+        }
+
+        /* Adicione ao seu CSS existente */
+        #scan-line {
+            position: relative;
+            width: 100%;
+            height: 2px;
+            background-color: red;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Seu CSS existente */
+        #scan-button {
+            position: absolute;
+            /* Fixa o botão na parte inferior da tela */
+            bottom: 0;
+            /* Posiciona o botão na parte inferior */
+            left: 0;
+            /* Alinha o botão à esquerda */
+            width: 100%;
+            /* Faz o botão ocupar toda a largura */
+            padding: 10px 0;
+            /* Padding superior e inferior */
+            font-size: 16px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="scan-button" class="red">Iniciar Escaneamento</button>
+    <h1>Leitor</h1>
+    <div id="barcode-scanner">
+        <div id="scan-line"></div> <!-- Linha de digitalização -->
+        <div id="flash-overlay"></div> <!-- Overlay para piscar -->
+    </div>
+
+
+    <div id="most-frequent-code"></div>
+
+    <script>
+
+        let isScanning = false;
+
+        document.getElementById('scan-button').addEventListener('click', function () {
+            this.classList.remove('green');
+            this.classList.add('red');
+            this.textContent = 'Escaneando';
+            isScanning = true;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Função para gerar um bipe
+            function beep(frequency = 520, duration = 200) {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                let oscillator = audioContext.createOscillator();
+                let gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.frequency.value = frequency;
+
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.stop();
+                    audioContext.close();
+                }, duration);
+            }
+            
+            let scannedCodes = [];
+            const maxReadings = 10;
+
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector('#barcode-scanner'),
+                    constraints: {
+                        facingMode: "environment",
+                        width: { ideal: 900 },  // Sugere a largura ideal
+                        height: { ideal: 900 } // Sugere a altura ideal
+                    },
+                },
+                decoder: {
+                    readers: ["ean_reader"]
+                },
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                    return
+                }
+                console.log("Initialization finished. Ready to start");
+                Quagga.start();
+            });
+
+            Quagga.onDetected(function (result) {
+                var code = result.codeResult.code;
+                if (isScanning) {
+                    if (scannedCodes.length < maxReadings) {
+                        scannedCodes.push(code);
+
+                        if (scannedCodes.length === maxReadings) {
+                            displayMostFrequentCode(scannedCodes);
+                            scannedCodes = [];
+                            let scanButton = document.getElementById('scan-button');
+                            scanButton.classList.remove('red');
+                            scanButton.classList.add('green');
+                            scanButton.textContent = 'Escanear';
+                            isScanning = false;
+                             beep(); // Toca um bipe
+                        }
+                    }
+                }
+            });
+
+            function displayMostFrequentCode(codes) {
+                const counts = codes.reduce((acc, code) => {
+                    acc[code] = (acc[code] || 0) + 1;
+                    return acc;
+                }, {});
+
+                const mostFrequentCode = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+                document.getElementById('most-frequent-code').innerHTML += 'Código: ' + mostFrequentCode + '<br>';
+
+                // Adicione o efeito de piscar aqui
+                flashScreen();
+               
+
+            }
+        });
+
+        
+
+        // Função para piscar a tela
+        function flashScreen() {
+            const flashOverlay = document.getElementById('flash-overlay');
+            flashOverlay.style.display = 'block';
+            setTimeout(() => {
+                flashOverlay.style.display = 'none';
+            }, 100); // Duração do piscar em milissegundos
+        }
+    </script>
+</body>
+
+</html>

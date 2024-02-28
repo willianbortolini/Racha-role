@@ -1,0 +1,21 @@
+{{cssImg}}
+<h1>
+    <?php echo (isset(${{tableName}}->{{tableName}}_id)) ? 'Editar {{name}}' : 'Adicionar {{name}}'; ?>
+</h1>
+
+<form action="<?php echo URL_BASE   . "{{ModelName}}/save" ?>" method="POST" enctype="multipart/form-data">
+
+{{field}}
+    <input type="hidden" name="{{tableName}}_id" value="<?php echo (isset(${{tableName}}->{{tableName}}_id)) ? ${{tableName}}->{{tableName}}_id : NULL; ?>">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+    <div class="row">
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+        <div class="col-auto">
+            <a href="<?php echo URL_BASE   . "{{ModelName}}" ?>" class="btn btn-primary">Voltar</a>
+        </div>
+    </div>
+</form>
+{{jsImg}}
