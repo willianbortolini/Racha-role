@@ -228,11 +228,13 @@
 
 <div class="fundo">
     <div class="titulo">
-        <a href="#" class="button-voltar">
+        <a href="<?php echo URL_BASE . 'Inventario_item/index/' .  $inventario ?>" class="button-voltar">
             VOLTAR
         </a>
         COLETOR DE DADOS
+        <a href="<?php echo URL_BASE  ?>" >
         <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">
+        </a>
     </div>
     <div class="primeiro-plano">
         <div class="video">
@@ -504,17 +506,6 @@
         function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
-            // Atualiza ou adiciona o código com a quantidade na variável global
-            /*if (codeQuantities.hasOwnProperty(mostFrequentCode)) {
-                codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode]) + parseInt(qtd);
-                // Mover o código atualizado para o topo
-                //moveCodeToTop(mostFrequentCode);
-            } else {
-                codeQuantities[mostFrequentCode] = qtd;
-                // Adicionar novo código no topo da lista
-                //prependCodeToList(mostFrequentCode, qtd);
-            }*/
-            // Verifica se o código já existe e atualiza a quantidade
             var found = false;
             for (var i = 0; i < codeQuantities.length; i++) {
                 if (codeQuantities[i].code === mostFrequentCode) {
