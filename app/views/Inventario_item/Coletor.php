@@ -508,11 +508,11 @@
             if (codeQuantities.hasOwnProperty(mostFrequentCode)) {
                 codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode]) + parseInt(qtd);
                 // Mover o código atualizado para o topo
-                moveCodeToTop(mostFrequentCode);
+                //moveCodeToTop(mostFrequentCode);
             } else {
                 codeQuantities[mostFrequentCode] = qtd;
                 // Adicionar novo código no topo da lista
-                prependCodeToList(mostFrequentCode, qtd);
+                //prependCodeToList(mostFrequentCode, qtd);
             }
 
             // Renderiza a tabela
