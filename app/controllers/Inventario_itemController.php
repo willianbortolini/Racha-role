@@ -19,7 +19,7 @@ class Inventario_itemController extends Controller
     {
         $this->usuario = UtilService::getUsuario();
         if (!$this->usuario) {
-            $this->redirect(URL_BASE  . "login");
+            $this->redirect(URL_BASE . "login");
             exit;
         }
     }
@@ -91,7 +91,10 @@ class Inventario_itemController extends Controller
                     $inventario_item->preco = $_POST["preco"];
                 if (isset($_POST["ean13"]))
                     $inventario_item->ean13 = $_POST["ean13"];
+                if (isset($_POST["quantidade"]))
+                    $inventario_item->quantidade = $_POST["quantidade"];
 
+                $inventario_item->usuarios_id = $_SESSION['id'];
 
             }
 

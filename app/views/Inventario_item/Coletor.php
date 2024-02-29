@@ -54,9 +54,11 @@
         margin-bottom: 15px;
     }
 
-
-
     .titulo {
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 5px;
         font-size: small;
         font-weight: 600;
@@ -106,6 +108,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .qtd-button:active {
+        background-color: #21414b;
+        transform: scale(0.98);
+        border: 1px solid orange;
     }
 
     .qtd-button .fas {
@@ -208,11 +216,23 @@
     .scan-off {
         background-color: #247AAA;
     }
+
+    .button-voltar {
+        text-decoration: none;
+        color: white;
+        border: solid white 1px;
+        padding: 5px;
+        border-radius: 5px;
+    }
 </style>
 
 <div class="fundo">
     <div class="titulo">
+        <a href="#" class="button-voltar">
+            VOLTAR
+        </a>
         COLETOR DE DADOS
+        <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">
     </div>
     <div class="primeiro-plano">
         <div class="video">
@@ -221,7 +241,7 @@
             </div>
         </div>
         <div class="box-aprova">
-            <div class="action-bar">                
+            <div class="action-bar">
                 <button class="action-button" id="validate-button">
                     <i class="fas fa-check"></i> <!-- Ícone de validar -->
                 </button>
@@ -237,25 +257,25 @@
         </div>
         <div class="tabela-ean">
             <table id="most-frequent-code">
-                
+
             </table>
         </div>
         <div class="div-quantidade">
 
-            <div class="action-bar">                
-                <button class="qtd-button">
-                    6
+            <div class="action-bar">
+                <button id="btn-10" class="qtd-button">
+                    10
                 </button>
-                <button class="qtd-button">
+                <button id="btn-1" class="qtd-button">
                     1
                 </button>
-                <input class="qtd-text" type="number" value="1">
-                <button class="qtd-button">
+                <input id="quantidade" class="qtd-text" type="number" value="1">
+                <button id="btn-menos" class="qtd-button">
                     <i class="fas fa-minus"></i>
                 </button>
-                <button class="qtd-button">
+                <button id="btn-mais" class="qtd-button">
                     <i class="fas fa-plus"></i>
-                </button>                
+                </button>
             </div>
         </div>
     </div>
@@ -269,6 +289,8 @@
 <script>
 
     let isScanning = false;
+    id_inventario = <?php echo $inventario ?>;
+    chave_csrf_token = <?php echo $_SESSION['csrf_token']; ?>
 
     document.getElementById('scan-button').addEventListener('click', function () {
         this.classList.remove('scan-off');
@@ -283,15 +305,31 @@
 
     var outputCodigo = document.getElementById("codigo-lido");
     var progressBar = document.querySelector('.progress-fill');
+    var textQuantidade = document.getElementById("quantidade");
 
+    document.getElementById("btn-mais").addEventListener('click', function () {
+        textQuantidade.value = parseInt(textQuantidade.value) + 1;    
+    })
+    document.getElementById("btn-menos").addEventListener('click', function () {
+        textQuantidade.value = parseInt(textQuantidade.value) - 1;    
+    })
+    document.getElementById("btn-1").addEventListener('click', function () {
+        textQuantidade.value = 1;    
+    })
+    document.getElementById("btn-10").addEventListener('click', function () {
+        textQuantidade.value = 10;    
+    })
+
+    
 
     document.addEventListener('DOMContentLoaded', function () {
 
         function sendData(ean13) {
             const formData = new URLSearchParams();
-            formData.append('inventario_id', '<?php echo $inventario ?>');
+            formData.append('inventario_id', id_inventario);
             formData.append('ean13', ean13);
-            formData.append('csrf_token', '<?php echo $_SESSION['csrf_token']; ?>');
+            formData.append('csrf_token', chave_csrf_token);
+            formData.append('quantidade', textQuantidade.value);
 
             fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
                 method: 'POST',
@@ -314,7 +352,7 @@
                 .catch(error => {
                     console.error('Erro:', error);
                     // Salvar localmente para reenvio posterior
-                    saveDataLocally('<?php echo $inventario ?>', ean13);
+                    saveDataLocally(id_inventario, ean13);
                 });
         }
 
@@ -330,7 +368,8 @@
                 const formData = new URLSearchParams();
                 formData.append('inventario_id', inventarioId);
                 formData.append('ean13', ean13);
-                formData.append('csrf_token', '<?php echo $_SESSION['csrf_token']; ?>');
+                formData.append('csrf_token', chave_csrf_token);                
+                formData.append('quantidade', textQuantidade.value);
 
                 return fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
                     method: 'POST',
@@ -458,7 +497,6 @@
             progressBar.style.transition = 'width 3s ease-in-out'; // Remove a animação
             progressBar.classList.add('grow');
 
-            flashScreen();
         }
 
         function addLine(mostFrequentCode) {
@@ -470,7 +508,7 @@
             newLine.appendChild(eanCell);
 
             var quantidadeCell = document.createElement('td');
-            quantidadeCell.textContent = 2;
+            quantidadeCell.textContent = textQuantidade.value;
             newLine.appendChild(quantidadeCell);
 
             // Adiciona a nova linha no início
@@ -483,12 +521,5 @@
             }
         }
     });
-    // Função para piscar a tela
-    function flashScreen() {
-        const flashOverlay = document.getElementById('flash-overlay');
-        flashOverlay.style.display = 'block';
-        setTimeout(() => {
-            flashOverlay.style.display = 'none';
-        }, 100); // Duração do piscar em milissegundos
-    }
+   
 </script>
