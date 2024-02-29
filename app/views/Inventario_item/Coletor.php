@@ -504,52 +504,48 @@
         function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
-            // Atualiza ou adiciona o código com a quantidade na variável global
-            if (codeQuantities.hasOwnProperty(mostFrequentCode)) {
-                codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode]) + parseInt(qtd);
-                // Mover o código atualizado para o topo
-                //moveCodeToTop(mostFrequentCode);
-            } else {
-                codeQuantities[mostFrequentCode] = qtd;
-                // Adicionar novo código no topo da lista
-                //prependCodeToList(mostFrequentCode, qtd);
+            // Converte qtd para um número inteiro, se necessário
+            qtd = parseInt(qtd, 10);
+
+            // Verifica se o código já existe e atualiza a quantidade
+            var found = false;
+            for (var i = 0; i < codeQuantities.length; i++) {
+                if (codeQuantities[i].code === mostFrequentCode) {
+                    codeQuantities[i].quantity += qtd;
+                    // Mover o item atualizado para o topo
+                    var item = codeQuantities.splice(i, 1)[0];
+                    codeQuantities.unshift(item);
+                    found = true;
+                    break;
+                }
+            }
+
+            // Se o código é novo, adiciona no início do array
+            if (!found) {
+                codeQuantities.unshift({ code: mostFrequentCode, quantity: qtd });
             }
 
             // Renderiza a tabela
             renderTable();
         }
 
-        function moveCodeToTop(code) {
-            // Remove o código da sua posição atual
-            delete codeQuantities[code];
-            // Reinsere o código no topo do objeto
-            codeQuantities = { [code]: codeQuantities[code], ...codeQuantities };
-        }
-
-        function prependCodeToList(code, qtd) {
-            codeQuantities = { [code]: qtd, ...codeQuantities };
-        }
-
         function renderTable() {
             var container = document.getElementById('most-frequent-code');
-            container.innerHTML = ''; // Limpa a tabela
+            container.innerHTML = '';
 
-            var count = 0;
-            for (var code in codeQuantities) {
-                if (count >= 5) break; // Limita a 5 linhas
-
+            for (var i = 0; i < codeQuantities.length && i < 5; i++) {
+                var item = codeQuantities[i];
                 var newLine = document.createElement('tr');
 
                 var eanCell = document.createElement('td');
-                eanCell.textContent = code;
+                eanCell.textContent = item.code;
                 newLine.appendChild(eanCell);
 
                 var quantidadeCell = document.createElement('td');
-                quantidadeCell.textContent = codeQuantities[code];
+                quantidadeCell.textContent = item.quantity;
                 newLine.appendChild(quantidadeCell);
 
                 container.appendChild(newLine);
-                count++;
             }
         }
     });
