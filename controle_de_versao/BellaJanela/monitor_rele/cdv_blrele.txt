@@ -1,6 +1,0 @@
-{
-  "swVersion": "1.0.44",
-  "swCodigo": "todos",
-  "swURL": "https://w9b2.com/controle_de_versao/BellaJanela/monitor_rele/bjRele_1.0.44.ino.generic.bin",
-  "smURL": "https://w9b2.com/controle_de_versao/BellaJanela/monitor_rele/OTAmini_1.1.1.ino.generic.bin"
-}

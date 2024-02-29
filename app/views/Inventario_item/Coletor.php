@@ -221,13 +221,13 @@
             </div>
         </div>
         <div class="box-aprova">
-            <div class="action-bar">
-                <button class="action-button" id="cancel-button">
-                    <i class="fas fa-times"></i> <!-- Ícone de X -->
-                </button>
-                <span id="codigo-lido" class="action-text"></span>
+            <div class="action-bar">                
                 <button class="action-button" id="validate-button">
                     <i class="fas fa-check"></i> <!-- Ícone de validar -->
+                </button>
+                <span id="codigo-lido" class="action-text"></span>
+                <button class="action-button" id="cancel-button">
+                    <i class="fas fa-times"></i> <!-- Ícone de X -->
                 </button>
             </div>
             <div class="progress-bar">
@@ -242,20 +242,20 @@
         </div>
         <div class="div-quantidade">
 
-            <div class="action-bar">
-                <button class="qtd-button">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <button class="qtd-button">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <input class="qtd-text" type="number" value="1">
+            <div class="action-bar">                
                 <button class="qtd-button">
                     6
                 </button>
                 <button class="qtd-button">
                     1
                 </button>
+                <input class="qtd-text" type="number" value="1">
+                <button class="qtd-button">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="qtd-button">
+                    <i class="fas fa-plus"></i>
+                </button>                
             </div>
         </div>
     </div>

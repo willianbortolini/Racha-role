@@ -1,8 +1,0 @@
-{
-  "codVersion": "1.0.1",
-  "codCodigo": "nenhum",
-  "codURL": "https://w9b2.com/controle_de_versao/ClpWifi/modelo01/cel1.1.ino.esp32.bin",
-  "spiffsVersion": "1.0.1",
-  "spiffsCodigo": "nenhum",
-  "spiffsURL": "https://w9b2.com/controle_de_versao/ClpWifi/modelo01/Blinkteste.ino.esp32.bin"
-}

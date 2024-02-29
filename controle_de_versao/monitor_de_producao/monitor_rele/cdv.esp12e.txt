@@ -1,5 +1,0 @@
-{
-  "swVersion": "1.0.11",
-  "swCodigo": "todos",
-  "swURL": "https://w9b2.com/controle_de_versao/monitor_de_producao/monitor_rele/monitor_hora_1.0.11.ino.nodemcu.bin"
-}
