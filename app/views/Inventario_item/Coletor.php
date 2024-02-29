@@ -504,14 +504,21 @@
         function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
-            // Converte qtd para um número inteiro, se necessário
-            qtd = parseInt(qtd, 10);
-
+            // Atualiza ou adiciona o código com a quantidade na variável global
+            /*if (codeQuantities.hasOwnProperty(mostFrequentCode)) {
+                codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode]) + parseInt(qtd);
+                // Mover o código atualizado para o topo
+                //moveCodeToTop(mostFrequentCode);
+            } else {
+                codeQuantities[mostFrequentCode] = qtd;
+                // Adicionar novo código no topo da lista
+                //prependCodeToList(mostFrequentCode, qtd);
+            }*/
             // Verifica se o código já existe e atualiza a quantidade
             var found = false;
             for (var i = 0; i < codeQuantities.length; i++) {
                 if (codeQuantities[i].code === mostFrequentCode) {
-                    codeQuantities[i].quantity += qtd;
+                    codeQuantities[i].quantity = parseInt(codeQuantities[i].quantity) + parseInt(qtd);
                     // Mover o item atualizado para o topo
                     var item = codeQuantities.splice(i, 1)[0];
                     codeQuantities.unshift(item);
@@ -528,6 +535,7 @@
             // Renderiza a tabela
             renderTable();
         }
+
 
         function renderTable() {
             var container = document.getElementById('most-frequent-code');
