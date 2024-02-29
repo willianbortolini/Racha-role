@@ -506,7 +506,7 @@
 
             // Atualiza ou adiciona o código com a quantidade na variável global
             if (codeQuantities.hasOwnProperty(mostFrequentCode)) {
-                codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode], 10) + parseInt(qtd, 10);
+                codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode]) + parseInt(qtd);
                 // Mover o código atualizado para o topo
                 moveCodeToTop(mostFrequentCode);
             } else {
