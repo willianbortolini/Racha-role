@@ -290,7 +290,7 @@
 
     let isScanning = false;
     id_inventario = <?php echo $inventario ?>;
-    chave_csrf_token = <?php echo $_SESSION['csrf_token']; ?>
+    chave_csrf_token = '<?php echo $_SESSION['csrf_token']; ?>'
 
     document.getElementById('scan-button').addEventListener('click', function () {
         this.classList.remove('scan-off');
