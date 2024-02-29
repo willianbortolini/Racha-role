@@ -148,7 +148,7 @@
     }
 
     .grow {
-        width: 98%;
+        width: 100%;
     }
 
     .tabela-ean {
@@ -308,19 +308,19 @@
     var textQuantidade = document.getElementById("quantidade");
 
     document.getElementById("btn-mais").addEventListener('click', function () {
-        textQuantidade.value = parseInt(textQuantidade.value) + 1;    
+        textQuantidade.value = parseInt(textQuantidade.value) + 1;
     })
     document.getElementById("btn-menos").addEventListener('click', function () {
-        textQuantidade.value = parseInt(textQuantidade.value) - 1;    
+        textQuantidade.value = parseInt(textQuantidade.value) - 1;
     })
     document.getElementById("btn-1").addEventListener('click', function () {
-        textQuantidade.value = 1;    
+        textQuantidade.value = 1;
     })
     document.getElementById("btn-10").addEventListener('click', function () {
-        textQuantidade.value = 10;    
+        textQuantidade.value = 10;
     })
 
-    
+
 
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -368,7 +368,7 @@
                 const formData = new URLSearchParams();
                 formData.append('inventario_id', inventarioId);
                 formData.append('ean13', ean13);
-                formData.append('csrf_token', chave_csrf_token);                
+                formData.append('csrf_token', chave_csrf_token);
                 formData.append('quantidade', textQuantidade.value);
 
                 return fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
@@ -491,7 +491,7 @@
             }, {});
 
             const mostFrequentCode = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-            addLine(mostFrequentCode)
+            addLine(mostFrequentCode, textQuantidade.value)
             outputCodigo.textContent = mostFrequentCode;
             // Adicione o efeito de piscar aqui
             progressBar.style.transition = 'width 3s ease-in-out'; // Remove a animação
@@ -499,27 +499,36 @@
 
         }
 
-        function addLine(mostFrequentCode) {
+        var codeQuantities = {};
+        function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
-            var newLine = document.createElement('tr');
 
-            var eanCell = document.createElement('td');
-            eanCell.textContent = mostFrequentCode;
-            newLine.appendChild(eanCell);
+            // Atualiza ou adiciona o código com a quantidade na variável global
+            if (codeQuantities[mostFrequentCode]) {
+                codeQuantities[mostFrequentCode] += qtd;
+            } else {
+                codeQuantities[mostFrequentCode] = qtd;
+            }
 
-            var quantidadeCell = document.createElement('td');
-            quantidadeCell.textContent = textQuantidade.value;
-            newLine.appendChild(quantidadeCell);
+            // Limpa a tabela
+            container.innerHTML = '';
 
-            // Adiciona a nova linha no início
-            container.insertBefore(newLine, container.firstChild);
+            // Insere as linhas na tabela, limitando a 5 linhas
+            for (var i = 0; i < sortedCodes.length && i < 5; i++) {
+                var code = sortedCodes[i];
+                var newLine = document.createElement('tr');
 
-            // Limita a 5 linhas
-            var lines = container.children;
-            if (lines.length > 6) {
-                container.removeChild(lines[5]); // Remove a sexta linha (índice 5)
+                var eanCell = document.createElement('td');
+                eanCell.textContent = code;
+                newLine.appendChild(eanCell);
+
+                var quantidadeCell = document.createElement('td');
+                quantidadeCell.textContent = codeQuantities[code];
+                newLine.appendChild(quantidadeCell);
+
+                container.appendChild(newLine);
             }
         }
     });
-   
+
 </script>
