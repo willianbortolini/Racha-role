@@ -500,26 +500,44 @@
         }
 
         var codeQuantities = {};
-       
+
         function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
             // Atualiza ou adiciona o código com a quantidade na variável global
-            if (codeQuantities[mostFrequentCode]) {
-                codeQuantities[mostFrequentCode] += qtd;
+            if (codeQuantities.hasOwnProperty(mostFrequentCode)) {
+                codeQuantities[mostFrequentCode] = parseInt(codeQuantities[mostFrequentCode], 10) + parseInt(qtd, 10);
+                // Mover o código atualizado para o topo
+                moveCodeToTop(mostFrequentCode);
             } else {
                 codeQuantities[mostFrequentCode] = qtd;
+                // Adicionar novo código no topo da lista
+                prependCodeToList(mostFrequentCode, qtd);
             }
 
-            // Limpa a tabela
-            container.innerHTML = '';
+            // Renderiza a tabela
+            renderTable();
+        }
 
-            // Cria uma lista dos códigos, ordenada por quantidade em ordem decrescente
-            var sortedCodes = Object.keys(codeQuantities).sort((a, b) => codeQuantities[b] - codeQuantities[a]);
+        function moveCodeToTop(code) {
+            // Remove o código da sua posição atual
+            delete codeQuantities[code];
+            // Reinsere o código no topo do objeto
+            codeQuantities = { [code]: codeQuantities[code], ...codeQuantities };
+        }
 
-            // Insere as linhas na tabela, limitando a 5 linhas
-            for (var i = 0; i < sortedCodes.length && i < 5; i++) {
-                var code = sortedCodes[i];
+        function prependCodeToList(code, qtd) {
+            codeQuantities = { [code]: qtd, ...codeQuantities };
+        }
+
+        function renderTable() {
+            var container = document.getElementById('most-frequent-code');
+            container.innerHTML = ''; // Limpa a tabela
+
+            var count = 0;
+            for (var code in codeQuantities) {
+                if (count >= 5) break; // Limita a 5 linhas
+
                 var newLine = document.createElement('tr');
 
                 var eanCell = document.createElement('td');
@@ -531,6 +549,7 @@
                 newLine.appendChild(quantidadeCell);
 
                 container.appendChild(newLine);
+                count++;
             }
         }
     });
