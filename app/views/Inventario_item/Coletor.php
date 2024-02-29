@@ -499,13 +499,13 @@
 
         }
 
-        var codeQuantities = {};
+        var codeQuantities = [];
 
         function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
             // Converte qtd para um número inteiro, se necessário
-            qtd = parseInt(qtd);
+            qtd = parseInt(qtd, 10);
 
             // Verifica se o código já existe e atualiza a quantidade
             var found = false;
