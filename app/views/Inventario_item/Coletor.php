@@ -500,6 +500,7 @@
         }
 
         var codeQuantities = {};
+       
         function addLine(mostFrequentCode, qtd) {
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
@@ -512,6 +513,9 @@
 
             // Limpa a tabela
             container.innerHTML = '';
+
+            // Cria uma lista dos códigos, ordenada por quantidade em ordem decrescente
+            var sortedCodes = Object.keys(codeQuantities).sort((a, b) => codeQuantities[b] - codeQuantities[a]);
 
             // Insere as linhas na tabela, limitando a 5 linhas
             for (var i = 0; i < sortedCodes.length && i < 5; i++) {
