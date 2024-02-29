@@ -505,7 +505,7 @@
             var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
 
             // Converte qtd para um número inteiro, se necessário
-            qtd = parseInt(qtd, 10);
+            qtd = parseInt(qtd);
 
             // Verifica se o código já existe e atualiza a quantidade
             var found = false;
