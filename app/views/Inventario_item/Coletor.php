@@ -306,7 +306,7 @@
     });
 
     var codeQuantities = <?php echo json_encode($identidades); ?>;
-    for (var i = 0; i < codeQuantities.length && i < 5; i++) {
+    for (var i = 0; i < codeQuantities.length; i++) {
         var item = codeQuantities[i];
         var newLine = document.createElement('tr');
 
@@ -550,7 +550,7 @@
             var container = document.getElementById('most-frequent-code');
             container.innerHTML = '';
 
-            for (var i = 0; i < codeQuantities.length && i < 5; i++) {
+            for (var i = 0; i < codeQuantities.length; i++) {
                 var item = codeQuantities[i];
                 var newLine = document.createElement('tr');
 
