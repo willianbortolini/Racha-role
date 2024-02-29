@@ -280,7 +280,7 @@
         <button id="scan-button" class="botao-captura scan-off">ESCANEAR</button>
     </div>
     <div class="tabela-ean">
-        <table id="most-frequent-code">        
+        <table id="most-frequent-code">
         </table>
     </div>
 </div>
@@ -292,6 +292,7 @@
     let isScanning = false;
     id_inventario = <?php echo $inventario ?>;
     chave_csrf_token = '<?php echo $_SESSION['csrf_token']; ?>'
+    var container = document.getElementById('most-frequent-code'); 
 
     document.getElementById('scan-button').addEventListener('click', function () {
         this.classList.remove('scan-off');
@@ -303,6 +304,23 @@
 
         isScanning = true;
     });
+
+    var codeQuantities = <?php echo json_encode($identidades); ?>;
+    for (var i = 0; i < codeQuantities.length && i < 5; i++) {
+        var item = codeQuantities[i];
+        var newLine = document.createElement('tr');
+
+        var eanCell = document.createElement('td');
+        eanCell.textContent = item.code;
+        newLine.appendChild(eanCell);
+
+        var quantidadeCell = document.createElement('td');
+        quantidadeCell.textContent = item.quantity;
+        newLine.appendChild(quantidadeCell);
+
+        container.appendChild(newLine);
+    }
+
 
     var outputCodigo = document.getElementById("codigo-lido");
     var progressBar = document.querySelector('.progress-fill');
@@ -449,8 +467,8 @@
                 target: document.querySelector('#barcode-scanner'),
                 constraints: {
                     facingMode: "environment",
-                    width: { ideal: 900 },  // Sugere a largura ideal
-                    height: { ideal: 900 } // Sugere a altura ideal
+                    //width: { ideal: 900 },  // Sugere a largura ideal
+                    //height: { ideal: 900 } // Sugere a altura ideal
                 },
             },
             decoder: {
@@ -502,11 +520,10 @@
 
         }
 
-        var codeQuantities = [];
+
 
         function addLine(mostFrequentCode, qtd) {
-            var container = document.getElementById('most-frequent-code'); // Certifique-se de que isto é o tbody da tabela
-
+            
             var found = false;
             for (var i = 0; i < codeQuantities.length; i++) {
                 if (codeQuantities[i].code === mostFrequentCode) {
@@ -521,7 +538,7 @@
 
             // Se o código é novo, adiciona no início do array
             if (!found) {
-                codeQuantities.unshift({ code: mostFrequentCode, quantity: qtd });
+                codeQuantities.unshift({ code: mostFrequentCode, quantity: parseInt(qtd) });
             }
 
             // Renderiza a tabela

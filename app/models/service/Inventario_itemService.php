@@ -16,6 +16,12 @@ class Inventario_itemService
 
     }  
 
+    public static function identiradesContadas($inventarios_id)
+    {
+        $dao = new Inventario_itemDao();
+        return $dao->identiradesContadas($inventarios_id);
+    }  
+
     public static function excluir($tabela, $campo, $id)
     {
         Service::excluir($tabela, $campo, $id);

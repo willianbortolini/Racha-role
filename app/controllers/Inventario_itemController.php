@@ -42,6 +42,7 @@ class Inventario_itemController extends Controller
     public function coletor($inventario_id)
     {
         $dados["inventario"] = $inventario_id;
+        $dados["identidades"] = Inventario_itemService::identiradesContadas($inventario_id);
         $dados["view"] = "Inventario_item/Coletor";
         $this->load("template", $dados);
     }
