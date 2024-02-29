@@ -11,7 +11,6 @@
     }
 
     .primeiro-plano {
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
         background-color: #0B232A;
@@ -281,79 +280,7 @@
         <button id="scan-button" class="botao-captura scan-off">ESCANEAR</button>
     </div>
     <div class="tabela-ean">
-        <table id="most-frequent-code">
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    342323
-                </td>
-                <td>
-                    3423
-                </td>
-            </tr>
+        <table id="most-frequent-code">        
         </table>
     </div>
 </div>
