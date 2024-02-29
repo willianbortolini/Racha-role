@@ -15,15 +15,14 @@
         display: flex;
         flex-direction: column;
         background-color: #0B232A;
-
         border-radius: 15px;
     }
 
     .fundo {
         display: flex;
         flex-direction: column;
-        height: 100%;
         margin: 10px;
+        height: 98vh;
         max-width: 500px;
     }
 
@@ -49,9 +48,8 @@
     }
 
     .footer {
-        height: 75px;
         margin-top: 5px;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
 
     .titulo {
@@ -152,6 +150,8 @@
     }
 
     .tabela-ean {
+        background-color: #0B232A;
+        border-radius: 15px;
         flex-grow: 1;
         overflow-y: auto;
         width: 100%;
@@ -228,12 +228,12 @@
 
 <div class="fundo">
     <div class="titulo">
-        <a href="<?php echo URL_BASE . 'Inventario_item/index/' .  $inventario ?>" class="button-voltar">
+        <a href="<?php echo URL_BASE . 'Inventario_item/index/' . $inventario ?>" class="button-voltar">
             VOLTAR
         </a>
         COLETOR DE DADOS
-        <a href="<?php echo URL_BASE  ?>" >
-        <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">
+        <a href="<?php echo URL_BASE ?>">
+            <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">
         </a>
     </div>
     <div class="primeiro-plano">
@@ -257,11 +257,7 @@
                 </div>
             </div>
         </div>
-        <div class="tabela-ean">
-            <table id="most-frequent-code">
 
-            </table>
-        </div>
         <div class="div-quantidade">
 
             <div class="action-bar">
@@ -283,6 +279,82 @@
     </div>
     <div class="footer">
         <button id="scan-button" class="botao-captura scan-off">ESCANEAR</button>
+    </div>
+    <div class="tabela-ean">
+        <table id="most-frequent-code">
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    342323
+                </td>
+                <td>
+                    3423
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -313,7 +385,9 @@
         textQuantidade.value = parseInt(textQuantidade.value) + 1;
     })
     document.getElementById("btn-menos").addEventListener('click', function () {
-        textQuantidade.value = parseInt(textQuantidade.value) - 1;
+        if (parseInt(textQuantidade.value) > 1) {
+            textQuantidade.value = parseInt(textQuantidade.value) - 1;
+        }
     })
     document.getElementById("btn-1").addEventListener('click', function () {
         textQuantidade.value = 1;
