@@ -1,3 +1,9 @@
+<script>
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) {
+        window.location.href = "<?php echo URL_BASE ?>";
+    }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <style>
     body,
@@ -41,7 +47,7 @@
 
     .div-quantidade {
         margin-top: auto;
-        border-top: 2px solid #3E5F79;
+        border-top: 1px solid #3E5F79;
         border-radius: 10px;
         margin: 5px;
     }
@@ -84,7 +90,7 @@
         width: 45px;
         height: 45px;
         background-color: #0B232A;
-        border: 2px solid #99CEE4;
+        border: 1px solid #99CEE4;
         border-radius: 100%;
         cursor: pointer;
         display: flex;
@@ -96,7 +102,7 @@
         width: 50px;
         height: 50px;
         background-color: #0B232A;
-        border: 2px solid #3E5F79;
+        border: 1px solid #3E5F79;
         border-radius: 20%;
         cursor: pointer;
         color: #3E5F79;
@@ -145,7 +151,7 @@
     }
 
     .grow {
-        width: 100%;
+        width: 99%;
     }
 
     .tabela-ean {
@@ -186,7 +192,7 @@
         width: 25%;
         height: 50px;
         background-color: white;
-        border: 2px solid #3E5F79;
+        border: 1px solid #3E5F79;
         border-radius: 50px;
         cursor: pointer;
         color: #0B232A;
@@ -223,6 +229,15 @@
         padding: 5px;
         border-radius: 5px;
     }
+
+    .vermelhoDelete {
+        border: solid #ff6775 2px;
+        background-color: #3d1f1f;
+    }
+
+    .vermelhoDelete .fas {
+        color: #ff6775;
+    }
 </style>
 
 <div class="fundo">
@@ -238,17 +253,17 @@
     <div class="primeiro-plano">
         <div class="video">
             <div id="barcode-scanner">
-                <div id="flash-overlay"></div> <!-- Overlay para piscar -->
+
             </div>
         </div>
         <div class="box-aprova">
             <div class="action-bar">
                 <button class="action-button" id="validate-button">
-                    <i class="fas fa-check"></i> <!-- Ícone de validar -->
+                    <i class="fas fa-check"></i>
                 </button>
                 <span id="codigo-lido" class="action-text"></span>
                 <button class="action-button" id="cancel-button">
-                    <i class="fas fa-times"></i> <!-- Ícone de X -->
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="progress-bar">
@@ -292,7 +307,62 @@
     let isScanning = false;
     id_inventario = <?php echo $inventario ?>;
     chave_csrf_token = '<?php echo $_SESSION['csrf_token']; ?>'
-    var container = document.getElementById('most-frequent-code'); 
+    var container = document.getElementById('most-frequent-code');
+    var ultimoEnvio = { id: 0, code: '', quantity: 0 };
+    var outputCodigo = document.getElementById("codigo-lido");
+    var progressBar = document.querySelector('.progress-fill');
+    var btnCancelar = document.getElementById("cancel-button");
+    var textQuantidade = document.getElementById("quantidade");
+
+    btnCancelar.addEventListener('click', function () {
+        deletaUltimo();
+    });
+
+    function deletaUltimo() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?php echo URL_BASE; ?>inventario_item/deleteColetor', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        var params = new URLSearchParams();
+        params.append('_method', 'DELETE');
+        params.append('inventario_item_id', ultimoEnvio['id']);
+        params.append('csrf_token', chave_csrf_token);
+
+        xhr.send(params);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Item deletado com sucesso');
+
+                // Imprimir a resposta do servidor
+                console.log('Resposta do servidor:', xhr.responseText);
+
+                // Se a resposta for JSON, você pode converter e usar assim:
+                try {
+                    var resposta = JSON.parse(xhr.responseText);
+                    console.log('Resposta do servidor como objeto:', resposta);
+                    subLine(ultimoEnvio['code'], ultimoEnvio['quantity'])
+                    ultimoEnvio = { id: 0, code: '', quantity: 0 }
+                    btnCancelar.classList.remove('vermelhoDelete');
+                    // Agora você pode acessar as propriedades do objeto, por exemplo: resposta.mensagem
+                } catch (e) {
+                    console.error('Erro ao analisar a resposta do servidor como JSON:', e);
+                }
+
+                // Aqui você pode adicionar o código para atualizar a UI conforme necessário
+            } else {
+                console.error('Falha ao deletar o item');
+                // Também pode ser útil imprimir a resposta de erro do servidor
+                console.error('Erro do servidor:', xhr.responseText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Erro na rede');
+        };
+    }
+
+
 
     document.getElementById('scan-button').addEventListener('click', function () {
         this.classList.remove('scan-off');
@@ -322,9 +392,7 @@
     }
 
 
-    var outputCodigo = document.getElementById("codigo-lido");
-    var progressBar = document.querySelector('.progress-fill');
-    var textQuantidade = document.getElementById("quantidade");
+
 
     document.getElementById("btn-mais").addEventListener('click', function () {
         textQuantidade.value = parseInt(textQuantidade.value) + 1;
@@ -343,228 +411,242 @@
 
 
 
-    document.addEventListener('DOMContentLoaded', function () {
 
-        function sendData(ean13) {
+
+    function sendData(ean13) {
+        const formData = new URLSearchParams();
+        formData.append('inventario_id', id_inventario);
+        formData.append('ean13', ean13);
+        formData.append('csrf_token', chave_csrf_token);
+        formData.append('quantidade', textQuantidade.value);
+
+        fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha no envio');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Dados enviados com sucesso:', data);
+                ultimoEnvio['id'] = data['inventario_item_id']
+                btnCancelar.classList.add('vermelhoDelete');
+                // Tente reenviar qualquer dado salvo localmente
+                resendSavedData();
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                // Salvar localmente para reenvio posterior
+                saveDataLocally(id_inventario, ean13);
+            });
+    }
+
+
+
+    function resendSavedData() {
+        // Recupera os dados salvos
+        let savedData = localStorage.getItem('savedData');
+        if (!savedData) return;
+
+        savedData = JSON.parse(savedData);
+
+        // Função auxiliar para enviar dados
+        function sendSavedData(inventarioId, ean13) {
             const formData = new URLSearchParams();
-            formData.append('inventario_id', id_inventario);
+            formData.append('inventario_id', inventarioId);
             formData.append('ean13', ean13);
             formData.append('csrf_token', chave_csrf_token);
             formData.append('quantidade', textQuantidade.value);
 
-            fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
+            return fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: formData
-            })
+            });
+        }
+
+        // Cria uma cópia para iterar e modifica o array original
+        [...savedData].reverse().forEach((item, index) => {
+            sendSavedData(item.inventarioId, item.ean13)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Falha no envio');
+                        throw new Error('Falha no reenvio');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Dados enviados com sucesso:', data);
-                    // Tente reenviar qualquer dado salvo localmente
-                    resendSavedData();
+                    console.log('Reenvio bem-sucedido:', data);
+                    // Remove o item enviado do array original                        
+                    savedData.splice(savedData.length - 1 - index, 1);
                 })
                 .catch(error => {
-                    console.error('Erro:', error);
-                    // Salvar localmente para reenvio posterior
-                    saveDataLocally(id_inventario, ean13);
+                    console.error('Erro no reenvio:', error);
+                    // Não é necessário salvar novamente, pois já está salvo
+                })
+                .finally(() => {
+                    // Atualiza o armazenamento local após processar cada item
+                    localStorage.setItem('savedData', JSON.stringify(savedData));
                 });
-        }
-
-        function resendSavedData() {
-            // Recupera os dados salvos
-            let savedData = localStorage.getItem('savedData');
-            if (!savedData) return;
-
-            savedData = JSON.parse(savedData);
-
-            // Função auxiliar para enviar dados
-            function sendSavedData(inventarioId, ean13) {
-                const formData = new URLSearchParams();
-                formData.append('inventario_id', inventarioId);
-                formData.append('ean13', ean13);
-                formData.append('csrf_token', chave_csrf_token);
-                formData.append('quantidade', textQuantidade.value);
-
-                return fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: formData
-                });
-            }
-
-            // Cria uma cópia para iterar e modifica o array original
-            [...savedData].reverse().forEach((item, index) => {
-                sendSavedData(item.inventarioId, item.ean13)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Falha no reenvio');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Reenvio bem-sucedido:', data);
-                        // Remove o item enviado do array original
-                        savedData.splice(savedData.length - 1 - index, 1);
-                    })
-                    .catch(error => {
-                        console.error('Erro no reenvio:', error);
-                        // Não é necessário salvar novamente, pois já está salvo
-                    })
-                    .finally(() => {
-                        // Atualiza o armazenamento local após processar cada item
-                        localStorage.setItem('savedData', JSON.stringify(savedData));
-                    });
-            });
-        }
-
-
-        function saveDataLocally(inventarioId, ean13) {
-            // Recupera os dados salvos ou inicializa um array vazio
-            let savedData = localStorage.getItem('savedData') || '[]';
-            savedData = JSON.parse(savedData);
-
-            // Cria um objeto com inventario_id e ean13 e adiciona ao array
-            savedData.push({ inventarioId, ean13 });
-            console.log(savedData);
-            // Salva o array atualizado no localStorage
-            localStorage.setItem('savedData', JSON.stringify(savedData));
-        }
-
-
-        // Função para gerar um bipe
-        function beep(frequency = 520, duration = 200) {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            let oscillator = audioContext.createOscillator();
-            let gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            oscillator.frequency.value = frequency;
-
-            oscillator.start();
-            setTimeout(() => {
-                oscillator.stop();
-                audioContext.close();
-            }, duration);
-        }
-
-        let scannedCodes = [];
-        const maxReadings = 4;
-
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#barcode-scanner'),
-                constraints: {
-                    facingMode: "environment",
-                    width: { ideal: 900 },  // Sugere a largura ideal
-                    height: { ideal: 900 } // Sugere a altura ideal
-                },
-            },
-            decoder: {
-                readers: ["ean_reader"]
-            },
-        }, function (err) {
-            if (err) {
-                console.log(err);
-                return
-            }
-            console.log("Initialization finished. Ready to start");
-            Quagga.start();
         });
+    }
 
-        Quagga.onDetected(function (result) {
-            var code = result.codeResult.code;
-            if (isScanning) {
-                if (scannedCodes.length < maxReadings) {
-                    scannedCodes.push(code);
 
-                    if (scannedCodes.length === maxReadings) {
-                        displayMostFrequentCode(scannedCodes);
-                        sendData(scannedCodes);
-                        scannedCodes = [];
-                        let scanButton = document.getElementById('scan-button');
-                        scanButton.classList.remove('scan-on');
-                        scanButton.classList.add('scan-off');
-                        scanButton.textContent = 'ESCANEAR';
-                        isScanning = false;
-                        beep(); // Toca um bipe   
+    function saveDataLocally(inventarioId, ean13) {
+        // Recupera os dados salvos ou inicializa um array vazio
+        let savedData = localStorage.getItem('savedData') || '[]';
+        savedData = JSON.parse(savedData);
 
-                    }
-                }
-            }
-        });
+        // Cria um objeto com inventario_id e ean13 e adiciona ao array
+        savedData.push({ inventarioId, ean13 });
+        console.log(savedData);
+        // Salva o array atualizado no localStorage
+        localStorage.setItem('savedData', JSON.stringify(savedData));
+    }
 
-        function displayMostFrequentCode(codes) {
-            const counts = codes.reduce((acc, code) => {
-                acc[code] = (acc[code] || 0) + 1;
-                return acc;
-            }, {});
 
-            const mostFrequentCode = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-            addLine(mostFrequentCode, textQuantidade.value)
-            outputCodigo.textContent = mostFrequentCode;
-            // Adicione o efeito de piscar aqui
-            progressBar.style.transition = 'width 3s ease-in-out'; // Remove a animação
-            progressBar.classList.add('grow');
+    // Função para gerar um bipe
+    function beep(frequency = 520, duration = 200) {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillator = audioContext.createOscillator();
+        let gainNode = audioContext.createGain();
 
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.frequency.value = frequency;
+
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            audioContext.close();
+        }, duration);
+    }
+
+    let scannedCodes = [];
+    const maxReadings = 5;
+
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#barcode-scanner'),
+            constraints: {
+                facingMode: "environment",
+                //width: { ideal: 900 },  // Sugere a largura ideal
+                //height: { ideal: 900 } // Sugere a altura ideal
+            },
+        },
+        decoder: {
+            readers: ["ean_reader"]
+        },
+    }, function (err) {
+        if (err) {
+            console.log(err);
+            return
         }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+    });
 
+    Quagga.onDetected(function (result) {
+        var code = result.codeResult.code;
+        if (isScanning) {
+            if (scannedCodes.length < maxReadings) {
+                scannedCodes.push(code);
 
+                if (scannedCodes.length === maxReadings) {
+                    displayMostFrequentCode(scannedCodes);
+                    sendData(scannedCodes);
+                    scannedCodes = [];
+                    let scanButton = document.getElementById('scan-button');
+                    scanButton.classList.remove('scan-on');
+                    scanButton.classList.add('scan-off');
+                    scanButton.textContent = 'ESCANEAR';
+                    isScanning = false;
+                    beep(); // Toca um bipe   
 
-        function addLine(mostFrequentCode, qtd) {
-            
-            var found = false;
-            for (var i = 0; i < codeQuantities.length; i++) {
-                if (codeQuantities[i].code === mostFrequentCode) {
-                    codeQuantities[i].quantity = parseInt(codeQuantities[i].quantity) + parseInt(qtd);
-                    // Mover o item atualizado para o topo
-                    var item = codeQuantities.splice(i, 1)[0];
-                    codeQuantities.unshift(item);
-                    found = true;
-                    break;
                 }
-            }
-
-            // Se o código é novo, adiciona no início do array
-            if (!found) {
-                codeQuantities.unshift({ code: mostFrequentCode, quantity: parseInt(qtd) });
-            }
-
-            // Renderiza a tabela
-            renderTable();
-        }
-
-
-        function renderTable() {
-            var container = document.getElementById('most-frequent-code');
-            container.innerHTML = '';
-
-            for (var i = 0; i < codeQuantities.length; i++) {
-                var item = codeQuantities[i];
-                var newLine = document.createElement('tr');
-
-                var eanCell = document.createElement('td');
-                eanCell.textContent = item.code;
-                newLine.appendChild(eanCell);
-
-                var quantidadeCell = document.createElement('td');
-                quantidadeCell.textContent = item.quantity;
-                newLine.appendChild(quantidadeCell);
-
-                container.appendChild(newLine);
             }
         }
     });
+
+    function displayMostFrequentCode(codes) {
+        const counts = codes.reduce((acc, code) => {
+            acc[code] = (acc[code] || 0) + 1;
+            return acc;
+        }, {});
+
+        const mostFrequentCode = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+        addLine(mostFrequentCode, textQuantidade.value)
+        outputCodigo.textContent = mostFrequentCode;
+
+        ultimoEnvio['code'] = mostFrequentCode;
+        ultimoEnvio['quantity'] = textQuantidade.value;
+        // Adicione o efeito de piscar aqui
+        progressBar.style.transition = 'width 3s ease-in-out'; // Remove a animação
+        progressBar.classList.add('grow');
+    }
+
+    function subLine(code, qtd) {
+        for (var i = 0; i < codeQuantities.length; i++) {
+            if (codeQuantities[i].code === code) {
+                codeQuantities[i].quantity = parseInt(codeQuantities[i].quantity) - parseInt(qtd);
+                break;
+            }
+        }
+        renderTable()
+    }
+
+    function addLine(mostFrequentCode, qtd) {
+
+        var found = false;
+        for (var i = 0; i < codeQuantities.length; i++) {
+            if (codeQuantities[i].code === mostFrequentCode) {
+                codeQuantities[i].quantity = parseInt(codeQuantities[i].quantity) + parseInt(qtd);
+                // Mover o item atualizado para o topo
+                var item = codeQuantities.splice(i, 1)[0];
+                codeQuantities.unshift(item);
+                found = true;
+                break;
+            }
+        }
+
+        // Se o código é novo, adiciona no início do array
+        if (!found) {
+            codeQuantities.unshift({ code: mostFrequentCode, quantity: parseInt(qtd) });
+        }
+
+        // Renderiza a tabela
+        renderTable();
+    }
+
+
+    function renderTable() {
+        var container = document.getElementById('most-frequent-code');
+        container.innerHTML = '';
+
+        for (var i = 0; i < codeQuantities.length && i < 20; i++) {
+            var item = codeQuantities[i];
+            var newLine = document.createElement('tr');
+
+            var eanCell = document.createElement('td');
+            eanCell.textContent = item.code;
+            newLine.appendChild(eanCell);
+
+            var quantidadeCell = document.createElement('td');
+            quantidadeCell.textContent = item.quantity;
+            newLine.appendChild(quantidadeCell);
+
+            container.appendChild(newLine);
+        }
+    }
+
 
 </script>

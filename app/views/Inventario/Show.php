@@ -1,16 +1,14 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="mt-1">Inventarios</h1>
-            <a href="<?php echo URL_BASE . "Inventario/create" ?>" class="btn btn-primary mb-3">Adicionar
+            <h1 class="mt-1 text-center">INVENTARIOS</h1>
+            <a href="<?php echo URL_BASE . "Inventario/create" ?>" class="btn btn-sm btn-outline-info mb-1  col-12 col-md-auto">Adicionar
                 inventario</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Localizacao</th>
-                        <th>Responsavel</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -21,20 +19,14 @@
                                 <?php echo $item->nome; ?>
                             </td>
                             <td>
-                                <?php echo $item->localizacao; ?>
-                            </td>
-                            <td>
-                                <?php echo $item->responsavel; ?>
-                            </td>
-                            <td>
                                 <a href="<?php echo URL_BASE . "Inventario/edit/" . $item->inventario_id ?>"
-                                    class="btn btn-primary btn-sm">Editar</a>
+                                    class="btn btn-outline-primary btn-sm">Editar</a>
 
                                 <a href="<?php echo URL_BASE . "Inventario_item/index/" . $item->inventario_id ?>"
-                                    class="btn btn-primary btn-sm">Bipar itens</a>
+                                    class="btn btn-outline-primary btn-sm">Bipar itens</a>
 
                                 <button onclick="deletarItem(<?php echo $item->inventario_id; ?>)" type="button"
-                                    class="btn btn-danger btn-sm deletar" data-bs-toggle="modal"
+                                    class="btn btn-outline-danger btn-sm deletar" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal">
                                     Deletar
                                 </button>
@@ -72,9 +64,9 @@
 <script>
     $(document).ready(function () {
         var table = new DataTable('table.display', {
-            "paging": true,
+            "paging": false,
             "lengthChange": true,
-            "searching": true,
+            "searching": false,
             "info": true,
             "autoWidth": false,
             "responsive": true,

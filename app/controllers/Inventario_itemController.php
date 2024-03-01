@@ -26,6 +26,8 @@ class Inventario_itemController extends Controller
 
     public function index($inventario_id)
     {
+        $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $dados["mobile"] = preg_match('/mobile|android|touch|samsung|iphone|ipad|ipod|ios|iemobile|opera mini/', $userAgent);
         $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);
         $dados["inventario"] = $inventario_id;
         $dados["view"] = "Inventario_item/Show";
@@ -53,6 +55,44 @@ class Inventario_itemController extends Controller
         $dados["inventario"] = $inventario_id;
         $dados["view"] = "Inventario_item/Edit";
         $this->load("templateBootstrap", $dados);
+    }
+
+    public function deleteColetor()
+    {
+        // Certifica-se de que a requisição é POST e o método pedido é DELETE
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
+            // Verifica o token CSRF
+            $csrfToken = $_POST['csrf_token'] ?? '';
+            if ($csrfToken === $_SESSION['csrf_token']) {
+                $id = $_POST['inventario_item_id'] ?? '';
+
+                if (empty($id)) {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(['error' => 'O ID fornecido é inválido.']);
+                    return;
+                }
+
+                // Tenta excluir o item
+                $result = Inventario_itemService::excluir($this->tabela, $this->campo, $id);
+                
+                Flash::limpaErro();
+                Flash::limpaMsg();
+                // Verifica se a exclusão foi bem-sucedida
+                if ($result > 0) {
+                    http_response_code(200); // OK
+                    echo json_encode(['message' => 'Item excluído com sucesso.']);
+                } else {
+                    http_response_code(500); // Internal Server Error
+                    echo json_encode(['error' => 'Falha ao excluir o item.']);
+                }
+            } else {
+                http_response_code(403); // Forbidden
+                echo json_encode(['error' => 'Token CSRF inválido.']);
+            }
+        } else {
+            http_response_code(405); // Method Not Allowed
+            echo json_encode(['error' => 'Método não permitido. Apenas DELETE é aceito neste endpoint.']);
+        }
     }
 
     public function delete()
@@ -121,11 +161,9 @@ class Inventario_itemController extends Controller
             $inventario_item = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["inventario_item_id"]) && is_numeric($_POST["inventario_item_id"]) && $_POST["inventario_item_id"] > 0) {
-                    $inventario_item->inventario_item_id = $_POST["inventario_item_id"];
-                } else {
-                    $inventario_item->inventario_item_id = 0;
-                }
+
+                $inventario_item->inventario_item_id = 0;
+
                 if (isset($_POST["inventario_id"]))
                     $inventario_item->inventario_id = $_POST["inventario_id"];
                 if (isset($_POST["nome"]))
@@ -138,12 +176,14 @@ class Inventario_itemController extends Controller
                     $inventario_item->ean13 = $_POST["ean13"];
 
             }
-            if (Inventario_itemService::salvar($inventario_item, $this->campo, $this->tabela) > 1) //se é maior que um inseriu novo 
+
+            $inventario_item_id = Inventario_itemService::salvar($inventario_item, $this->campo, $this->tabela);
+            if ($inventario_item_id > 1) //se é maior que um inseriu novo 
             {
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Item inserido com sucesso.',
-                    'inventario_id' => $inventario_item->inventario_id
+                    'inventario_item_id' => $inventario_item_id
                 ]);
                 Flash::limpaErro();
                 Flash::limpaMsg();

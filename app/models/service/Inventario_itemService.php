@@ -24,6 +24,6 @@ class Inventario_itemService
 
     public static function excluir($tabela, $campo, $id)
     {
-        Service::excluir($tabela, $campo, $id);
+        return  Service::excluir($tabela, $campo, $id);
     }
 }

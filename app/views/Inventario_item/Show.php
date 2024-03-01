@@ -1,17 +1,19 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="mt-1">EAN-13</h1>
-            <a href="<?php echo URL_BASE   . "Inventario_item/create/" . $inventario?>" class="btn btn-primary m-2">Adicionar EAN manualmente</a>
-            <a href="<?php echo URL_BASE   . "Inventario_item/coletor/" . $inventario?>" class="btn btn-primary m-2 ">Ir para coletor</a>
+            <h1 class="mt-1 text-center">ITENS DO INVENTARIO</h1>
+            <a href="<?php echo URL_BASE   . "Inventario_item/create/" . $inventario?>" class="btn btn-sm btn-outline-info m-1 col-12 col-md-auto">Adicionar EAN manualmente</a>
+            <?php if($mobile){ ?>
+            <a href="<?php echo URL_BASE   . "Inventario_item/coletor/" . $inventario?>" class="btn btn-sm btn-outline-info m-1 col-12 col-md-auto">Ir para coletor</a>
+            <?php } ?>
+            <a href="<?php echo URL_BASE   . "Inventario"?>" class="btn btn-sm btn-outline-info m-1 col-12 col-md-auto">Voltar para inventarios</a>
+
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>
                     <tr>                   
                         <th>EAN-13</th>
-                        <th>Nome</th>
-                        <th>Quantidade</th>
-                        <th>Preco</th>
+                        <th>Qtd.</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -22,21 +24,14 @@
                                 <?php echo $item->ean13; ?>
                             </td>
                             <td>
-                                <?php echo $item->nome; ?>
-                            </td>
-                            <td>
                                 <?php echo $item->quantidade; ?>
                             </td>
-                            <td>
-                                <?php echo $item->preco; ?>
-                            </td>
-                      
                             <td> 
                                 <a href="<?php echo URL_BASE   . "Inventario_item/edit/" . $item->inventario_item_id ?>"
-                                    class="btn btn-primary btn-sm">Editar</a>
+                                    class="btn btn-sm btn-outline-primary mb-1">Editar</a>
 
                                 <button onclick="deletarItem(<?php echo $item->inventario_item_id; ?>)" type="button"
-                                    class="btn btn-danger btn-sm deletar" data-bs-toggle="modal"
+                                    class="btn btn-sm btn-outline-danger deletar mb-1" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal">
                                     Deletar
                                 </button>
@@ -48,8 +43,7 @@
             </table>
         </div>
     </div>
-    <a href="<?php echo URL_BASE   . "Inventario"?>" class="btn btn-primary m-2 ">Voltar para inventarios</a>
-</div>
+    </div>
 
 <!-- Modal Delete -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -1,296 +1,674 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-
-    <title>Data Collector</title>
-</head>
-<style>
-    body,
-    html {
-        height: 100%;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #ACBDC6;
-        color: white;
-        text-align: center;
-    }
-
-    .primeiro-plano {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        background-color: #0B232A;
-        border-radius: 15px;
-    }
-
-    .fundo {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        margin: 10px;
-        max-width: 500px;
-    }
-
-    .botao-captura {
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        border-top: 2px solid white;
-        border-radius: 50px;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        outline: none;
-        width: 100%;
-    }
-
-    .div-quantidade {
-        margin-top: auto;
-        border-top: 2px solid #3E5F79;
-        border-radius: 10px;
-        margin: 5px;
-    }
-
-    .footer {
-        margin-top: 5px;
-        margin-bottom: 10px;
-    }
-
-
-
-    .titulo {
-        margin-bottom: 5px;
-        font-size: small;
-        font-weight: 600;
-    }
-
-    .video {
-        border: 2px dashed orange;
-        height: 200px;
-        margin: 5px;
-        border-radius: 10px;
-    }
-
-    .action-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-    }
-
-    .action-button {
-        width: 45px;
-        height: 45px;
-        background-color: #0B232A;
-        border: 2px solid #99CEE4;
-        border-radius: 100%;
-        cursor: pointer;
-    }
-
-    .qtd-button {
-        width: 50px;
-        height: 50px;
-        background-color: #0B232A;
-        border: 2px solid #3E5F79;
-        border-radius: 20%;
-        cursor: pointer;
-        color: #3E5F79;
-        font-size: x-large;
-        font-weight: 700;
-    }
-
-    .qtd-button .fas {
-        font-size: 1.2em;
-        color: #3E5F79;
-        font-size: large;
-    }
-
-    .action-text {
-        flex-grow: 1;
-        text-align: center;
-    }
-
-    .fas {
-        font-size: 1.2em;
-        color: #99CEE4;
-    }
-
-    .progress-bar {
-        border: 1px solid #99CEE4;
-        height: 10px;
-        border-radius: 10px;
-        margin: 0px 10px;
-    }
-
-    .progress-fill {
-        background-color: white;
-        width: 60%;
-        height: 8px;
-        border-radius: 8px;
-        margin: 1px;
-    }
-
-    .tabela-ean {
-        flex-grow: 1;
-        overflow-y: auto;
-        width: 100%;
-        overflow-x: auto;
-        padding: 5%;
-    }
-
-    table {
-        width: 90%;
-        border-collapse: collapse;
-    }
-
-    td {
-        padding: 5px;
-        text-align: center;
-        border-top: 1px solid #99CEE4;
-        border-bottom: 1px solid #99CEE4;
-    }
-
-    tr:first-child td {
-        border-top: none;
-    }
-
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    .qtd-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 25%;
-        height: 50px;
-        background-color: white;
-        border: 2px solid #3E5F79;
-        border-radius: 50px;
-        cursor: pointer;
-        color: #0B232A;
-        font-size: x-large;
-        font-weight: 700;
-    }
-</style>
-
-<body>
-
-    <div class="fundo">
-        <div class="titulo">
-            COLETOR DE DADOS
-        </div>
-        <div class="primeiro-plano">
-            <div class="video">
-
-            </div>
-            <div class="box-aprova">
-                <div class="action-bar">
-                    <button class="action-button" id="cancel-button">
-                        <i class="fas fa-times"></i> <!-- Ícone de X -->
-                    </button>
-                    <span class="action-text">13423234233423</span>
-                    <button class="action-button" id="validate-button">
-                        <i class="fas fa-check"></i> <!-- Ícone de validar -->
-                    </button>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill">
-                    </div>
-                </div>
-            </div>
-            <div class="tabela-ean">
-                <table>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            34234234234
-                        </td>
-                        <td>
-                            312
-                        </td>
-                    </tr>
-
-                </table>
-            </div>
-            <div class="div-quantidade">
-
-                <div class="action-bar">
-                    <button class="qtd-button">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button class="qtd-button">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <span class="qtd-text">1</span>
-                    <button class="qtd-button">
-                        6
-                    </button>
-                    <button class="qtd-button">
-                        1
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <button class="botao-captura">ESCANEAR</button>
-        </div>
-    </div>
-
-    <script>
-
-    </script>
-</body>
-
-</html>
+<html lang="pt-br"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>cursoswill
+        </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.16.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+  </head>
+  
+  <body>
+  
+  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <style>
+      body,
+      html {
+          height: 100%;
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background-color: #ACBDC6;
+          color: white;
+          text-align: center;
+      }
+  
+      .primeiro-plano {
+          display: flex;
+          flex-direction: column;
+          background-color: #0B232A;
+          border-radius: 15px;
+      }
+  
+      .fundo {
+          display: flex;
+          flex-direction: column;
+          margin: 10px;
+          height: 98vh;
+          max-width: 500px;
+      }
+  
+      .botao-captura {
+          padding: 10px 20px;
+          background-color: #007bff;
+          border: none;
+          border-top: 2px solid #ffffffc2;
+          border-radius: 50px;
+          color: white;
+          font-size: 16px;
+          cursor: pointer;
+          outline: none;
+          width: 100%;
+          height: 65px !important;
+      }
+  
+      .div-quantidade {
+          margin-top: auto;
+          border-top: 1px solid #3E5F79;
+          border-radius: 10px;
+          margin: 5px;
+      }
+  
+      .footer {
+          margin-top: 5px;
+          margin-bottom: 5px;
+      }
+  
+      .titulo {
+          margin-top: 5px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 5px;
+          font-size: small;
+          font-weight: 600;
+      }
+  
+      .video {
+          border: 2px dashed orange;
+          height: 200px;
+          margin: 5px;
+          border-radius: 10px;
+      }
+  
+      video {
+          height: 200px;
+          border-radius: 10px;
+      }
+  
+      .action-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+      }
+  
+      .action-button {
+          width: 45px;
+          height: 45px;
+          background-color: #0B232A;
+          border: 1px solid #99CEE4;
+          border-radius: 100%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+  
+      .qtd-button {
+          width: 50px;
+          height: 50px;
+          background-color: #0B232A;
+          border: 1px solid #3E5F79;
+          border-radius: 20%;
+          cursor: pointer;
+          color: #3E5F79;
+          font-size: x-large;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+  
+      .qtd-button:active {
+          background-color: #21414b;
+          transform: scale(0.98);
+          border: 1px solid orange;
+      }
+  
+      .qtd-button .fas {
+          font-size: 1.2em;
+          color: #3E5F79;
+          font-size: large;
+      }
+  
+      .action-text {
+          flex-grow: 1;
+          text-align: center;
+      }
+  
+      .fas {
+          font-size: 1.2em;
+          color: #99CEE4;
+      }
+  
+      .progress-bar {
+          border: 1px solid #99CEE4;
+          height: 10px;
+          border-radius: 10px;
+          margin: 0px 10px;
+      }
+  
+      .progress-fill {
+          background-color: white;
+          height: 8px;
+          border-radius: 8px;
+          margin: 1px;
+          width: 0;
+      }
+  
+      .grow {
+          width: 99%;
+      }
+  
+      .tabela-ean {
+          background-color: #0B232A;
+          border-radius: 15px;
+          flex-grow: 1;
+          overflow-y: auto;
+          width: 100%;
+          overflow-x: auto;
+          padding: 5%;
+      }
+  
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+  
+      td {
+          padding: 5px;
+          text-align: center;
+          border-top: 1px solid #99CEE4;
+          border-bottom: 1px solid #99CEE4;
+      }
+  
+      tr:first-child td {
+          border-top: none;
+      }
+  
+      tr:last-child td {
+          border-bottom: none;
+      }
+  
+      .qtd-text {
+          display: flex;
+          align-items: center;
+          text-align: center;
+          justify-content: center;
+          width: 25%;
+          height: 50px;
+          background-color: white;
+          border: 1px solid #3E5F79;
+          border-radius: 50px;
+          cursor: pointer;
+          color: #0B232A;
+          font-size: x-large;
+          font-weight: 700;
+      }
+  
+      #barcode-scanner {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          overflow: hidden;
+      }
+  
+      #barcode-scanner video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+      }
+  
+      .scan-on {
+          background-color: #FEBC6C;
+      }
+  
+      .scan-off {
+          background-color: #247AAA;
+      }
+  
+      .button-voltar {
+          text-decoration: none;
+          color: white;
+          border: solid white 1px;
+          padding: 5px;
+          border-radius: 5px;
+      }
+  
+      .vermelhoDelete {
+          border: solid #ff6775 2px;
+          background-color: #3d1f1f;
+      }
+  
+      .vermelhoDelete .fas {
+          color: #ff6775;
+      }
+  </style>
+  
+  <div class="fundo">
+      <div class="titulo">
+          <a href="http://localhost/Inventario_item/index/1" class="button-voltar">
+              VOLTAR
+          </a>
+          COLETOR DE DADOS
+          <a href="http://localhost/">
+              <img src="http://localhost/logoApp.png" width="30px" alt="">
+          </a>
+      </div>
+      <div class="primeiro-plano">
+          <div class="video">
+              <div id="barcode-scanner">
+                
+              <video autoplay="true" preload="auto" src="" muted="true" playsinline="true"></video><canvas class="drawingBuffer" width="640" height="480"></canvas><br clear="all"></div>
+          </div>
+          <div class="box-aprova">
+              <div class="action-bar">
+                  <button class="action-button" id="validate-button">
+                      <i class="fas fa-check"></i> 
+                  </button>
+                  <span id="codigo-lido" class="action-text"></span>
+                  <button class="action-button" id="cancel-button">
+                      <i class="fas fa-times"></i> 
+                  </button>
+              </div>
+              <div class="progress-bar">
+                  <div class="progress-fill">
+                  </div>
+              </div>
+          </div>
+  
+          <div class="div-quantidade">
+  
+              <div class="action-bar">
+                  <button id="btn-10" class="qtd-button">
+                      10
+                  </button>
+                  <button id="btn-1" class="qtd-button">
+                      1
+                  </button>
+                  <input id="quantidade" class="qtd-text" type="number" value="1">
+                  <button id="btn-menos" class="qtd-button">
+                      <i class="fas fa-minus"></i>
+                  </button>
+                  <button id="btn-mais" class="qtd-button">
+                      <i class="fas fa-plus"></i>
+                  </button>
+              </div>
+          </div>
+      </div>
+      <div class="footer">
+          <button id="scan-button" class="botao-captura scan-off">ESCANEAR</button>
+      </div>
+      <div class="tabela-ean">
+          <table id="most-frequent-code">
+          <tr><td>7896331705362</td><td>7</td></tr><tr><td>2820331705362</td><td>3</td></tr><tr><td>2299731705362</td><td>2</td></tr><tr><td>8164502143992</td><td>1</td></tr><tr><td>1103507153091</td><td>1</td></tr><tr><td>4164507143991</td><td>1</td></tr><tr><td>8164502153090</td><td>1</td></tr><tr><td>4898551705361</td><td>1</td></tr><tr><td>7296331701362</td><td>1</td></tr><tr><td>4165107143091</td><td>1</td></tr><tr><td>1203507143921</td><td>1</td></tr><tr><td>2829731705361</td><td>1</td></tr><tr><td>9293311053686</td><td>1</td></tr><tr><td>3057501153091</td><td>1</td></tr><tr><td>8296352705362</td><td>1</td></tr><tr><td>5592757924210</td><td>1</td></tr><tr><td>2220331701362</td><td>1</td></tr><tr><td>5263147143091</td><td>1</td></tr><tr><td>4165107153090</td><td>1</td></tr><tr><td>1820551701527</td><td>1</td></tr><tr><td>1820441701361</td><td>1</td></tr><tr><td>1299541705362</td><td>0</td></tr><tr><td>5890531701362</td><td>0</td></tr><tr><td>8296342705426</td><td>0</td></tr><tr><td>1203107157991</td><td>0</td></tr><tr><td>7014587143091</td><td>0</td></tr><tr><td>0051991219421</td><td>0</td></tr><tr><td>8004101141091</td><td>0</td></tr><tr><td>2467512053616</td><td>0</td></tr><tr><td>4896541701362</td><td>0</td></tr><tr><td>2820371701362</td><td>0</td></tr><tr><td>2103147147091</td><td>0</td></tr></table>
+      </div>
+  </div>
+  
+  
+  
+  <script>
+  
+      let isScanning = false;
+      id_inventario = 1;
+      chave_csrf_token = 'b6ad402170523747f13263921f8947523d030790c756edb8c06f62b2b9f38bd5'
+      var container = document.getElementById('most-frequent-code');
+      var ultimoEnvio = { id: 0, code: '', quantity: 0 };
+      var outputCodigo = document.getElementById("codigo-lido");
+      var progressBar = document.querySelector('.progress-fill');
+      var btnCancelar = document.getElementById("cancel-button");
+      var textQuantidade = document.getElementById("quantidade");
+  
+      btnCancelar.addEventListener('click', function () {
+          deletaUltimo();
+      });
+  
+      function deletaUltimo() {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', 'http://localhost/inventario_item/deleteColetor', true);
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  
+          var params = new URLSearchParams();
+          params.append('_method', 'DELETE');
+          params.append('inventario_item_id', ultimoEnvio['id']);
+          params.append('csrf_token', chave_csrf_token);
+  
+          xhr.send(params);
+  
+          xhr.onload = function () {
+              if (xhr.status === 200) {
+                  console.log('Item deletado com sucesso');
+  
+                  // Imprimir a resposta do servidor
+                  console.log('Resposta do servidor:', xhr.responseText);
+  
+                  // Se a resposta for JSON, você pode converter e usar assim:
+                  try {
+                      var resposta = JSON.parse(xhr.responseText);
+                      console.log('Resposta do servidor como objeto:', resposta);
+                      subLine(ultimoEnvio['code'], ultimoEnvio['quantity'])
+                      ultimoEnvio = { id: 0, code: '', quantity: 0 }
+                      btnCancelar.classList.remove('vermelhoDelete');
+                      // Agora você pode acessar as propriedades do objeto, por exemplo: resposta.mensagem
+                  } catch (e) {
+                      console.error('Erro ao analisar a resposta do servidor como JSON:', e);
+                  }
+  
+                  // Aqui você pode adicionar o código para atualizar a UI conforme necessário
+              } else {
+                  console.error('Falha ao deletar o item');
+                  // Também pode ser útil imprimir a resposta de erro do servidor
+                  console.error('Erro do servidor:', xhr.responseText);
+              }
+          };
+  
+          xhr.onerror = function () {
+              console.error('Erro na rede');
+          };
+      }
+  
+  
+  
+      document.getElementById('scan-button').addEventListener('click', function () {
+          this.classList.remove('scan-off');
+          this.classList.add('scan-on');
+          this.textContent = 'ESCANEAMENTO';
+  
+          progressBar.style.transition = 'none';
+          progressBar.classList.remove('grow');
+  
+          isScanning = true;
+      });
+  
+      var codeQuantities = [{"code":"7896331705362","quantity":7},{"code":"2820331705362","quantity":3},{"code":"2299731705362","quantity":2},{"code":"8164502143992","quantity":1},{"code":"1103507153091","quantity":1},{"code":"4164507143991","quantity":1},{"code":"8164502153090","quantity":1},{"code":"4898551705361","quantity":1},{"code":"7296331701362","quantity":1},{"code":"4165107143091","quantity":1},{"code":"1203507143921","quantity":1},{"code":"2829731705361","quantity":1},{"code":"9293311053686","quantity":1},{"code":"3057501153091","quantity":1},{"code":"8296352705362","quantity":1},{"code":"5592757924210","quantity":1},{"code":"2220331701362","quantity":1},{"code":"5263147143091","quantity":1},{"code":"4165107153090","quantity":1},{"code":"1820551701527","quantity":1},{"code":"1820441701361","quantity":1},{"code":"1299541705362","quantity":0},{"code":"5890531701362","quantity":0},{"code":"8296342705426","quantity":0},{"code":"1203107157991","quantity":0},{"code":"7014587143091","quantity":0},{"code":"0051991219421","quantity":0},{"code":"8004101141091","quantity":0},{"code":"2467512053616","quantity":0},{"code":"4896541701362","quantity":0},{"code":"2820371701362","quantity":0},{"code":"2103147147091","quantity":0}];
+      for (var i = 0; i < codeQuantities.length; i++) {
+          var item = codeQuantities[i];
+          var newLine = document.createElement('tr');
+  
+          var eanCell = document.createElement('td');
+          eanCell.textContent = item.code;
+          newLine.appendChild(eanCell);
+  
+          var quantidadeCell = document.createElement('td');
+          quantidadeCell.textContent = item.quantity;
+          newLine.appendChild(quantidadeCell);
+  
+          container.appendChild(newLine);
+      }
+  
+  
+  
+  
+      document.getElementById("btn-mais").addEventListener('click', function () {
+          textQuantidade.value = parseInt(textQuantidade.value) + 1;
+      })
+      document.getElementById("btn-menos").addEventListener('click', function () {
+          if (parseInt(textQuantidade.value) > 1) {
+              textQuantidade.value = parseInt(textQuantidade.value) - 1;
+          }
+      })
+      document.getElementById("btn-1").addEventListener('click', function () {
+          textQuantidade.value = 1;
+      })
+      document.getElementById("btn-10").addEventListener('click', function () {
+          textQuantidade.value = 10;
+      })
+  
+  
+  
+  
+  
+      function sendData(ean13) {
+          const formData = new URLSearchParams();
+          formData.append('inventario_id', id_inventario);
+          formData.append('ean13', ean13);
+          formData.append('csrf_token', chave_csrf_token);
+          formData.append('quantidade', textQuantidade.value);
+  
+          fetch('http://localhost/inventario_item/saveEan', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              body: formData
+          })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Falha no envio');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  console.log('Dados enviados com sucesso:', data);
+                  ultimoEnvio['id'] = data['inventario_item_id']
+                  btnCancelar.classList.add('vermelhoDelete');
+                  // Tente reenviar qualquer dado salvo localmente
+                  resendSavedData();
+              })
+              .catch(error => {
+                  console.error('Erro:', error);
+                  // Salvar localmente para reenvio posterior
+                  saveDataLocally(id_inventario, ean13);
+              });
+      }
+  
+  
+  
+      function resendSavedData() {
+          // Recupera os dados salvos
+          let savedData = localStorage.getItem('savedData');
+          if (!savedData) return;
+  
+          savedData = JSON.parse(savedData);
+  
+          // Função auxiliar para enviar dados
+          function sendSavedData(inventarioId, ean13) {
+              const formData = new URLSearchParams();
+              formData.append('inventario_id', inventarioId);
+              formData.append('ean13', ean13);
+              formData.append('csrf_token', chave_csrf_token);
+              formData.append('quantidade', textQuantidade.value);
+  
+              return fetch('http://localhost/inventario_item/saveEan', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                  },
+                  body: formData
+              });
+          }
+  
+          // Cria uma cópia para iterar e modifica o array original
+          [...savedData].reverse().forEach((item, index) => {
+              sendSavedData(item.inventarioId, item.ean13)
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Falha no reenvio');
+                      }
+                      return response.json();
+                  })
+                  .then(data => {
+                      console.log('Reenvio bem-sucedido:', data);
+                      // Remove o item enviado do array original                        
+                      savedData.splice(savedData.length - 1 - index, 1);
+                  })
+                  .catch(error => {
+                      console.error('Erro no reenvio:', error);
+                      // Não é necessário salvar novamente, pois já está salvo
+                  })
+                  .finally(() => {
+                      // Atualiza o armazenamento local após processar cada item
+                      localStorage.setItem('savedData', JSON.stringify(savedData));
+                  });
+          });
+      }
+  
+  
+      function saveDataLocally(inventarioId, ean13) {
+          // Recupera os dados salvos ou inicializa um array vazio
+          let savedData = localStorage.getItem('savedData') || '[]';
+          savedData = JSON.parse(savedData);
+  
+          // Cria um objeto com inventario_id e ean13 e adiciona ao array
+          savedData.push({ inventarioId, ean13 });
+          console.log(savedData);
+          // Salva o array atualizado no localStorage
+          localStorage.setItem('savedData', JSON.stringify(savedData));
+      }
+  
+  
+      // Função para gerar um bipe
+      function beep(frequency = 520, duration = 200) {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          let oscillator = audioContext.createOscillator();
+          let gainNode = audioContext.createGain();
+  
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          oscillator.frequency.value = frequency;
+  
+          oscillator.start();
+          setTimeout(() => {
+              oscillator.stop();
+              audioContext.close();
+          }, duration);
+      }
+  
+      let scannedCodes = [];
+      const maxReadings = 5;
+  
+      Quagga.init({
+          inputStream: {
+              name: "Live",
+              type: "LiveStream",
+              target: document.querySelector('#barcode-scanner'),
+              constraints: {
+                  facingMode: "environment",
+                  //width: { ideal: 900 },  // Sugere a largura ideal
+                  //height: { ideal: 900 } // Sugere a altura ideal
+              },
+          },
+          decoder: {
+              readers: ["ean_reader"]
+          },
+      }, function (err) {
+          if (err) {
+              console.log(err);
+              return
+          }
+          console.log("Initialization finished. Ready to start");
+          Quagga.start();
+      });
+  
+      Quagga.onDetected(function (result) {
+          var code = result.codeResult.code;
+          if (isScanning) {
+              if (scannedCodes.length < maxReadings) {
+                  scannedCodes.push(code);
+  
+                  if (scannedCodes.length === maxReadings) {
+                      displayMostFrequentCode(scannedCodes);
+                      sendData(scannedCodes);
+                      scannedCodes = [];
+                      let scanButton = document.getElementById('scan-button');
+                      scanButton.classList.remove('scan-on');
+                      scanButton.classList.add('scan-off');
+                      scanButton.textContent = 'ESCANEAR';
+                      isScanning = false;
+                      beep(); // Toca um bipe   
+  
+                  }
+              }
+          }
+      });
+  
+      function displayMostFrequentCode(codes) {
+          const counts = codes.reduce((acc, code) => {
+              acc[code] = (acc[code] || 0) + 1;
+              return acc;
+          }, {});
+  
+          const mostFrequentCode = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+          addLine(mostFrequentCode, textQuantidade.value)
+          outputCodigo.textContent = mostFrequentCode;
+  
+          ultimoEnvio['code'] = mostFrequentCode;
+          ultimoEnvio['quantity'] = textQuantidade.value;
+          // Adicione o efeito de piscar aqui
+          progressBar.style.transition = 'width 3s ease-in-out'; // Remove a animação
+          progressBar.classList.add('grow');
+      }
+  
+      function subLine(code, qtd) {
+          for (var i = 0; i < codeQuantities.length; i++) {
+              if (codeQuantities[i].code === code) {
+                  codeQuantities[i].quantity = parseInt(codeQuantities[i].quantity) - parseInt(qtd);
+                  break;
+              }
+          }
+          renderTable()
+      }
+  
+      function addLine(mostFrequentCode, qtd) {
+  
+          var found = false;
+          for (var i = 0; i < codeQuantities.length; i++) {
+              if (codeQuantities[i].code === mostFrequentCode) {
+                  codeQuantities[i].quantity = parseInt(codeQuantities[i].quantity) + parseInt(qtd);
+                  // Mover o item atualizado para o topo
+                  var item = codeQuantities.splice(i, 1)[0];
+                  codeQuantities.unshift(item);
+                  found = true;
+                  break;
+              }
+          }
+  
+          // Se o código é novo, adiciona no início do array
+          if (!found) {
+              codeQuantities.unshift({ code: mostFrequentCode, quantity: parseInt(qtd) });
+          }
+  
+          // Renderiza a tabela
+          renderTable();
+      }
+  
+  
+      function renderTable() {
+          var container = document.getElementById('most-frequent-code');
+          container.innerHTML = '';
+  
+          for (var i = 0; i < codeQuantities.length && i < 20; i++) {
+              var item = codeQuantities[i];
+              var newLine = document.createElement('tr');
+  
+              var eanCell = document.createElement('td');
+              eanCell.textContent = item.code;
+              newLine.appendChild(eanCell);
+  
+              var quantidadeCell = document.createElement('td');
+              quantidadeCell.textContent = item.quantity;
+              newLine.appendChild(quantidadeCell);
+  
+              container.appendChild(newLine);
+          }
+      }
+  
+  
+  </script>
+  
+  
+  
+  
+  
+  
+  <script>
+      function fecharAlerta(botao) {
+        // Navegar até o elemento pai (div com a classe "alert") do botao e ocultá-lo
+        var divPai = botao.closest(".alert");
+        divPai.remove();
+      }
+      
+    </script></body></html>

@@ -19,14 +19,14 @@ class InventarioController extends Controller
     {
         $this->usuario = UtilService::getUsuario();
         if (!$this->usuario) {
-            $this->redirect(URL_BASE  . "login");
+            $this->redirect(URL_BASE . "login");
             exit;
         }
     }
 
     public function index()
     {
-        $dados["inventario"] = Service::get($this->tabela,'usuarios_id', $_SESSION['id'],true);
+        $dados["inventario"] = Service::get($this->tabela, 'usuarios_id', $_SESSION['id'], true);
         $dados["view"] = "Inventario/Show";
         $this->load("templateBootstrap", $dados);
     }
@@ -51,7 +51,7 @@ class InventarioController extends Controller
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-                
+
                 // Excluir a imagem, se existir               
 
                 // Excluir
@@ -67,33 +67,33 @@ class InventarioController extends Controller
             $inventario = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["inventario_id"]) && is_numeric($_POST["inventario_id"]) && $_POST["inventario_id"] > 0) {                  
-                    $inventario->inventario_id = $_POST["inventario_id"];                    
+                if (isset($_POST["inventario_id"]) && is_numeric($_POST["inventario_id"]) && $_POST["inventario_id"] > 0) {
+                    $inventario->inventario_id = $_POST["inventario_id"];
                 } else {
-                    $inventario->inventario_id = 0;                         
+                    $inventario->inventario_id = 0;
                 }
-                                if (isset($_POST["nome"]))
-                   $inventario->nome = $_POST["nome"];
+                if (isset($_POST["nome"]))
+                    $inventario->nome = $_POST["nome"];
                 if (isset($_POST["localizacao"]))
-                   $inventario->localizacao = $_POST["localizacao"];
+                    $inventario->localizacao = $_POST["localizacao"];
                 if (isset($_POST["responsavel"]))
-                   $inventario->responsavel = $_POST["responsavel"];
+                    $inventario->responsavel = $_POST["responsavel"];
                 if (isset($_POST["usuarios_id"]))
-                   $inventario->usuarios_id = $_POST["usuarios_id"];
-                
-               
+                    $inventario->usuarios_id = $_POST["usuarios_id"];
+
+
             }
 
 
             Flash::setForm($inventario);
             if (InventarioService::salvar($inventario, $this->campo, $this->tabela) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "Inventario");
+                $this->redirect(URL_BASE . "Inventario");
             } else {
                 if (!$inventario->inventario_id) {
-                    $this->redirect(URL_BASE   . "Inventario/create");
+                    $this->redirect(URL_BASE . "Inventario/create");
                 } else {
-                    $this->redirect(URL_BASE   . "Inventario/edit/" . $inventario->inventario_id);
+                    $this->redirect(URL_BASE . "Inventario/edit/" . $inventario->inventario_id);
                 }
             }
         }

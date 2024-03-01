@@ -1,10 +1,17 @@
- <nav class="navbar navbar-expand-lg  container">
+<style>
+  .header{
+    padding: 10px 30px;
+    background-color: #7A909B;
+    font-weight: 700;
+  }
+</style>
+<nav class="header navbar navbar-expand-lg  container">
   <a class="navbar-brand text-wrapper-4" href="<?php echo URL_BASE ?>">InvTrack</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
     aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+    <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">
   </button>
- <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
     <ul class="navbar-nav mr-3">
       <!--<li class="nav-item active">
         <a class="nav-link text-wrapper-4" href="<?php echo URL_BASE ?>">Home</a>
