@@ -694,7 +694,7 @@
     }
 
     let scannedCodes = [];
-    const maxReadings = 5;
+    const maxReadings = 8;
 
     Quagga.init({
         inputStream: {
