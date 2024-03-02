@@ -72,9 +72,8 @@ class Inventario_itemController extends Controller
                     return;
                 }
 
-                // Tenta excluir o item
                 $result = Inventario_itemService::excluir($this->tabela, $this->campo, $id);
-                
+
                 Flash::limpaErro();
                 Flash::limpaMsg();
                 // Verifica se a exclusão foi bem-sucedida
@@ -124,21 +123,15 @@ class Inventario_itemController extends Controller
                 }
                 if (isset($_POST["inventario_id"]))
                     $inventario_item->inventario_id = $_POST["inventario_id"];
-                if (isset($_POST["nome"]))
-                    $inventario_item->nome = $_POST["nome"];
                 if (isset($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
-                if (isset($_POST["preco"]))
-                    $inventario_item->preco = $_POST["preco"];
                 if (isset($_POST["ean13"]))
                     $inventario_item->ean13 = $_POST["ean13"];
                 if (isset($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
 
                 $inventario_item->usuarios_id = $_SESSION['id'];
-
             }
-
 
             Flash::setForm($inventario_item);
             if (Inventario_itemService::salvar($inventario_item, $this->campo, $this->tabela) > 1) //se é maior que um inseriu novo 
@@ -174,6 +167,12 @@ class Inventario_itemController extends Controller
                     $inventario_item->preco = $_POST["preco"];
                 if (isset($_POST["ean13"]))
                     $inventario_item->ean13 = $_POST["ean13"];
+                if (isset($_POST["rua"]))
+                    $inventario_item->rua = $_POST["rua"];
+                if (isset($_POST["coluna"]))
+                    $inventario_item->coluna = $_POST["coluna"];
+                if (isset($_POST["nivel"]))
+                    $inventario_item->nivel = $_POST["nivel"];
 
             }
 

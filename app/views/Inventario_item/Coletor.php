@@ -273,10 +273,14 @@
             <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">
         </a>
     </div>
-    <div>
-        estoque 1 / rua 1 / coluna 1
-    </div>
+
     <div class="primeiro-plano">
+        <div>
+            <button type="button" id="textPosicaoEstoque" class="btn btn btn-sm btn-outline-info mt-2"
+                data-toggle="modal" data-target="#modalProsicaoEstoque">
+                Informar posição de estoque
+            </button>
+        </div>
         <div class="video">
             <div id="barcode-scanner">
             </div>
@@ -324,6 +328,41 @@
         <button type="button" class="btn botao-digitar" data-toggle="modal" data-target="#modalProduto">
             DIGITAR CODIGO
         </button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalProsicaoEstoque" tabindex="-1" aria-labelledby="modalProsicaoEstoqueLabel"
+    aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProsicaoEstoqueLabel">Estoque e posição</h5>
+                <button type="button" class="btn btn-sm btn-outline-info close" data-dismiss="modal"
+                    aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="estoque">Rua:</label>
+                        <input type="text" class="form-control" id="rua">
+                    </div>
+                    <div class="form-group">
+                        <label for="estoque">Coluna:</label>
+                        <input type="text" class="form-control" id="coluna">
+                    </div>
+                    <div class="form-group">
+                        <label for="estoque">Nivel:</label>
+                        <input type="text" class="form-control" id="nivel">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btnConfirmarEstoque">Confirmar</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -382,20 +421,47 @@
         }
         let modulo = sum % 10;
         let checkDigit = modulo === 0 ? 0 : 10 - modulo;
-        return checkDigit === parseInt(code[12]);
+        console.log(parseInt(code[12]));
+        console.log(parseInt(code[12]) > 0);
+        return checkDigit === parseInt(code[12]) > 0;
     }
+
+    var rua = '';
+    var coluna = '';
+    var nivel = '';
+
+    document.getElementById('btnConfirmarEstoque').addEventListener('click', function () {
+        rua = document.getElementById('rua').value;
+        coluna = document.getElementById('coluna').value;
+        nivel = document.getElementById('nivel').value;
+
+        textoEstoque = '';
+        if (rua != '') {
+            textoEstoque += 'Rua ' + rua + ' / '
+        }
+        if (coluna != '') {
+            textoEstoque += 'Coluna ' + coluna + ' / '
+        }
+        if (rua != '') {
+            textoEstoque += 'Nivel ' + nivel
+        }
+
+        textPosicaoEstoque.textContent = textoEstoque;
+
+        $('#modalProsicaoEstoque').modal('hide');
+    });
 
     document.getElementById('btnConfirmar').addEventListener('click', function () {
         var ean13 = document.getElementById('ean13').value;
         var quantidade = document.getElementById('quantidadeManual').value;
-        console.log("EAN13: " + ean13 + ", Quantidade: " + quantidade);
         if (isValidEAN13(ean13)) {
-            sendData(ean13, quantidade)
+            outputCodigo.textContent = ean13;
+            sendData(ean13, quantidade)            
             $('#eanError').hide();
-            $('#modalProduto').modal('hide'); // Fechando o modal com jQuery
         } else {
             $('#eanError').show();
         }
+        $('#modalProduto').modal('hide');
     });
 
     let isScanning = false;
@@ -464,11 +530,13 @@
             progressBar.style.transition = 'none';
             progressBar.classList.remove('grow');
             isScanning = true;
+            Quagga.start();
         } else {
             this.classList.remove('scan-on');
             this.classList.add('scan-off');
             this.textContent = 'ESCANEAR';
             isScanning = false;
+            Quagga.stop();
         }
 
     });
@@ -510,6 +578,9 @@
         formData.append('ean13', ean13);
         formData.append('csrf_token', chave_csrf_token);
         formData.append('quantidade', qtd);
+        formData.append('rua', rua);
+        formData.append('coluna', coluna);
+        formData.append('nivel', nivel);
 
         fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
             method: 'POST',
@@ -534,7 +605,7 @@
             .catch(error => {
                 console.error('Erro:', error);
                 // Salvar localmente para reenvio posterior
-                saveDataLocally(id_inventario, ean13, qtd);
+                saveDataLocally(id_inventario, ean13, qtd, rua, coluna, nivel);
             });
     }
 
@@ -548,12 +619,15 @@
         savedData = JSON.parse(savedData);
 
         // Função auxiliar para enviar dados
-        function sendSavedData(inventarioId, ean13, qtd) {
+        function sendSavedData(inventarioId, ean13, qtd, rua, coluna, nivel) {
             const formData = new URLSearchParams();
             formData.append('inventario_id', inventarioId);
             formData.append('ean13', ean13);
             formData.append('csrf_token', chave_csrf_token);
             formData.append('quantidade', qtd);
+            formData.append('rua', rua);
+            formData.append('coluna', coluna);
+            formData.append('nivel', nivel);
 
             return fetch('<?php echo URL_BASE; ?>inventario_item/saveEan', {
                 method: 'POST',
@@ -566,7 +640,7 @@
 
         // Cria uma cópia para iterar e modifica o array original
         [...savedData].reverse().forEach((item, index) => {
-            sendSavedData(item.inventarioId, item.ean13, item.qtd)
+            sendSavedData(item.inventarioId, item.ean13, item.qtd, item.rua, item.coluna, item.nivel)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Falha no reenvio');
@@ -590,13 +664,13 @@
     }
 
 
-    function saveDataLocally(inventarioId, ean13, qtd) {
+    function saveDataLocally(inventarioId, ean13, qtd, rua, coluna, nivel) {
         // Recupera os dados salvos ou inicializa um array vazio
         let savedData = localStorage.getItem('savedData') || '[]';
         savedData = JSON.parse(savedData);
 
         // Cria um objeto com inventario_id e ean13 e adiciona ao array
-        savedData.push({ inventarioId, ean13, qtd });
+        savedData.push({ inventarioId, ean13, qtd, rua, coluna, nivel });
         // Salva o array atualizado no localStorage
         localStorage.setItem('savedData', JSON.stringify(savedData));
     }
@@ -651,17 +725,17 @@
             if (scannedCodes.length < maxReadings) {
                 scannedCodes.push(code);
 
-                if (scannedCodes.length === maxReadings) {   
-                    var maisFrequente = calculaMaisFrequente(scannedCodes)   
-                    console.log(scannedCodes)         
-                    if(isValidEAN13(maisFrequente)){
+                if (scannedCodes.length === maxReadings) {
+                    var maisFrequente = calculaMaisFrequente(scannedCodes)
+                    
+                    if (isValidEAN13(maisFrequente)) {
                         displayCodeErro(maisFrequente)
-                    }else{                        
+                    } else {
                         displayMostFrequentCode(maisFrequente);
                         beep(); // Toca um bipe   
                         sendData(maisFrequente, textQuantidade.value);
-                    }                    
-                    
+                    }
+
                     scannedCodes = [];
                     let scanButton = document.getElementById('scan-button');
                     scanButton.classList.remove('scan-on');
@@ -673,22 +747,22 @@
         }
     });
 
-    function calculaMaisFrequente(codes){
+    function calculaMaisFrequente(codes) {
         const counts = codes.reduce((acc, code) => {
             acc[code] = (acc[code] || 0) + 1;
             return acc;
         }, {});
 
         return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-        
+
     }
 
     function displayCodeErro(code) {
-        outputCodigo.textContent = code;  
-        outputCodigo.classList.add('vermelhoDelete');  
+        outputCodigo.textContent = code;
+        outputCodigo.classList.add('vermelhoDelete');
     }
 
-    function displayMostFrequentCode(code) {        
+    function displayMostFrequentCode(code) {
         outputCodigo.classList.remove('vermelhoDelete');
         addLine(code, textQuantidade.value)
         outputCodigo.textContent = code;
