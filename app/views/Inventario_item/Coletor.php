@@ -87,17 +87,43 @@
         font-weight: 600;
     }
 
+    #barcode-scanner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+
+    #barcode-scanner video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 10px;
+    }
+
     .video {
+        display: flex;
         border: 2px dashed orange;
         height: 200px;
         margin: 5px;
         border-radius: 10px;
+        z-index: 10;
+        align-items: center;
+        justify-content: center;
     }
 
-    video {
-        height: 200px;
-        border-radius: 10px;
+    .scanner-hole {
+        position: absolute;
+        width: 188px;
+        height: 96px;
+        background-color: transparent;
+        border: 2px solid orange;
+        z-index: 2;
+        border-radius: 2px;
     }
+
 
     .action-bar {
         display: flex;
@@ -222,20 +248,6 @@
         font-weight: 700;
     }
 
-    #barcode-scanner {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        overflow: hidden;
-    }
-
-    #barcode-scanner video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-    }
-
     .scan-on {
         background-color: #FEBC6C;
     }
@@ -282,6 +294,7 @@
             </button>
         </div>
         <div class="video">
+            <div class="scanner-hole"></div>
             <div id="barcode-scanner">
             </div>
         </div>
@@ -456,7 +469,7 @@
         var quantidade = document.getElementById('quantidadeManual').value;
         if (isValidEAN13(ean13)) {
             outputCodigo.textContent = ean13;
-            sendData(ean13, quantidade)            
+            sendData(ean13, quantidade)
             $('#eanError').hide();
         } else {
             $('#eanError').show();
@@ -727,7 +740,7 @@
 
                 if (scannedCodes.length === maxReadings) {
                     var maisFrequente = calculaMaisFrequente(scannedCodes)
-                    
+
                     if (isValidEAN13(maisFrequente)) {
                         displayCodeErro(maisFrequente)
                     } else {
