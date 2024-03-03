@@ -559,13 +559,13 @@
         var item = codeQuantities[i];
         var newLine = document.createElement('tr');
 
-        var eanCell = document.createElement('td');
-        eanCell.textContent = item.code;
-        newLine.appendChild(eanCell);
-
         var quantidadeCell = document.createElement('td');
         quantidadeCell.textContent = item.quantity;
         newLine.appendChild(quantidadeCell);
+
+        var eanCell = document.createElement('td');
+        eanCell.textContent = item.code;
+        newLine.appendChild(eanCell);        
 
         container.appendChild(newLine);
     }
@@ -827,15 +827,15 @@
 
         for (var i = 0; i < codeQuantities.length && i < 20; i++) {
             var item = codeQuantities[i];
-            var eanCell = document.createElement('td');
-            eanCell.textContent = item.code;
-            newLine.appendChild(eanCell);
-
             var newLine = document.createElement('tr');            
 
             var quantidadeCell = document.createElement('td');
             quantidadeCell.textContent = item.quantity;
             newLine.appendChild(quantidadeCell);
+
+            var eanCell = document.createElement('td');
+            eanCell.textContent = item.code;            
+            newLine.appendChild(eanCell);
 
             container.appendChild(newLine);
         }
