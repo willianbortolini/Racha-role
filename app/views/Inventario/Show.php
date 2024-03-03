@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="mt-1 text-center">INVENTARIOS</h1>
-            <a href="<?php echo URL_BASE . "Inventario/create" ?>" class="btn btn-sm btn-outline-info mb-1  col-12 col-md-auto">Adicionar
+            <a href="<?php echo URL_BASE . "Inventario/create" ?>"
+                class="btn btn-sm btn-outline-info mb-1  col-12 col-md-auto">Adicionar
                 inventario</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
@@ -23,17 +24,38 @@
                                     class="btn btn-outline-primary btn-sm">Editar</a>
 
                                 <a href="<?php echo URL_BASE . "Inventario_item/index/" . $item->inventario_id ?>"
-                                    class="btn btn-outline-primary btn-sm">Bipar itens</a>
+                                    class="btn btn-outline-primary btn-sm">Itens</a>
+
+                                <a href="<?php echo URL_BASE . "Inventario_compartilhado/membros/" . $item->inventario_id ?>"
+                                    class="btn btn-outline-primary btn-sm">Membros</a>
 
                                 <button onclick="deletarItem(<?php echo $item->inventario_id; ?>)" type="button"
                                     class="btn btn-outline-danger btn-sm deletar" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal">
                                     Deletar
                                 </button>
-
+                                <button type="button" onclick="copiarLink('<?php echo $item->chave ?>')"
+                                    class="btn btn-outline-info btn-sm ">Compartilhar</button>
                             </td>
                         </tr>
                     <?php } ?>
+
+                    <?php foreach ($inventarioCompartilhado as $item) { ?>
+                        <tr>
+                            <td>
+                                <?php echo $item->nome; ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo URL_BASE . "Inventario_item/compartilhado/" . $item->chave ?>"
+                                    class="btn btn-outline-primary btn-sm">Itens</a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
+
+
+
+
                 </tbody>
             </table>
         </div>
@@ -82,5 +104,33 @@
     var idLinha = 0;
     function deletarItem(id) {
         idLinha = id;
+    }
+
+    function copiarLink(chave) {
+        // Define o link que você quer copiar
+        var linkParaCopiar = "<?php echo URL_BASE . 'Inventario_item/compartilhado/' ?>" + chave;
+
+        // Cria um elemento input temporário para ajudar na cópia do link
+        var tempInput = document.createElement("input");
+        tempInput.value = linkParaCopiar;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput); // Remove o input temporário
+
+        // Seleciona o botão pelo evento ou por ID se necessário
+        var botao = event.currentTarget;
+
+        // Muda a cor e o texto do botão
+        botao.classList.remove("btn-primary");
+        botao.classList.add("btn-secondary");
+        botao.textContent = "Link compartilhável copiado";
+
+        // Espera 10 segundos e reverte as mudanças
+        setTimeout(function () {
+            botao.classList.remove("btn-secondary");
+            botao.classList.add("btn-primary");
+            botao.textContent = "Copiar link compartilhável";
+        }, 5000); // 10000 milissegundos = 10 segundos
     }
 </script>

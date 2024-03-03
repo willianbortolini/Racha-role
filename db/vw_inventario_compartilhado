@@ -1,0 +1,7 @@
+CREATE VIEW vw_inventario_compartilhado AS
+SELECT usuarios.email, inventario.nome, inventario_compartilhado.*
+FROM inventario_compartilhado
+INNER JOIN usuarios ON
+usuarios.usuarios_id = inventario_compartilhado.usuarios_id
+INNER JOIN inventario ON
+inventario.inventario_id = inventario_compartilhado.inventario_id

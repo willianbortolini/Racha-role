@@ -13,7 +13,20 @@ class Inventario_itemDao extends Model
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(":inventario_id", $inventarios_id);      
         $stmt->execute();
-        return $stmt->fetchaLL(\PDO::FETCH_OBJ);        
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);        
+    }
+
+    public function itensInventarioUsuario($inventarios_id, $usuarios_id){
+        $sql = "SELECT * "
+                . "FROM inventario_item " 
+                . "WHERE inventario_id = :inventario_id "
+                . "AND usuarios_id = :usuarios_id "
+                . "ORDER BY data_captura DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":inventario_id", $inventarios_id);      
+        $stmt->bindValue(":usuarios_id", $usuarios_id);      
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);        
     }
    
 }

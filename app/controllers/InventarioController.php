@@ -27,6 +27,7 @@ class InventarioController extends Controller
     public function index()
     {
         $dados["inventario"] = Service::get($this->tabela, 'usuarios_id', $_SESSION['id'], true);
+        $dados["inventarioCompartilhado"] = InventarioService::inventariosCompartilhados($_SESSION['id']);
         $dados["view"] = "Inventario/Show";
         $this->load("templateBootstrap", $dados);
     }
@@ -74,6 +75,8 @@ class InventarioController extends Controller
                 }
                 if (isset($_POST["nome"]))
                     $inventario->nome = $_POST["nome"];
+                
+                $inventario->chave = InventarioService::generateUUIDv4();
                 if (isset($_POST["localizacao"]))
                     $inventario->localizacao = $_POST["localizacao"];
                 if (isset($_POST["responsavel"]))

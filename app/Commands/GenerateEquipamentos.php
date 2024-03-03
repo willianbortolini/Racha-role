@@ -31,15 +31,12 @@ $fields = [
     ['name' => 'recebimento_data_liberacao',   'type' => 'date', 'label' => 'Data da liberação do recebimento']
 ];*/
 
-$name = "inventario_item";
-$modelName = "inventario_item";
-$tableName = "inventario_item";
+$name = "inventario_compartilhado";
+$modelName = "inventario_compartilhado";
+$tableName = "inventario_compartilhado";
 $fields = [
     ['name' => 'inventario_id',   'type' => 'number', 'label' => 'Inventario'],
-    ['name' => 'ean13',   'type' => 'TEXT', 'label' => 'EAN-13'],
-    ['name' => 'nome',   'type' => 'text', 'label' => 'Nome'],
-    ['name' => 'quantidade',   'type' => 'number', 'label' => 'Quantidade'],
-    ['name' => 'preco',   'type' => 'number', 'label' => 'Preco']
+    ['name' => 'usuario_id',   'type' => 'number', 'label' => 'usuario']
 ];
 
 /*$name = "inventario";

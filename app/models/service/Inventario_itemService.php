@@ -16,6 +16,12 @@ class Inventario_itemService
 
     }  
 
+    public static function itensInventarioUsuario($inventarios_id, $usuarios_id)
+    {
+        $dao = new Inventario_itemDao();
+        return $dao->itensInventarioUsuario($inventarios_id, $usuarios_id);
+    } 
+
     public static function identiradesContadas($inventarios_id)
     {
         $dao = new Inventario_itemDao();

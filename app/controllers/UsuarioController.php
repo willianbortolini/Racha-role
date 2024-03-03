@@ -58,7 +58,7 @@ class UsuarioController extends Controller
         Flash::setForm($usuario);
 
         if (UsuarioService::salvar($usuario, $this->campo, $this->tabela)) {
-            $retornoUsusario = LoginService::loginSemRecaptcha("email", $usuario->email, $_POST['senha'], "usuarios");
+            $retornoUsusario = LoginService::login( $usuario->email, $_POST['senha']);
             if ($retornoUsusario == 1) {
                 Flash::limpaErro();
                 Flash::limpaMsg();

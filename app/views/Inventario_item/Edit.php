@@ -11,22 +11,28 @@
     </div>
 
     <div class="form-group mb-2">
-        <label for="nome">Nome</label>
-        <input type="text" class="form-control" id="nome" name="nome"
-            value="<?php echo (isset($inventario_item->nome)) ? $inventario_item->nome : ''; ?>" >
-    </div>
-
-    <div class="form-group mb-2">
         <label for="quantidade">Quantidade</label>
         <input type="number" class="form-control" id="quantidade" name="quantidade"
             value="<?php echo (isset($inventario_item->quantidade)) ? $inventario_item->quantidade : ''; ?>" >
     </div>
 
     <div class="form-group mb-2">
-        <label for="preco">Preco</label>
-        <input type="number" class="form-control" id="preco" name="preco"
-            value="<?php echo (isset($inventario_item->preco)) ? $inventario_item->preco : ''; ?>" >
+        <label for="rua">Rua</label>
+        <input type="number" class="form-control" id="rua" name="rua"
+            value="<?php echo (isset($inventario_item->rua)) ? $inventario_item->rua : ''; ?>" >
     </div>
+
+    <div class="form-group mb-2">
+        <label for="coluna">Coluna</label>
+        <input type="number" class="form-control" id="coluna" name="coluna"
+            value="<?php echo (isset($inventario_item->coluna)) ? $inventario_item->coluna : ''; ?>" >
+    </div>
+
+    <div class="form-group mb-2">
+        <label for="nivel">Nivel</label>
+        <input type="number" class="form-control" id="nivel" name="nivel"
+            value="<?php echo (isset($inventario_item->nivel)) ? $inventario_item->nivel : ''; ?>" >
+    </div>    
 
     <input type="hidden" name="inventario_id"
         value="<?php echo (isset($inventario_item->inventario_id)) ? $inventario_item->inventario_id : $inventario; ?>">

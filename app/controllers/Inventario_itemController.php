@@ -7,6 +7,7 @@ use app\util\UtilService;
 use app\models\service\Inventario_itemService;
 use app\core\Flash;
 use app\models\service\Service;
+use app\models\service\Inventario_compartilhadoService;
 
 class Inventario_itemController extends Controller
 {
@@ -28,8 +29,51 @@ class Inventario_itemController extends Controller
     {
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
         $dados["mobile"] = preg_match('/mobile|android|touch|samsung|iphone|ipad|ipod|ios|iemobile|opera mini/', $userAgent);
-        $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);
+        $inventario = Service::get('inventario', 'inventario_id', $inventario_id);
+
+        $inventario_compartilhado = [];
+        if ($inventario->usuarios_id <> $_SESSION['id']) {
+            $inventario_compartilhado = Inventario_compartilhadoService::inventarioUsuario($inventario->inventario_id, $_SESSION['id']);
+            $habilitado = (isset($inventario_compartilhado->habilitado) && ($inventario_compartilhado->habilitado == 1));
+            $dados["habilitado"] = $habilitado;
+            if ($habilitado == 1) {
+                $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);
+            }
+        }else{
+            $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true); 
+            $dados["habilitado"] = 1;
+        }
         $dados["inventario"] = $inventario_id;
+        $dados["view"] = "Inventario_item/Show";
+        $this->load("templateBootstrap", $dados);
+    }
+
+    public function compartilhado($chave)
+    {
+        $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $dados["mobile"] = preg_match('/mobile|android|touch|samsung|iphone|ipad|ipod|ios|iemobile|opera mini/', $userAgent);
+        $inventario = Service::get('inventario', 'chave', $chave);
+        //verifica se esse usuario ja esta associado a esse inentario se não associa
+        $inventario_compartilhado = [];
+        if ($inventario->usuarios_id <> $_SESSION['id']) {
+            $inventario_compartilhado = Inventario_compartilhadoService::inventarioUsuario($inventario->inventario_id, $_SESSION['id']);
+            if (!$inventario_compartilhado) {
+                $inventario_compartilhado = new \stdClass();
+                $inventario_compartilhado->inventario_compartilhado_id = 0;
+                $inventario_compartilhado->inventario_id = $inventario->inventario_id;
+                $inventario_compartilhado->usuarios_id = $_SESSION['id'];
+                Inventario_compartilhadoService::salvar($inventario_compartilhado);
+                Flash::limpaMsg();
+                Flash::limpaErro();
+            }
+        }
+
+        $habilitado = (isset($inventario_compartilhado->habilitado) && ($inventario_compartilhado->habilitado == 1));
+        $dados["habilitado"] = $habilitado;
+        if ($habilitado == 1) {
+            $dados["inventario_item"] = Inventario_itemService::itensInventarioUsuario($inventario->inventario_id, $_SESSION['id']);
+        }
+        $dados["inventario"] = $inventario->inventario_id;
         $dados["view"] = "Inventario_item/Show";
         $this->load("templateBootstrap", $dados);
     }
@@ -37,6 +81,10 @@ class Inventario_itemController extends Controller
     public function edit($id)
     {
         $dados["inventario_item"] = Service::get($this->tabela, $this->campo, $id);
+        $inventario = Service::get('inventario', 'inventario_id', $dados["inventario_item"]->inventario_id);
+        if (($dados["inventario_item"]->usuarios_id <> $_SESSION['id']) && ($inventario->usuarios_id <> $_SESSION['id'])) {
+            $this->redirect(URL_BASE);
+        }
         $dados["view"] = "Inventario_item/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -100,10 +148,6 @@ class Inventario_itemController extends Controller
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-
-                // Excluir a imagem, se existir               
-
-                // Excluir
                 Inventario_itemService::excluir($this->tabela, $this->campo, $id);
             }
         }
@@ -129,6 +173,13 @@ class Inventario_itemController extends Controller
                     $inventario_item->ean13 = $_POST["ean13"];
                 if (isset($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
+                if (isset($_POST["rua"]))
+                    $inventario_item->rua = $_POST["rua"];
+                if (isset($_POST["coluna"]))
+                    $inventario_item->coluna = $_POST["coluna"];
+                if (isset($_POST["nivel"]))
+                    $inventario_item->nivel = $_POST["nivel"];
+
 
                 $inventario_item->usuarios_id = $_SESSION['id'];
             }
@@ -163,8 +214,6 @@ class Inventario_itemController extends Controller
                     $inventario_item->nome = $_POST["nome"];
                 if (isset($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
-                if (isset($_POST["preco"]))
-                    $inventario_item->preco = $_POST["preco"];
                 if (isset($_POST["ean13"]))
                     $inventario_item->ean13 = $_POST["ean13"];
                 if (isset($_POST["rua"]))
