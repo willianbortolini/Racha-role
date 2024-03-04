@@ -29,13 +29,17 @@
                                 <a href="<?php echo URL_BASE . "Inventario_compartilhado/membros/" . $item->inventario_id ?>"
                                     class="btn btn-outline-primary btn-sm">Membros</a>
 
+                                <button type="button" onclick="copiarLink('<?php echo $item->chave ?>')"
+                                    class="btn btn-outline-info btn-sm ">Compartilhar</button>
+
+                                <a href="<?php echo URL_BASE . "Inventario_item/Visualizar/" . $item->inventario_id ?>"
+                                    class="btn btn-outline-primary btn-sm">Visualizar</a>
+                                    
                                 <button onclick="deletarItem(<?php echo $item->inventario_id; ?>)" type="button"
                                     class="btn btn-outline-danger btn-sm deletar" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal">
                                     Deletar
                                 </button>
-                                <button type="button" onclick="copiarLink('<?php echo $item->chave ?>')"
-                                    class="btn btn-outline-info btn-sm ">Compartilhar</button>
                             </td>
                         </tr>
                     <?php } ?>

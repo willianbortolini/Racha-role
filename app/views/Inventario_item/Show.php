@@ -61,8 +61,8 @@
                     </tbody>
                 </table>
             <?php } else { ?>
-                <h3>Você não esta habilitado a editar esse inventário, solicite ao criador do inventario que libere o seu
-                    usuario nos membros do inventátio.</h3>
+                <h3>Você não esta habilitado a editar esse inventário, solicite ao criador do inventário para liberar o seu
+                    usuário nos membros do inventátio.</h3>
             <?php } ?>
         </div>
     </div>

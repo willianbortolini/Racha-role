@@ -48,6 +48,32 @@ class Inventario_itemController extends Controller
         $this->load("templateBootstrap", $dados);
     }
 
+    public function visualizar($inventario_id)
+    {
+        $inventario = Service::get('inventario', 'inventario_id', $inventario_id);
+        if($inventario->usuarios_id <> $_SESSION['id']){
+            $this->redirect(URL_BASE);
+        }        
+        $dados["agrupado"] = 0;
+        $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);         
+        $dados["inventario"] = $inventario;
+        $dados["view"] = "Inventario_item/Visualizar";
+        $this->load("templateBootstrap", $dados);
+    }
+
+    public function visualizarAgrupado($inventario_id)
+    {
+        $inventario = Service::get('inventario', 'inventario_id', $inventario_id);
+        if($inventario->usuarios_id <> $_SESSION['id']){
+            $this->redirect(URL_BASE);
+        }        
+        $dados["agrupado"] = 1;
+        $dados["inventario_item"] = Inventario_itemService::identiradesContadas($inventario_id);   
+        $dados["inventario"] = $inventario;
+        $dados["view"] = "Inventario_item/Visualizar";
+        $this->load("templateBootstrap", $dados);
+    }
+
     public function compartilhado($chave)
     {
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
