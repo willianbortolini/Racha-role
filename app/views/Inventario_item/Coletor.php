@@ -717,8 +717,8 @@
             target: document.querySelector('#barcode-scanner'),
             constraints: {
                 facingMode: "environment",
-                //width: { ideal: 900 },  // Sugere a largura ideal
-                //height: { ideal: 900 } // Sugere a altura ideal
+                width: { ideal: 900 },  // Sugere a largura ideal
+                height: { ideal: 900 } // Sugere a altura ideal
             },
         },
         decoder: {
