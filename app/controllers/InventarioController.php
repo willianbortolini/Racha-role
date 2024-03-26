@@ -48,7 +48,7 @@ class InventarioController extends Controller
 
     public function delete()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['_method']) && $_POST['_method'] === 'DELETE') {
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
@@ -68,22 +68,23 @@ class InventarioController extends Controller
             $inventario = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["inventario_id"]) && is_numeric($_POST["inventario_id"]) && $_POST["inventario_id"] > 0) {
+                if (isset ($_POST["inventario_id"]) && is_numeric($_POST["inventario_id"]) && $_POST["inventario_id"] > 0) {
                     $inventario->inventario_id = $_POST["inventario_id"];
                 } else {
                     $inventario->inventario_id = 0;
                 }
-                if (isset($_POST["nome"]))
+                if (isset ($_POST["nome"]))
                     $inventario->nome = $_POST["nome"];
-                
-                $inventario->chave = InventarioService::generateUUIDv4();
-                if (isset($_POST["localizacao"]))
-                    $inventario->localizacao = $_POST["localizacao"];
-                if (isset($_POST["responsavel"]))
-                    $inventario->responsavel = $_POST["responsavel"];
-                if (isset($_POST["usuarios_id"]))
-                    $inventario->usuarios_id = $_POST["usuarios_id"];
 
+                $inventario->chave = InventarioService::generateUUIDv4();
+                if (isset ($_POST["localizacao"]))
+                    $inventario->localizacao = $_POST["localizacao"];
+                if (isset ($_POST["responsavel"]))
+                    $inventario->responsavel = $_POST["responsavel"];
+                if (isset ($_POST["usuarios_id"]))
+                    $inventario->usuarios_id = $_POST["usuarios_id"];
+                if (isset ($_POST["url_validacao"]))
+                    $inventario->url_validacao = $_POST["url_validacao"];
 
             }
 

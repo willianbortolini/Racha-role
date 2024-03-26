@@ -34,13 +34,13 @@ class Inventario_itemController extends Controller
         $inventario_compartilhado = [];
         if ($inventario->usuarios_id <> $_SESSION['id']) {
             $inventario_compartilhado = Inventario_compartilhadoService::inventarioUsuario($inventario->inventario_id, $_SESSION['id']);
-            $habilitado = (isset($inventario_compartilhado->habilitado) && ($inventario_compartilhado->habilitado == 1));
+            $habilitado = (isset ($inventario_compartilhado->habilitado) && ($inventario_compartilhado->habilitado == 1));
             $dados["habilitado"] = $habilitado;
             if ($habilitado == 1) {
                 $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);
             }
-        }else{
-            $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true); 
+        } else {
+            $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);
             $dados["habilitado"] = 1;
         }
         $dados["inventario"] = $inventario_id;
@@ -51,11 +51,11 @@ class Inventario_itemController extends Controller
     public function visualizar($inventario_id)
     {
         $inventario = Service::get('inventario', 'inventario_id', $inventario_id);
-        if($inventario->usuarios_id <> $_SESSION['id']){
+        if ($inventario->usuarios_id <> $_SESSION['id']) {
             $this->redirect(URL_BASE);
-        }        
+        }
         $dados["agrupado"] = 0;
-        $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);         
+        $dados["inventario_item"] = Service::get($this->tabela, 'inventario_id', $inventario_id, true);
         $dados["inventario"] = $inventario;
         $dados["view"] = "Inventario_item/Visualizar";
         $this->load("templateBootstrap", $dados);
@@ -64,11 +64,11 @@ class Inventario_itemController extends Controller
     public function visualizarAgrupado($inventario_id)
     {
         $inventario = Service::get('inventario', 'inventario_id', $inventario_id);
-        if($inventario->usuarios_id <> $_SESSION['id']){
+        if ($inventario->usuarios_id <> $_SESSION['id']) {
             $this->redirect(URL_BASE);
-        }        
+        }
         $dados["agrupado"] = 1;
-        $dados["inventario_item"] = Inventario_itemService::identiradesContadas($inventario_id);   
+        $dados["inventario_item"] = Inventario_itemService::identiradesContadas($inventario_id);
         $dados["inventario"] = $inventario;
         $dados["view"] = "Inventario_item/Visualizar";
         $this->load("templateBootstrap", $dados);
@@ -94,7 +94,7 @@ class Inventario_itemController extends Controller
             }
         }
 
-        $habilitado = (isset($inventario_compartilhado->habilitado) && ($inventario_compartilhado->habilitado == 1));
+        $habilitado = (isset ($inventario_compartilhado->habilitado) && ($inventario_compartilhado->habilitado == 1));
         $dados["habilitado"] = $habilitado;
         if ($habilitado == 1) {
             $dados["inventario_item"] = Inventario_itemService::itensInventarioUsuario($inventario->inventario_id, $_SESSION['id']);
@@ -119,6 +119,7 @@ class Inventario_itemController extends Controller
     {
         $dados["inventario"] = $inventario_id;
         $dados["identidades"] = Inventario_itemService::identiradesContadas($inventario_id);
+        $dados["ApiValidacao"] = Service::get('inventario', 'inventario_id', $inventario_id)->url_validacao;
         $dados["view"] = "Inventario_item/Coletor";
         $this->load("template", $dados);
     }
@@ -134,13 +135,13 @@ class Inventario_itemController extends Controller
     public function deleteColetor()
     {
         // Certifica-se de que a requisição é POST e o método pedido é DELETE
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['_method']) && $_POST['_method'] === 'DELETE') {
             // Verifica o token CSRF
             $csrfToken = $_POST['csrf_token'] ?? '';
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['inventario_item_id'] ?? '';
 
-                if (empty($id)) {
+                if (empty ($id)) {
                     http_response_code(400); // Bad Request
                     echo json_encode(['error' => 'O ID fornecido é inválido.']);
                     return;
@@ -170,7 +171,7 @@ class Inventario_itemController extends Controller
 
     public function delete()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['_method']) && $_POST['_method'] === 'DELETE') {
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
@@ -186,24 +187,24 @@ class Inventario_itemController extends Controller
             $inventario_item = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["inventario_item_id"]) && is_numeric($_POST["inventario_item_id"]) && $_POST["inventario_item_id"] > 0) {
+                if (isset ($_POST["inventario_item_id"]) && is_numeric($_POST["inventario_item_id"]) && $_POST["inventario_item_id"] > 0) {
                     $inventario_item->inventario_item_id = $_POST["inventario_item_id"];
                 } else {
                     $inventario_item->inventario_item_id = 0;
                 }
-                if (isset($_POST["inventario_id"]))
+                if (isset ($_POST["inventario_id"]))
                     $inventario_item->inventario_id = $_POST["inventario_id"];
-                if (isset($_POST["quantidade"]))
+                if (isset ($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
-                if (isset($_POST["ean13"]))
+                if (isset ($_POST["ean13"]))
                     $inventario_item->ean13 = $_POST["ean13"];
-                if (isset($_POST["quantidade"]))
+                if (isset ($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
-                if (isset($_POST["rua"]))
+                if (isset ($_POST["rua"]))
                     $inventario_item->rua = $_POST["rua"];
-                if (isset($_POST["coluna"]))
+                if (isset ($_POST["coluna"]))
                     $inventario_item->coluna = $_POST["coluna"];
-                if (isset($_POST["nivel"]))
+                if (isset ($_POST["nivel"]))
                     $inventario_item->nivel = $_POST["nivel"];
 
 
@@ -224,6 +225,22 @@ class Inventario_itemController extends Controller
         }
     }
 
+    public function testeValidaEan()
+    {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            if (isset ($_POST["ean13"])) {
+                /*http_response_code(400); // Código de status HTTP para "Bad Request"
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Falha ao editar o item do inventário.'
+                ]);*/
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Item inserido com sucesso.'
+                ]);
+            }
+        }
+    }
     public function saveEan()
     {
         $csrfToken = $_POST['csrf_token'];
@@ -234,19 +251,19 @@ class Inventario_itemController extends Controller
 
                 $inventario_item->inventario_item_id = 0;
 
-                if (isset($_POST["inventario_id"]))
+                if (isset ($_POST["inventario_id"]))
                     $inventario_item->inventario_id = $_POST["inventario_id"];
-                if (isset($_POST["nome"]))
+                if (isset ($_POST["nome"]))
                     $inventario_item->nome = $_POST["nome"];
-                if (isset($_POST["quantidade"]))
+                if (isset ($_POST["quantidade"]))
                     $inventario_item->quantidade = $_POST["quantidade"];
-                if (isset($_POST["ean13"]))
+                if (isset ($_POST["ean13"]))
                     $inventario_item->ean13 = $_POST["ean13"];
-                if (isset($_POST["rua"]))
+                if (isset ($_POST["rua"]))
                     $inventario_item->rua = $_POST["rua"];
-                if (isset($_POST["coluna"]))
+                if (isset ($_POST["coluna"]))
                     $inventario_item->coluna = $_POST["coluna"];
-                if (isset($_POST["nivel"]))
+                if (isset ($_POST["nivel"]))
                     $inventario_item->nivel = $_POST["nivel"];
 
             }

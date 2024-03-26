@@ -480,6 +480,7 @@
     let isScanning = false;
     id_inventario = <?php echo $inventario ?>;
     chave_csrf_token = '<?php echo $_SESSION['csrf_token']; ?>'
+    var ApiValidacao = '<?php echo $ApiValidacao ?>';
     var container = document.getElementById('most-frequent-code');
     var ultimoEnvio = { id: 0, code: '', quantity: 0 };
     var outputCodigo = document.getElementById("codigo-lido");
@@ -565,7 +566,7 @@
 
         var eanCell = document.createElement('td');
         eanCell.textContent = item.code;
-        newLine.appendChild(eanCell);        
+        newLine.appendChild(eanCell);
 
         container.appendChild(newLine);
     }
@@ -716,8 +717,8 @@
             target: document.querySelector('#barcode-scanner'),
             constraints: {
                 facingMode: "environment",
-                width: { ideal: 900 },  // Sugere a largura ideal
-                height: { ideal: 900 } // Sugere a altura ideal
+                //width: { ideal: 900 },  // Sugere a largura ideal
+                //height: { ideal: 900 } // Sugere a altura ideal
             },
         },
         decoder: {
@@ -732,6 +733,52 @@
         Quagga.start();
     });
 
+    function validaNaApi(codigo, quantidade) {
+        if (ApiValidacao != '') {
+            const formData = new URLSearchParams();
+            formData.append('inventario_id', id_inventario);
+            formData.append('ean13', codigo);
+            formData.append('quantidade', quantidade);
+            formData.append('rua', rua);
+            formData.append('coluna', coluna);
+            formData.append('nivel', nivel);
+            console.log('validando');
+            fetch(ApiValidacao, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Falha no envio');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Dados validados', data.status);
+                    if (data.status == 'success') {
+                        displayMostFrequentCode(codigo);
+                        sendData(codigo, textQuantidade.value);
+                        return true;
+                    } else {
+                        displayCodeErro(codigo);
+                        return false;
+                    }
+                })
+                .catch(error => {
+                    displayCodeErro(codigo)
+                    console.error('Erro:', error);
+                    return false;
+                });
+        } else {
+            displayMostFrequentCode(codigo);
+            sendData(codigo, textQuantidade.value);
+            return true;
+        }
+    }
+
     Quagga.onDetected(function (result) {
         var code = result.codeResult.code;
         if (isScanning) {
@@ -744,9 +791,8 @@
                     if (isValidEAN13(maisFrequente)) {
                         displayCodeErro(maisFrequente)
                     } else {
-                        displayMostFrequentCode(maisFrequente);
+                        validaNaApi(maisFrequente, textQuantidade.value);
                         beep(); // Toca um bipe   
-                        sendData(maisFrequente, textQuantidade.value);
                     }
 
                     scannedCodes = [];
@@ -827,14 +873,14 @@
 
         for (var i = 0; i < codeQuantities.length && i < 20; i++) {
             var item = codeQuantities[i];
-            var newLine = document.createElement('tr');            
+            var newLine = document.createElement('tr');
 
             var quantidadeCell = document.createElement('td');
             quantidadeCell.textContent = item.quantity;
             newLine.appendChild(quantidadeCell);
 
             var eanCell = document.createElement('td');
-            eanCell.textContent = item.code;            
+            eanCell.textContent = item.code;
             newLine.appendChild(eanCell);
 
             container.appendChild(newLine);

@@ -23,10 +23,17 @@
         value="<?php echo (isset($inventario->responsavel)) ? $inventario->responsavel : ''; ?>" required>
     </div>
 
+    <div class="form-group mb-2">
+        <label for="url_validacao">Url API de Validação de EAN13</label>
+        <input type="text" class="form-control" id="url_validacao" name="url_validacao"
+        value="<?php echo (isset($inventario->url_validacao)) ? $inventario->url_validacao : ''; ?>" required>
+    </div>
+
 
     <input type="hidden" class="form-control" id="usuarios_id" name="usuarios_id"
         value="<?php echo (isset($inventario->usuarios_id)) ? $inventario->usuarios_id : $_SESSION['id']; ?>" required>        
     <input type="hidden" name="inventario_id" value="<?php echo (isset($inventario->inventario_id)) ? $inventario->inventario_id : NULL; ?>">
+    
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
     <div class="row">
