@@ -4,15 +4,15 @@ define('DOCKER_CONTAINER', false);
 
 if (strpos($_SERVER["HTTP_HOST"], "localhost") !== false) {
     define("SERVIDOR", "localhost");
-    define("BANCO", "testew9b2");
+    define("BANCO", "invtrac");
     define("USUARIO", "root");
     define("SENHA", "");
     define("CHARSET", "UTF8");
     define("DESENV", "true");
 } else {
     define("SERVIDOR", "localhost");
-    define("BANCO", "u296776918_w9b2");
-    define("USUARIO", "u296776918_willian");
+    define("BANCO", "u296776918_invtrackDB");
+    define("USUARIO", "u296776918_userInvtrack");
     define("SENHA", "buenosnachos");
     define("CHARSET", "UTF8");
     define("DESENV", "false");
