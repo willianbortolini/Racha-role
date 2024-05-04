@@ -1,4 +1,3 @@
-
 <?php
 
 use app\core\Excecao;
@@ -14,7 +13,7 @@ require_once 'config/config.php';
 require_once 'vendor/autoload.php';
 date_default_timezone_set(TIMEZONE);
 
-  
+
 try{
     $core = new Core;
     $core->run();

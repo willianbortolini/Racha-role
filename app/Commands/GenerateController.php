@@ -34,7 +34,8 @@ class GenerateController
         foreach ($fields as $input) {
             $fieldName = $input['name']; 
             $inputType = $input['type']; 
-            $labelText = $input['label'];      
+            $labelText = $input['label'];            
+            
             if ($inputType == 'img'){
                 $temImg = true;
 

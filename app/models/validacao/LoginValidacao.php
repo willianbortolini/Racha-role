@@ -9,12 +9,12 @@ class LoginValidacao{
         
         $validacao->setData("login", $login->login);
         $validacao->setData("senha", $login->senha);
-        //$validacao->setData("recaptcha", $login->recaptcha);
+        $validacao->setData("recaptcha", $login->recaptcha);
 
         //fazendo a validação
         $validacao->getData("login")->isVazio();
         $validacao->getData("senha")->isVazio();
-        //$validacao->getData("recaptcha")->Captcha($login->recaptcha);        
+        $validacao->getData("recaptcha")->Captcha($login->recaptcha);        
         return $validacao;
         
     }
@@ -27,18 +27,6 @@ class LoginValidacao{
 
         //fazendo a validação
         $validacao->getData("login")->isVazio();
-        $validacao->getData("senha")->isVazio();       
-        return $validacao;
-        
-    }
-
-    public static function login($login){
-        $validacao = new Validacao();        
-        $validacao->setData("email", $login->email);
-        $validacao->setData("senha", $login->senha);
-
-        //fazendo a validação
-        $validacao->getData("email")->isVazio();
         $validacao->getData("senha")->isVazio();       
         return $validacao;
         

@@ -15,14 +15,10 @@ class {{ModelName}}Controller extends Controller
     private $usuario;
 
     //verifica se tem usuario logado(somente para telas que exigem)
-    /*public function __construct()
+    public function __construct()
     {
-        $this->usuario = UtilService::getUsuario();
-        if (!$this->usuario) {
-            $this->redirect(URL_BASE  . "login");
-            exit;
-        }
-    }*/
+        UtilService::validaUsuario();
+    }
 
     public function index()
     {

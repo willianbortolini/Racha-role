@@ -16,8 +16,8 @@ class Validacao{
     const ERRO_CPF    = 7;
     const ERRO_CNPJ   = 8;
     const ERRO_UNICO  = 9;
-    const ERRO_CAPTCHA= 10;  
-    const ERRO_SENHA  = 11;     
+    const ERRO_CAPTCHA= 10;     
+    const ERRO_SENHA  = 11;  
     
     
     public function __construct(){
@@ -26,11 +26,11 @@ class Validacao{
         $this->erros = array();
     }
     
-    public function setData($chave, $valor){
+    public function setData($chave, $valor, $apelido = ''){
         $this->atributos[$chave] = $valor;
-        $this->itens[$chave] = new ValidacaoItem($valor, $chave);
+        $this->itens[$chave] = new ValidacaoItem($valor, $chave, $apelido);
     }
-    
+   
     public function getData($chave){
         if(isset($this->itens[$chave])){
             return $this->itens[$chave];

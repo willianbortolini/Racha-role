@@ -7,70 +7,83 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <title>InvTrack
-    <?php //echo $titulo 
+  <title>
+    <?php
+    if (isset($titulo)) {
+      echo $titulo;
+    } else {
+      $url = explode("index.php", $_SERVER["PHP_SELF"]);
+      $url = end($url);
+      if ($url != "") {
+        $url = explode('/', $url);
+        array_shift($url);
+        echo str_replace("_", " ", $url[0]);
+      } else {
+        echo 'W9b2';
+      }
+    }
     ?>
   </title>
-  <link rel="manifest" type="text/css" href="<?php echo URL_BASE  . "manifest.json" ?>">
+  <link rel="manifest" type="text/css" href="<?php echo URL_BASE . "manifest.json" ?>">
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('<?php echo URL_BASE  . "service-worker.js" ?>')
-        .then(function(registration) {
+      navigator.serviceWorker.register('<?php echo URL_BASE . "service-worker.js" ?>')
+        .then(function (registration) {
           //console.log('Service Worker registrado com sucesso:', registration);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log('Falha ao registrar o Service Worker:', error);
         });
     }
-    const URL_BASE = "<?php echo URL_BASE?>";
+    const URL_BASE = "<?php echo URL_BASE ?>";
+    const URL_IMAGEM = "<?php echo URL_IMAGEM ?>";
     const csrfToken = <?php echo json_encode($_SESSION['csrf_token']); ?>;
     var controller;
     var caminhoRetornoDelete;
   </script>
 
-    <script src="<?php echo URL_BASE  . "assets/js/jquery-3.7.0.js" ?>"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link href="<?php echo URL_BASE  . "assets/css2/bootstrap.min.css" ?>" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE  . "assets/css2/jquery.dataTables.min.css" ?>">
-    
-    <script type="text/javascript" src="<?php echo URL_BASE  . "assets/js/jquery.dataTables.min.js" ?>"></script>
-    
+  <script src="<?php echo URL_BASE . "assets/js/jquery-3.7.0.js" ?>"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link href="<?php echo URL_BASE . "assets/css2/bootstrap.min.css" ?>" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE . "assets/css2/jquery.dataTables.min.css" ?>">
+  <script type="text/javascript" src="<?php echo URL_BASE . "assets/js/jquery.dataTables.min.js" ?>"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-
-
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+  <script type="text/javascript"
+    src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 </head>
 
 <body>
+  <div class="container-fluid">
+    <div class="row flex-nowrap">
+      <?php include "sidebar.php" ?>
+      <main class="col ps-md-2 pt-2">
 
-  <div class="d-flex flex-column min-vh-100 ">
+        <div class="d-flex flex-column min-vh-100">
 
 
-    <?php include "header.php" ?>
-   
-    <div class="container">
-    <div class="rectangle-6"></div>
-      <?php $this->load($view, $viewData) ?>
+          <?php include "header.php" ?>
+
+          <div class="container">
+            <?php $this->load($view, $viewData) ?>
+          </div>
+
+          <?php include "rodape.php" ?>
+        </div>
+
     </div>
+    <script src="<?php echo URL_BASE . "assets/js/bootstrap.bundle.min.js" ?>"></script>
+    <script src="<?php echo URL_BASE . "assets/js/popper.min.js" ?>"></script>
+    <script src="<?php echo URL_BASE . "assets/js/bootstrap.min.js" ?>"></script>
 
-    <?php include "rodape.php" ?>
+    <script src="<?php echo URL_BASE . "assets/js/jsBase2.js" ?>"></script>
   </div>
 
-  </div>
-  <?php if (DOCKER_CONTAINER == TRUE) { ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <?php } else { ?>
-    <script src="<?php echo URL_BASE  . "assets/js/bootstrap.bundle.min.js" ?>" ></script>
-    <script src="<?php echo URL_BASE  . "assets/js/popper.min.js" ?>"></script>
-    <script src="<?php echo URL_BASE  . "assets/js/bootstrap.min.js" ?>"></script>
-  <?php } ?> 
-  
-  <script src="<?php echo URL_BASE  . "assets/js/jsBase.js" ?>"></script>
 </body>
 
 

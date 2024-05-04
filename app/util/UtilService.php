@@ -88,7 +88,19 @@ class UtilService
 
     public static function validaNivel($nivel)
     {
-        if ((isset($_SESSION['nivel'])) && ($_SESSION['nivel'] >= $nivel)) {
+        if(($nivel == CLIENTE) && (isset($_SESSION['he_cliente']))){
+            return true;
+        }else if(($nivel == COLABORADOR) && (isset($_SESSION['he_colaborador']))){
+            return true;
+        }else if(($nivel == FORNECEDOR) && (isset($_SESSION['he_fornecedor']))){
+            return true;
+        }else if(($nivel == REPRESENTANTE) && (isset($_SESSION['he_representante']))){
+            return true;
+        }else if(($nivel == GERENTE) && (isset($_SESSION['he_gerente']))){
+            return true;
+        }else if(($nivel == ADIMINISTRADOR) && (isset($_SESSION['he_administrador']))){
+            return true;
+        }else if(($nivel == FINANCEIRO) && (isset($_SESSION['he_master']))){
             return true;
         } else {
             throw new Exception("Não autorizado", 401);           

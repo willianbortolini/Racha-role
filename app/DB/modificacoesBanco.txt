@@ -1,0 +1,2 @@
+cria fi_faturas  E vw_fi_faturas
+e evento de criar fatura mensal
