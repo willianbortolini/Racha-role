@@ -13,7 +13,7 @@ if (strpos($_SERVER["HTTP_HOST"], "localhost") !== false) {
     define("SERVIDOR", "localhost");
     define("BANCO", "u296776918_invtrackDB");
     define("USUARIO", "u296776918_userInvtrack");
-    define("SENHA", "buenosnachos");
+    define("SENHA", "Previsivel123");
     define("CHARSET", "UTF8");
     define("DESENV", "false");
 }
