@@ -188,13 +188,13 @@
                 <label for="he_cliente">Cliente</label>
             </div>
 
-            <div class="form-group mb-2 col-12 col-md-2 ">
+            <div class="form-group mb-2 col-12 col-md-2 d-none">
                 <input type="hidden" name="he_colaborador" value="off">
                 <input type="checkbox" class="form-check-input" id="he_colaborador" value="on" <?php echo (isset($usuarios->he_colaborador) && $usuarios->he_colaborador == 1) ? 'checked' : ''; ?>
                     name="he_colaborador">
                 <label for="he_colaborador">Colaborador</label>
             </div>
-            <div class="form-group mb-2 col-12 col-md-2 ">
+            <div class="form-group mb-2 col-12 col-md-2 d-none">
                 <input type="hidden" name="he_fornecedor" value="off">
                 <input type="checkbox" class="form-check-input" id="he_fornecedor" value="on" <?php echo (isset($usuarios->he_fornecedor) && $usuarios->he_fornecedor == 1) ? 'checked' : ''; ?>
                     name="he_fornecedor">
@@ -206,7 +206,7 @@
                     name="he_representante">
                 <label for="he_representante">Representante</label>
             </div>
-            <div class="form-group mb-2 col-12 col-md-2 ">
+            <div class="form-group mb-2 col-12 col-md-2 d-none">
                 <input type="hidden" name="he_gerente" value="off">
                 <input type="checkbox" class="form-check-input" id="he_gerente" value="on" <?php echo (isset($usuarios->he_gerente) && $usuarios->he_gerente == 1) ? 'checked' : ''; ?> name="he_gerente">
                 <label for="he_gerente">Gerente</label>
