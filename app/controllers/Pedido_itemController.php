@@ -145,7 +145,7 @@ class Pedido_itemController extends Controller
                 }
 
                 if ($pedido_item->pedido_item_valor_total > 0) {
-                    if (number_format((($pedido_item->pedido_item_valor_unitario + $pedido_item->pedido_item_valor_opcionais) * $pedido_item->pedido_item_quantidade), 2, '.', '') != $pedido_item->pedido_item_valor_total) {
+                    if (number_format((($tabelaDoProduto->preco_medio + $pedido_item->pedido_item_valor_unitario + $pedido_item->pedido_item_valor_opcionais) * $pedido_item->pedido_item_quantidade), 2, '.', '') != $pedido_item->pedido_item_valor_total) {
                         Flash::setMsg("Erro ao calcular o valor total, caso o problema persistir contate o suporte.", -1);
                         $this->redirect(URL_BASE . "Pedido_item/edit/" . $pedido_item->pedido_item_id);
                     }

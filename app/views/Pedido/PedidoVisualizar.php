@@ -47,8 +47,6 @@
                 <tr>
                     <th>Produto</th>
                     <th>Descrição</th>
-                    <th>Largura</th>
-                    <th>Altura</th>
                     <th class="colunaLimitada">Composição</th>
                     <th>Quantidade</th>
                     <th>Valor Venda</th>
@@ -64,13 +62,6 @@
                             <?php echo $item->pedido_item_descricao; ?>
                         </td>
                         <td>
-                            <?php echo $item->pedido_item_largura; ?>
-                        </td>
-                        <td>
-                            <?php echo $item->pedido_item_altura; ?>
-                        </td>
-                        <td>
-
                             <pre><?php echo $item->pedido_item_composicao_descricao; ?></pre>
 
                         </td>

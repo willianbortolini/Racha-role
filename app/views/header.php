@@ -1,4 +1,4 @@
-<header class="p-2 border-bottom" style="background-color: #e6e6e6;">
+<header class="p-2 border-bottom">
   <div class="container">
     <div class="row">
       <?php if (isset($_SESSION['he_administrador'])) { ?>
@@ -16,7 +16,7 @@
           </a>
         <?php } else { ?>
           <a href="<?php echo URL_BASE ?>">
-            <img src="<?php echo URL_BASE . "assets/img/logo_indaflex.png" ?>">
+            <img height="80px" src="<?php echo URL_BASE . "assets/img/logoGessos.png" ?>">
           </a>
         <?php } ?>
       </div>

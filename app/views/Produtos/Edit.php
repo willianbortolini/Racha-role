@@ -41,9 +41,9 @@
     <div class="row">
         <div class="form-group mb-2 col-12 col-md-2">
             <input type="checkbox" class="form-check-input" id="he_produto_final" name="he_produto_final" <?php echo (isset($produtos->he_produto_final) && $produtos->he_produto_final == 1) ? 'checked' : ''; ?>>
-            <label for="he_produto_final">Produto final</label>
+            <label for="he_produto_final">Permite selecionar</label>
         </div>
-        <div class="form-group mb-2 col-12 col-md-2">
+        <div class="form-group mb-2 col-12 col-md-2 d-none">
             <input type="checkbox" class="form-check-input" id="he_produto_insumo" name="he_produto_insumo" <?php echo (isset($produtos->he_produto_insumo) && $produtos->he_produto_insumo == 1) ? 'checked' : ''; ?>>
             <label for="he_produto_insumo">Insumo</label>
         </div>
@@ -55,19 +55,19 @@
                     value="<?php echo (isset($produtos->produtos_descricao)) ? $produtos->produtos_descricao : ''; ?>">
             </div>
 
-            <div class="form-group mb-2 col-12 col-md-3">
+            <div class="form-group mb-2 col-12 col-md-3 d-none">
                 <label for="descricao_os">Descrição que vai aparecer na OP</label>
                 <input type="text" class="form-control" id="descricao_os" name="descricao_os"
                     value="<?php echo (isset($produtos->descricao_os)) ? $produtos->descricao_os : ''; ?>">
             </div>
 
-            <div class="form-group mb-2 col-md-1 col-12">
+            <div class="form-group mb-2 col-md-2 col-12 ">
                 <label for="preco_medio">Preço</label>
-                <input type="number" class="form-control" id="preco_medio" name="preco_medio" step="0.00"
+                <input type="number" class="form-control" id="preco_medio" name="preco_medio" step="0.01"
                     value="<?php echo (isset($produtos->preco_medio)) ? $produtos->preco_medio : ''; ?>">
             </div>
         </div>
-        <div class="form-group mb-2 col-12 col-md-4">
+        <div class="form-group mb-2 col-12 col-md-4 d-none">
             <label for="tabela_preco_id">Tabela de preços</label>
             <select class="form-select" aria-label="Default select example" name="tabela_preco_id" id="tabela_preco_id">
                 <option value="0">não usa tabela de preço</option>
@@ -77,7 +77,7 @@
             </select>
         </div>
         <?php if (isset($produtos->produtos_id)) { ?>
-            <div class="row  mb-4 mt-4">
+            <div class="row  mb-4 mt-4 d-none">
                 <?php $nomePropriedade = "imagem_produto"; ?>
                 <div class=" col-md-3 col-12">
                     <label for="<?= $nomePropriedade ?>">Imagem do produto para orçamento
@@ -129,7 +129,7 @@
                     <a href="<?php echo URL_BASE . "Composicao/show/" . $produtos->produtos_id ?>"
                         class="btn btn-secondary  ">Composição do produto</a>
                 </div>
-                <div class="col-auto">
+                <div class="col-auto d-none">
                     <a href="<?php echo URL_BASE . "Composicao/showMapa/" . $produtos->produtos_id ?>"
                         class="btn btn-secondary  ">Mapa do produto</a>
                 </div>

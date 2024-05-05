@@ -104,12 +104,12 @@
 
     th {
         text-align: center;
-        background-color: #f29219 !important;
+        background-color: #d0d0d0 !important;
     }
 
     td {
         text-align: center;
-        padding: 18px !important;
+        padding: 10px !important;
         font-weight: 600 !important;
     }
 
@@ -125,6 +125,10 @@
         left: 10px;
         z-index: 1000;
         /* Garante que a div fique acima de outros elementos da página */
+    }
+
+    .table {
+        border-color: #8f8f8f !important;
     }
 </style>
 <div class="folha">
@@ -154,14 +158,19 @@
 
     <?php if (count($pedido_item) > 0) { ?>
         <div class="folha">
+        <table id="tabela" class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td>Orçamento <?php echo $pedidos->pedidos_id?></td>
+                    <td>Emitido em: <?php echo databr($pedidos->pedido_dataCriacao)?></td>
+                    <td>Válido até: <?php echo databr(date('Y-m-d', strtotime($pedidos->pedido_dataCriacao . ' +7 days'))); ?></td>
+                </tr>
+            </tbody>
             <table id="tabela" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>AMBIENTE</th>
-                        <th>MODELO</th>
-                        <th>LARGURA</th>
-                        <th>X</th>
-                        <th>ALTUDA</th>
+                        <th>SERVIÇO</th>
+                        <th>DESCRIÇÃO</th>
                         <th>QUANTIDADE</th>
                         <th>INVESTIMENTO</th>
                     </tr>
@@ -169,20 +178,11 @@
                 <tbody>
                     <?php foreach ($pedido_item as $item) { ?>
                         <tr>
-                            <td class="primeira_coluna">
-                                <?php echo mb_strtoupper($item->pedido_item_descricao, 'UTF-8'); ?>
-                            </td>
                             <td>
                                 <?php echo mb_strtoupper($item->produtos_nome, 'UTF-8') ?>
                             </td>
                             <td>
-                                <?php echo $item->pedido_item_largura; ?>
-                            </td>
-                            <td>
-                                X
-                            </td>
-                            <td>
-                                <?php echo $item->pedido_item_altura; ?>
+                                <?php echo mb_strtoupper($item->pedido_item_descricao, 'UTF-8'); ?>
                             </td>
                             <td>
                                 <?php echo $item->pedido_item_quantidade; ?>
@@ -193,21 +193,16 @@
                         </tr>
                     <?php } ?>
                     <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                        </td>
                         <td class="primeira_coluna">
                             TOTAL
                         </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                            <?php echo  moedaBr($pedidos->total_valor_venda); ?>
+                        <td class="primeira_coluna">
+                            <?php echo moedaBr($pedidos->total_valor_venda); ?>
                         </td>
                     </tr>
 

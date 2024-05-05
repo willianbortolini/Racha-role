@@ -156,7 +156,7 @@ class ProdutosController extends Controller
                 if (isset($_POST["descricao_os"]))
                     $produtos->descricao_os = $_POST["descricao_os"];
                 if (isset($_POST["preco_medio"]))
-                    $produtos->descricao_os = $_POST["preco_medio"];
+                    $produtos->preco_medio = $_POST["preco_medio"];
 
                 $produtos->he_produto_final = (isset($_POST["he_produto_final"])) ? 1 : 0;
                 $produtos->he_produto_insumo = (isset($_POST["he_produto_insumo"])) ? 1 : 0;

@@ -153,9 +153,7 @@
                     <thead>
                         <tr>
                             <th>Produto</th>
-                            <th>Ambiente</th>
-                            <th>Largura</th>
-                            <th>Altura</th>
+                            <th>Descrição</th>
                             <th>Composição</th>
                             <th>Qtd.</th>
                             <?php if (isset($_SESSION['he_administrador'])) { ?>
@@ -174,12 +172,6 @@
                                 </td>
                                 <td>
                                     <?php echo $item->pedido_item_descricao; ?>
-                                </td>
-                                <td>
-                                    <?php echo $item->pedido_item_largura; ?>
-                                </td>
-                                <td>
-                                    <?php echo $item->pedido_item_altura; ?>
                                 </td>
                                 <td>
                                     <button onclick="trocaTextoDoModal(event)" type="button" class="btn btn-info btn-sm mt-2 "
@@ -223,11 +215,7 @@
                         <td>
                         </td>
                         <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
+                        </td>                        
                         <td>
                         </td>
                         <?php if (isset($_SESSION['he_administrador'])) { ?>

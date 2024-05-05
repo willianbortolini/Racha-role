@@ -93,7 +93,7 @@
         <div class="form-group col-md-10 col-12" id="colunaSelects">
             <div class="row">
                 <div class="form-group mb-2 col-md-10  col-12">
-                    <label for="pedido_item_largura">Ambiente</label>
+                    <label for="pedido_item_largura">Descrição</label>
                     <input type="text" class="form-control" id="pedido_item_descricao" name="pedido_item_descricao"
                         value="<?php echo (isset($pedido_item->pedido_item_descricao)) ? $pedido_item->pedido_item_descricao : ''; ?>">
                 </div>
@@ -113,7 +113,7 @@
                     <label for="produtos_id">Produto</label>
                     <select class="form-select" aria-label="Default select example" name="produtos_id" id="produtos_id">
                         <?php foreach ($produtos as $item) {
-                            echo "<option usaTabelaPreco= '$item->produtos_usaTabelaPreco' value='$item->produtos_id'" . ($item->produtos_id == $pedido_item->produtos_id ? "selected" : "") . ">$item->produtos_nome</option>";
+                            echo "<option preco='$item->preco_medio' usaTabelaPreco= '$item->produtos_usaTabelaPreco' value='$item->produtos_id'" . ($item->produtos_id == $pedido_item->produtos_id ? "selected" : "") . ">$item->produtos_nome</option>";
                         } ?>
                     </select>
                 </div>
@@ -198,11 +198,12 @@
 
     </div>
 </form>
-
+<div class="d-none">
 <h3 class="mt-3">Fotos do ambiente</h3>
 <div class="col-auto mt-2 mb-4">
     <a href="<?php echo URL_BASE . "foto_item_pedido/create/" . $pedido_item->pedido_item_id ?> "
         class="btn btn-primary">Adicionar foto</a>
+</div>
 </div>
 <div class="row">
     <?php foreach ($foto_item_pedido as $item) { ?>

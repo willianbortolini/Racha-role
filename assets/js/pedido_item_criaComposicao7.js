@@ -563,6 +563,7 @@ function processarInputs() {
     });
     dadosJson = JSON.stringify(dadosParaEnviar);
     input_valor_unitario.value = valorUnitarioCalculado.toFixed(2)
-    input_valor_total.value = (((parseFloat(input_valor_unitario_tabela.value) + parseFloat(valorUnitarioCalculado)).toFixed(2)) * parseFloat(quantidadeInput.value).toFixed(2)).toFixed(2)
+    input_valor_total.value = (((parseFloat(preco_medio) + parseFloat(input_valor_unitario_tabela.value) + parseFloat(valorUnitarioCalculado)).toFixed(2)) * parseFloat(quantidadeInput.value).toFixed(2)).toFixed(2);
+    console.log((((parseFloat(preco_medio) + parseFloat(input_valor_unitario_tabela.value) + parseFloat(valorUnitarioCalculado)).toFixed(2)) * parseFloat(quantidadeInput.value).toFixed(2)).toFixed(2))
     input_pedido_item_valor_venda.value = parseFloat(input_pedido_item_markup.value * input_valor_total.value).toFixed(2);
 }

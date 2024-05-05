@@ -60,9 +60,11 @@ function carregaTabelaPreco() {
         });
 }
 
+var preco_medio = 0;
 function mudaSelectProduto() {
     selectedOption = selectProduto.options[selectProduto.selectedIndex];
     usaTabelaPreco = selectedOption.getAttribute("usaTabelaPreco");
+    preco_medio = selectedOption.getAttribute("preco");
     validaUsaTabela(usaTabelaPreco)
     pegaComposicao()
 }

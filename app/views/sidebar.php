@@ -131,14 +131,14 @@
                         <?php if (in_array(TELA_PRODUTOS, $_SESSION['acessos'])) { ?>
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#produto-collapse" aria-expanded="false">
-                                <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Produtos </span><i
+                                <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Serviços </span><i
                                     class="bi bi-chevron-down"></i>
                             </button>
                             <div class="collapse" id="produto-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                     <?php if (in_array(TELA_PRODUTOS_PRODUTOS, $_SESSION['acessos'])) { ?>
                                         <li><a href="<?php echo URL_BASE . "Produtos" ?>"
-                                                class="nav-link link-dark text-truncate text"><strong>Produtos</strong></a>
+                                                class="nav-link link-dark text-truncate text"><strong>Serviços</strong></a>
                                         </li>
                                     <?php } ?>
                                     <?php if (in_array(TELA_PRODUTOS_INSUMOS, $_SESSION['acessos'])) { ?>

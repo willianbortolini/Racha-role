@@ -1,8 +1,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="mt-1">Produtos</h1>
-            <a href="<?php echo URL_BASE . "Produtos/create" ?>" class="btn btn-primary mb-3">Adicionar Produtos</a>
+            <h1 class="mt-1">Serviço</h1>
+            <a href="<?php echo URL_BASE . "Produtos/create" ?>" class="btn btn-primary mb-3">Adicionar Serviço</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>

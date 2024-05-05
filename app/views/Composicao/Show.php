@@ -41,12 +41,12 @@
             <?php if (isset($produto->produtos_id)) { ?>
                 <a href="<?php echo URL_BASE . "Composicao/create/" . ((isset($produto->produtos_id)) ? $produto->produtos_id : '-1') . "/" . ((isset($produto->produtos_nome)) ? '0' : '-1') ?>"
                     class="btn btn-secondary  btn-sm m-2">
-                    <?php echo ((isset($produto->produtos_id) and ($produto->produtos_id > 0)) ? 'Criar composição filha do produto principal' : 'Criar composição padrão') ?>
+                    <?php echo ((isset($produto->produtos_id) and ($produto->produtos_id > 0)) ? 'Criar composição filha do serviço principal' : 'Criar composição padrão') ?>
                 </a>
             <?php } ?>
             <?php if (isset($produto->produtos_id)) { ?>
                 <a href="<?php echo URL_BASE . "produtos/edit/" . $produto->produtos_id ?>"
-                    class="btn btn-primary btn-sm">Voltar para produto</a>
+                    class="btn btn-primary btn-sm">Voltar para serviço</a>
             <?php } else { ?>
                 <a href="<?php echo URL_BASE . "Composicao/padrao" ?>" class="btn btn-primary btn-sm">Voltar para
                     composições padão</a>
@@ -54,7 +54,7 @@
             <div class="row">
                 <?php if (isset($produto->produtos_id)) { ?>
                     <h3>Composição</h3>
-                    <p>É assim que a composição vai aparecer na tela de seleção de produto.</p>
+                    <p>É assim que a composição vai aparecer na tela de seleção de serviços.</p>
                     <div class="col-8">
                         <div class="row" id="itens"></div>
                     </div>
@@ -108,7 +108,6 @@
                                     a = altura <br>
                                     q = quantidade <br>
                                     v = valor <br>
-                                    t = valor de tabela do produto <br>
                                 </div>
                                 <input type="hidden" name="composicao_pai_id" id="composicao_pai_id" value="">
                                 <input type="hidden" name="produtos_id" id="produtos_id" value="">
