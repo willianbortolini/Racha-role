@@ -15,7 +15,7 @@
 
 <body>
 
-  <div class="d-flex flex-column min-vh-100 ">
+  <div class="d-flex min-vh-100 ">
     
     <main class="flex-grow-1">
     <div class="mt-2 mr-2">

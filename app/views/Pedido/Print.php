@@ -77,7 +77,7 @@
     }
 
     .folha {
-        width: 100%;
+        width: 900px;
         margin: auto;
     }
 
@@ -86,7 +86,7 @@
     }
 
     .imagem {
-        width: 100%;
+        width: 900px;
     }
 
     .conta {
@@ -130,6 +130,23 @@
     .table {
         border-color: #8f8f8f !important;
     }
+
+    /* Estilos específicos para dispositivos móveis */
+    @media screen and (max-width: 768px) {
+        .folha {
+            width: 100%;
+            /* Largura total para dispositivos móveis */
+        }
+
+        .imagem {
+            width: 100%;
+            /* Largura total para dispositivos móveis */
+        }
+
+        .folha {
+            font-size: 9pt;
+        }
+    }
 </style>
 <div class="folha">
     <div class='conta'>
@@ -164,7 +181,8 @@
                         <td>Orçamento <?php echo $pedidos->pedidos_id ?></td>
                         <td>Emitido em: <?php echo databr($pedidos->pedido_dataCriacao) ?></td>
                         <td>Válido até:
-                            <?php echo databr(date('Y-m-d', strtotime($pedidos->pedido_dataCriacao . ' +7 days'))); ?></td>
+                            <?php echo databr(date('Y-m-d', strtotime($pedidos->pedido_dataCriacao . ' +7 days'))); ?>
+                        </td>
                     </tr>
                 </tbody>
                 <table id="tabela" class="table table-bordered">
