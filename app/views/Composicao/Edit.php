@@ -33,16 +33,17 @@
         <select class="form-select" aria-label="Default select example" name="composicao_tipo_id" required>
 
             <?php
-            if ($composicao_pai->composicao_tipo_id == 3) {
+            /*if ($composicao_pai->composicao_tipo_id == 3) {
                 echo "<option value='4' selected>Opção selecionar</option>";
-            } else {
+            } else {*/
                 echo "<option value='0'></option>";
                 foreach ($composicao_tipo as $item) {
-                    if ($item->composicao_tipo_id != 4) {
+                    //if ($item->composicao_tipo_id != 4) {
                         echo "<option value='$item->composicao_tipo_id'" . ($item->composicao_tipo_id == $composicao->composicao_tipo_id ? "selected" : "") . ">$item->composicao_tipo_nome</option>";
-                    }
+                    //}
                 }
-            } ?>
+            //} 
+            ?>
         </select>
     </div>
 

@@ -138,6 +138,7 @@ class ComposicaoController extends Controller
         $dados["insumos"] = Service::get('produtos', 'he_produto_insumo', '1', true);
         $dados["composicao_referencia"] = $composicao_referencia;
         $dados["posicoes_op"] = Service::lista('posicao_op');
+       
         $dados["view"] = "Composicao/Edit";
         $this->load("templateBootstrap", $dados);
     }
