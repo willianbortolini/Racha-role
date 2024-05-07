@@ -68,7 +68,7 @@
         v = valor <br>
         t = valor de tabela do produto <br>
     </div>
-    <div class="card col-12 col-md-6 mb-2">
+    <div class="card col-12 col-md-6 mb-2 d-none">
         <div class="card-body">
             <h5>Informações para ordem de produção</h5>
             <div class="form-group mb-2 col-12 ">
@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <div class="card col-12 col-md-6 mb-2">
+    <div class="card col-12 col-md-6 mb-2 d-none">
         <div class="card-body">
             <h5>Consumo de insumo</h5>
             <div class="form-group mb-2 col-12 ">
