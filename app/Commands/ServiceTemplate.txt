@@ -8,16 +8,19 @@ use app\util\UtilService;
 
 class {{ModelName}}Service
 {
-    public static function salvar(${{modelName}}, $campo, $tabela)
+    const TABELA = "{{tableName}}"; 
+    const CAMPO = "{{tableName}}_id";     
+
+    public static function salvar(${{modelName}})
     {
         $validacao = {{ModelName}}Validacao::salvar(${{modelName}});
-{{salvaImagemService}}
-        return Service::salvar(${{modelName}}, $campo, $validacao->listaErros(), $tabela);
+        {{salvaImagemService}}
+        return Service::salvar(${{modelName}}, self::CAMPO, $validacao->listaErros(), self::TABELA);
 
     }  
 
-    public static function excluir($tabela, $campo, $id)
+    public static function excluir($id)
     {
-        Service::excluir($tabela, $campo, $id);
+        Service::excluir(self::TABELA, self::CAMPO, $id);
     }
 }

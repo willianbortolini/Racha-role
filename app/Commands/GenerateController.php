@@ -8,13 +8,172 @@ class GenerateController
 {
     public function __construct()
     {
-
     }
 
-    public function generate($name, $modelName, $tableName, $fields)
+
+    function generateMigration($tableName, $fields)
     {
+        $sql = "CREATE TABLE $tableName (\n";
+
+        $fieldDefinitions = [];
+        $joins = [];
+        $selectFields = ["t.*"];
+        foreach ($fields as $field) {
+            if ($field['type'] == 'img') {
+                $fieldSql = "    {$field['name']} VARCHAR(255) {$field['attributes']}";
+            } else if ($field['type'] == 'enum') {
+                $values = "'" . implode("', '", $field['values']) . "'";
+                $fieldSql = "    {$field['name']} ENUM($values) {$field['attributes']}";
+            } else {
+                $fieldSql = "    {$field['name']} {$field['type']} {$field['attributes']}";
+            }
+            $fieldDefinitions[] = $fieldSql;
+        }
+
+        $sql .= implode(",\n", $fieldDefinitions);
+
+        // Adiciona chaves estrangeiras no final da criação da tabela
+        foreach ($fields as $field) {
+            if (isset($field['foreign'])) {
+                $sql .= ",\n    FOREIGN KEY ({$field['name']}) REFERENCES {$field['foreign']['table']}({$field['foreign']['field']})";
+                $joins[] = "JOIN {$field['foreign']['table']} f_{$field['name']} ON t.{$field['name']} = f_{$field['name']}.{$field['foreign']['field']}";
+                $selectFields[] = "f_{$field['name']}.{$field['foreign']['nome']} AS {$field['foreign']['table']}_nome";
+            }
+        }
+
+        $sql .= "\n);";
+
+        file_put_contents(__DIR__ . '/../migrations/' . date('Y_m_d_His') . "_create_{$tableName}_table.sql", $sql);
+
+        // Adicionar a criação de uma VIEW que traz os valores da tabela estrangeira
+        $viewSql = "CREATE VIEW vw_{$tableName} AS\n";
+        $viewSql .= "SELECT " . implode(", ", $selectFields) . "\n";
+        $viewSql .= "FROM $tableName t\n";
+        if (!empty($joins)) {
+            $viewSql .= implode("\n", $joins) . "\n";
+        }
+
+        file_put_contents(__DIR__ . '/../migrations/' . date('Y_m_d_His') . "_create_vw_{$tableName}_view.sql", $viewSql);
+    }
+
+    public function generateControler($modelName, $tableName, $fields)
+    {
+        $this->generateMigration($tableName, $fields);
         $modelName = lcfirst($modelName);
         $ModelName = ucfirst($modelName);
+
+        // Loop para gerar os inputs HTML dinamicamente e substituir os marcadores no template
+        $fieldDoController = '';
+        $excluiImagem = '';
+        $fieldCreate = '';
+        $chavesEstrangeiras = [];
+        foreach ($fields as $input) {
+            $fieldName = $input['name'];
+            $inputType = $input['type'];
+
+            if ($inputType == 'img') {
+                //exclui imagem controller
+                $excluiImagem .= "                \$existe_imagem = service::get(\$this->tabela, \$this->campo, \$id);\n";
+                $excluiImagem .= "                if (isset(\$existe_imagem->$fieldName) && \$existe_imagem->$fieldName != '') {\n";
+                $excluiImagem .= "                    UtilService::deletarImagens(\$existe_imagem->$fieldName);\n";
+                $excluiImagem .= "                }\n";
+            } else {
+                if (($input['name'] != 'created_at') and ($input['name'] != 'updated_at') and ($input['name'] != $tableName . '_id')) {
+                    $fieldDoController .= "                if (isset(\$_POST[\"$fieldName\"]))\n";
+                    $fieldDoController .= "                   \${{modelName}}->{$fieldName} = \$_POST[\"$fieldName\"];\n";
+                }
+            }
+
+            //adiciona os fields do enum para o create e edit
+            if ($inputType == 'enum') {
+                $fieldCreate .= '        $dados["' . $fieldName . '"] = service::getEnumValues($this->tabela, "' . $fieldName . '");' . "\n";
+            }
+
+            // Adiciona chaves estrangeiras no create e edit
+            if (isset($input['foreign'])) {
+                if (!in_array($input['foreign']['table'], $chavesEstrangeiras)) {
+                    $fieldCreate .= '        $dados["' . $input['foreign']['table'] . '"] = service::lista("' . $input['foreign']['table'] . '");' . "\n";
+                    $chavesEstrangeiras[] = $input['foreign']['table'];
+                }
+            }
+        }
+        $fieldCreate = rtrim($fieldCreate, "\n");
+        //controller
+        // Replace placeholders in the controller template with actual values
+        $template = file_get_contents(__DIR__ . '/ControllerTemplate.txt');
+        $template = str_replace('{{excluiImagem}}', $excluiImagem, $template);
+        $template = str_replace('{{fieldDoController}}', $fieldDoController, $template);
+        $template = str_replace('{{fieldCreate}}', $fieldCreate, $template);
+        if(count($chavesEstrangeiras) > 0){
+            $template = str_replace('{{constanteView}}', 'private $view = "vw_'.$tableName.'";', $template);
+            $template = str_replace('{{tabelaOuView}}', 'view', $template);
+        }else{
+            $template = str_replace('{{constanteView}}', '', $template);
+            $template = str_replace('{{tabelaOuView}}', 'tabela', $template); 
+        }
+        $template = str_replace('{{ModelName}}', $ModelName, $template);
+        $template = str_replace('{{modelName}}', $modelName, $template);
+        $template = str_replace('{{tableName}}', $tableName, $template);
+        // Create the controller file
+        $controllerFileName = ucfirst($ModelName) . 'Controller.php';
+        file_put_contents(__DIR__ . '/../controllers/' . $controllerFileName, $template);
+    }
+
+    public function generateService( $modelName, $tableName, $fields)
+    { 
+        $salvaImagemService = '';
+        foreach ($fields as $input) {
+            $fieldName = $input['name'];
+            $inputType = $input['type'];
+
+            if ($inputType == 'img') {
+                //salva imagem service
+                $salvaImagemService .= "global \$config_upload;\n";
+                $salvaImagemService .= "        if (\$validacao->qtdeErro() <= 0) {\n";
+                $salvaImagemService .= "            if (isset(\$_POST[\"remove_$fieldName\"]) && \$_POST[\"remove_$fieldName\"] === \"1\") {\n";
+                $salvaImagemService .= "                \$existe_imagem = service::get(self::TABELA, self::CAMPO, \${{modelName}}->{{tableName}}_id);\n";
+                $salvaImagemService .= "                if (isset(\$existe_imagem->$fieldName) && \$existe_imagem->$fieldName != '') {\n";
+                $salvaImagemService .= "                    UtilService::deletarImagens(\$existe_imagem->$fieldName);\n";
+                $salvaImagemService .= "                }\n";
+                $salvaImagemService .= "                \${{modelName}}->$fieldName = '';\n";
+                $salvaImagemService .= "            } else {\n";
+                $salvaImagemService .= "                if (isset(\$_FILES[\"$fieldName\"][\"name\"]) && \$_FILES[\"$fieldName\"][\"error\"] === UPLOAD_ERR_OK) {\n";
+                $salvaImagemService .= "                    \$existe_imagem = service::get(self::TABELA, self::CAMPO, \${{modelName}}->{{tableName}}_id);\n";
+                $salvaImagemService .= "                    if (isset(\$existe_imagem->$fieldName) && \$existe_imagem->$fieldName != '') {\n";
+                $salvaImagemService .= "                      UtilService::deletarImagens(\$existe_imagem->$fieldName);\n";
+                $salvaImagemService .= "                    }\n";
+                $salvaImagemService .= "                    \${{modelName}}->$fieldName = UtilService::uploadImagem(\"$fieldName\", \$config_upload);\n";
+                $salvaImagemService .= "                    if (!\${{modelName}}->$fieldName) {\n";
+                $salvaImagemService .= "                        return false;\n";
+                $salvaImagemService .= "                    }\n";
+                $salvaImagemService .= "                }\n";
+                $salvaImagemService .= "            }\n";
+                $salvaImagemService .= "        }\n";
+            } 
+        }
+
+        //--service
+        // Replace placeholders in the service template with actual values 
+        $template = file_get_contents(__DIR__ . '/ServiceTemplate.txt');
+        $template = str_replace('{{salvaImagemService}}', $salvaImagemService, $template);
+        $template = str_replace('{{ModelName}}', $modelName, $template);
+        $template = str_replace('{{modelName}}', $modelName, $template);
+        $template = str_replace('{{tableName}}', $tableName, $template);
+
+        // Create the service file
+        $serviceFileName = ucfirst($modelName) . 'Service.php';
+        file_put_contents(__DIR__ . '/../models/service/' . $serviceFileName, $template);        
+    }
+
+
+    public function generate($name, $modelName, $tableName, $fields)
+    {        
+        $modelName = lcfirst($modelName);
+        $ModelName = ucfirst($modelName);
+
+        $this->generateMigration($tableName, $fields);
+        $this->generateControler($ModelName, $tableName, $fields);
+        $this->generateService($ModelName, $tableName, $fields);
 
         // Check if the controller already exists
         /*$controllerFileName = ucfirst($modelName) . 'Controller.php';
@@ -32,11 +191,11 @@ class GenerateController
         $temImg = false;
         $titulos = "";
         foreach ($fields as $input) {
-            $fieldName = $input['name']; 
-            $inputType = $input['type']; 
-            $labelText = $input['label'];            
-            
-            if ($inputType == 'img'){
+            $fieldName = $input['name'];
+            $inputType = $input['type'];
+            $labelText = $input['label'];
+
+            if ($inputType == 'img') {
                 $temImg = true;
 
                 //exclui imagem controller
@@ -47,36 +206,35 @@ class GenerateController
 
                 //salva imagem service
                 $salvaImagemService .= "global \$config_upload;\n";
-                $salvaImagemService .= "if (\$validacao->qtdeErro() <= 0) {\n";          
+                $salvaImagemService .= "if (\$validacao->qtdeErro() <= 0) {\n";
                 $salvaImagemService .= "        if (isset(\$_POST[\"remove_$fieldName\"]) && \$_POST[\"remove_$fieldName\"] === \"1\") {\n";
                 $salvaImagemService .= "            \$existe_imagem = service::get(\$tabela, \$campo, \${{modelName}}->{{tableName}}_id);\n";
                 $salvaImagemService .= "            if (isset(\$existe_imagem->$fieldName) && \$existe_imagem->$fieldName != '') {\n";
                 $salvaImagemService .= "                UtilService::deletarImagens(\$existe_imagem->$fieldName);\n";
                 $salvaImagemService .= "            }\n";
-                $salvaImagemService .= "            \${{modelName}}->$fieldName = '';\n";                    
+                $salvaImagemService .= "            \${{modelName}}->$fieldName = '';\n";
                 $salvaImagemService .= "        } else {\n";
                 $salvaImagemService .= "            if (isset(\$_FILES[\"$fieldName\"][\"name\"]) && \$_FILES[\"$fieldName\"][\"error\"] === UPLOAD_ERR_OK) {\n";
                 $salvaImagemService .= "                \$existe_imagem = service::get(\$tabela, \$campo, \${{modelName}}->{{tableName}}_id);\n";
                 $salvaImagemService .= "                if (isset(\$existe_imagem->$fieldName) && \$existe_imagem->$fieldName != '') {\n";
                 $salvaImagemService .= "                    UtilService::deletarImagens(\$existe_imagem->$fieldName);\n";
                 $salvaImagemService .= "                }\n";
-                $salvaImagemService .= "                \${{modelName}}->$fieldName = UtilService::uploadImagem(\"$fieldName\", \$config_upload);\n";        
+                $salvaImagemService .= "                \${{modelName}}->$fieldName = UtilService::uploadImagem(\"$fieldName\", \$config_upload);\n";
                 $salvaImagemService .= "                if (!\${{modelName}}->$fieldName) {\n";
                 $salvaImagemService .= "                    return false;\n";
                 $salvaImagemService .= "                }\n";
                 $salvaImagemService .= "            }\n";
-                $salvaImagemService .= "        }\n";            
+                $salvaImagemService .= "        }\n";
                 $salvaImagemService .= "}\n";
-
-            }else{
+            } else {
                 $fieldDoController .= "                if (isset(\$_POST[\"$fieldName\"]))\n";
                 $fieldDoController .= "                   \${{modelName}}->{$fieldName} = \$_POST[\"$fieldName\"];\n";
-           
+
                 //validação
                 $validacaoField .= "        \$validacao->setData(\"$fieldName\", \${{modelName}}->$fieldName, \"$labelText\");\n";
             }
             // Cria o input conforme o tipo
-            
+
             $titulos .= "                        <th>$labelText</th>\n";
 
             if ($inputType === 'textarea') {
@@ -85,11 +243,11 @@ class GenerateController
                 $inputCode .= "        <textarea class=\"form-control\" id=\"{$fieldName}\" name=\"{$fieldName}\" rows=\"5\"\n";
                 $inputCode .= "        required><?php echo (isset(\${{tableName}}->{$fieldName})) ? \${{tableName}}->{$fieldName} : ''; ?></textarea>\n";
                 $inputCode .= "    </div>\n\n";
-                
+
                 $showCode .= "                            <td>\n";
                 $showCode .= "                                <?php echo \$item->{$fieldName}; ?>\n";
                 $showCode .= "                            </td>\n";
-            } elseif ($inputType === 'select') { 
+            } elseif ($inputType === 'select') {
                 $inputCode .= "    <div class=\"form-group mb-2\">\n";
                 $inputCode .= "        <label for=\"{$fieldName}_id\">{$labelText}</label>\n";
                 $inputCode .= "        <select class=\"form-select\" aria-label=\"Default select example\" name=\"{$fieldName}_id\">\n";
@@ -97,16 +255,16 @@ class GenerateController
                 $inputCode .= "                echo \"<option value='\$item->{$fieldName}_id'\". (\$item->{$fieldName}_id == \${{tableName}}->{$fieldName}_id ? \"selected\" : \"\") . \">\$item->{$fieldName}_name</option>\";\n";
                 $inputCode .= "            } ?>\n";
                 $inputCode .= "        </select>\n";
-                $inputCode .= "    </div>\n\n"; 
-                
+                $inputCode .= "    </div>\n\n";
+
                 $showCode .= "                            <td>\n";
                 $showCode .= "                                <?php echo \$item->{$fieldName}_name; ?>\n";
                 $showCode .= "                            </td>\n";
-            } elseif ($inputType === 'img') { 
-                $inputCode .= "    <div class=\"row\">\n"; 
-                $inputCode .= "        <div class=\"form-group col-lg-6 col-12 mb-2\">\n"; 
-                $inputCode .= "           <?php if (isset(\${{tableName}}->{$fieldName}) && \${{tableName}}->{$fieldName} != '') { ?>\n"; 
-                $inputCode .= "                <label class=\"container-imagem\" for=\"{$fieldName}\">\n"; 
+            } elseif ($inputType === 'img') {
+                $inputCode .= "    <div class=\"row\">\n";
+                $inputCode .= "        <div class=\"form-group col-lg-6 col-12 mb-2\">\n";
+                $inputCode .= "           <?php if (isset(\${{tableName}}->{$fieldName}) && \${{tableName}}->{$fieldName} != '') { ?>\n";
+                $inputCode .= "                <label class=\"container-imagem\" for=\"{$fieldName}\">\n";
                 $inputCode .= "                    <img id=\"preview\"  width=\"250\" height=\"250\"\n";
                 $inputCode .= "                        src=\"<?php echo (isset(\${{tableName}}->{$fieldName})) ? (URL_IMAGEM . \${{tableName}}->{$fieldName}) : ''; ?>\">\n";
                 $inputCode .= "                </label>\n";
@@ -133,7 +291,6 @@ class GenerateController
                 $showCode .= "                                    <img class=\"img-thumbnail\" width=\"200\" src=\"<?php echo (URL_IMAGEM_150 . \$item->{$fieldName}) ?>\">\n";
                 $showCode .= "                                <?php } ?>\n";
                 $showCode .= "                            </td>\n";
-              
             } else {
                 // Para os demais tipos, como text, number, datetime-local, etc.   
                 $inputCode .= "    <div class=\"form-group mb-2\">\n";
@@ -146,8 +303,7 @@ class GenerateController
                 $showCode .= "                                <?php echo \$item->{$fieldName}; ?>\n";
                 $showCode .= "                            </td>\n";
             }
-
-        }       
+        }
 
         //se algum field é de imagem
         $cssImg = "";
@@ -155,11 +311,11 @@ class GenerateController
         if ($temImg) {
             $cssImg = "<style>\n.exclusao-ativa img { opacity: 0.3;} \n</style>";
             $jsImg .= "<script src=\"<?php echo URL_BASE ?>assets/js/inputImg.js\"></script>";
-        }       
+        }
 
         //controller
         // Replace placeholders in the controller template with actual values
-        $template = file_get_contents(__DIR__ . '/ControllerTemplate.txt');
+        /* $template = file_get_contents(__DIR__ . '/ControllerTemplate.txt');
         $template = str_replace('{{excluiImagem}}', $excluiImagem, $template);
         $template = str_replace('{{fieldDoController}}', $fieldDoController, $template);
         $template = str_replace('{{ModelName}}', $ModelName, $template);
@@ -167,7 +323,7 @@ class GenerateController
         $template = str_replace('{{tableName}}', $tableName, $template);
         // Create the controller file
         $controllerFileName = ucfirst($ModelName) . 'Controller.php';
-        file_put_contents(__DIR__ . '/../controllers/' . $controllerFileName, $template);
+        file_put_contents(__DIR__ . '/../controllers/' . $controllerFileName, $template);*/
 
         //Validacao
         // Replace placeholders in the controller template with actual values
@@ -178,19 +334,19 @@ class GenerateController
         $template = str_replace('{{tableName}}', $tableName, $template);
         // Create the controller file
         $validacaoFileName = ucfirst($ModelName) . 'Validacao.php';
-        file_put_contents(__DIR__ . '/../models/validacao/' . $validacaoFileName, $template);    
-        
+        file_put_contents(__DIR__ . '/../models/validacao/' . $validacaoFileName, $template);
+
         //Dao
         // Replace placeholders in the controller template with actual values
         $template = file_get_contents(__DIR__ . '/DaoTemplate.txt');
         $template = str_replace('{{ModelName}}', $ModelName, $template);
         // Create the controller file
         $daoFileName = ucfirst($ModelName) . 'Dao.php';
-        file_put_contents(__DIR__ . '/../models/dao/' . $daoFileName, $template);  
+        file_put_contents(__DIR__ . '/../models/dao/' . $daoFileName, $template);
 
         //--service
         // Replace placeholders in the service template with actual values 
-        $template = file_get_contents(__DIR__ . '/ServiceTemplate.txt');
+       /* $template = file_get_contents(__DIR__ . '/ServiceTemplate.txt');
         $template = str_replace('{{salvaImagemService}}', $salvaImagemService, $template);
         $template = str_replace('{{ModelName}}', $ModelName, $template);
         $template = str_replace('{{modelName}}', $modelName, $template);
@@ -198,7 +354,7 @@ class GenerateController
 
         // Create the service file
         $serviceFileName = ucfirst($modelName) . 'Service.php';
-        file_put_contents(__DIR__ . '/../models/service/' . $serviceFileName, $template);        
+        file_put_contents(__DIR__ . '/../models/service/' . $serviceFileName, $template);*/
 
         //--views
         // Create the directory for the model views
@@ -207,7 +363,7 @@ class GenerateController
             mkdir($viewsDir);
         }
         // View Edit generation
-        $viewEdit = file_get_contents(__DIR__ . '/ViewEditTemplate.txt');          
+        $viewEdit = file_get_contents(__DIR__ . '/ViewEditTemplate.txt');
         $viewEdit = str_replace('{{cssImg}}', $cssImg, $viewEdit);
         $viewEdit = str_replace('{{jsImg}}', $jsImg, $viewEdit);
         $viewEdit = str_replace('{{field}}', $inputCode, $viewEdit);
@@ -224,11 +380,10 @@ class GenerateController
         $viewShow = str_replace('{{td}} ', $showCode, $viewShow);
         $viewShow = str_replace('{{ModelName}}', $ModelName, $viewShow);
         $viewShow = str_replace('{{modelName}}', $modelName, $viewShow);
-        $viewShow = str_replace('{{tableName}}', $tableName, $viewShow);        
+        $viewShow = str_replace('{{tableName}}', $tableName, $viewShow);
         $viewShow = str_replace('{{name}}', $name, $viewShow);
         $viewShowPath = $viewsDir . '/Show.php';
         file_put_contents($viewShowPath, $viewShow);
-
-        return $serviceFileName;
+        echo 'fim';
     }
 }

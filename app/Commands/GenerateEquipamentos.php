@@ -353,7 +353,83 @@ $fields = [
     ['name' => 'usuarios_id', 'type' => 'number', 'label' => 'usuario'],
     ['name' => 'acesso', 'type' => 'number', 'label' => 'acesso']
 ];*/
+
+$name = "Tickets";
+$modelName = "Ticket";
+$tableName = "tickets";
+$fields = [
+    [
+        'name' => 'tickets_id',
+        'type' => 'INT',
+        'attributes' => 'AUTO_INCREMENT PRIMARY KEY',
+        'label' => 'Ticket ID',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'user_id',
+        'type' => 'INT',
+        'attributes' => '',
+        'label' => 'User ID',
+        'foreign' => [
+            'table' => 'usuarios',
+            'field' => 'usuarios_id',
+            'nome' => 'usuario'
+        ],
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'subject',
+        'type' => 'VARCHAR(255)',
+        'attributes' => 'NOT NULL',
+        'label' => 'Subject',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'imagem_perfil',
+        'type' => 'img',
+        'attributes' => '',
+        'label' => 'Imagem de perfil',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'description',
+        'type' => 'TEXT',
+        'attributes' => 'NOT NULL',
+        'label' => 'Description',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'status',
+        'type' => 'enum',
+        'values' => ['Open', 'In Progress', 'Closed'],
+        'attributes' => "NOT NULL DEFAULT 'Open'",
+        'label' => 'Status',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'priority',
+        'type' => 'enum',
+        'values' => ['Low', 'Medium', 'High', 'Urgent'],
+        'attributes' => "NOT NULL DEFAULT 'Medium'",
+        'label' => 'Priority',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'created_at',
+        'type' => 'TIMESTAMP',
+        'attributes' => 'DEFAULT CURRENT_TIMESTAMP',
+        'label' => 'Created At',
+        'ShowInTable' => 'true'
+    ],
+    [
+        'name' => 'updated_at',
+        'type' => 'TIMESTAMP',
+        'attributes' => 'DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+        'label' => 'Updated At',
+        'ShowInTable' => 'true'
+    ]
+];
 								
 $generator = new app\Commands\GenerateController();
-//$result = $generator->generate($name ,$modelName, $tableName, $fields);
+$result = $generator->generate($name ,$modelName, $tableName, $fields);
 echo $result;

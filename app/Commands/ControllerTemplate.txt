@@ -12,9 +12,8 @@ class {{ModelName}}Controller extends Controller
 {
     private $tabela = "{{tableName}}";
     private $campo = "{{tableName}}_id";
-    private $usuario;
+    {{constanteView}}
 
-    //verifica se tem usuario logado(somente para telas que exigem)
     public function __construct()
     {
         UtilService::validaUsuario();
@@ -22,14 +21,15 @@ class {{ModelName}}Controller extends Controller
 
     public function index()
     {
-        $dados["{{tableName}}"] = Service::lista($this->tabela);
+        $dados["{{tableName}}"] = Service::lista($this->{{tabelaOuView}});
         $dados["view"] = "{{ModelName}}/Show";
         $this->load("templateBootstrap", $dados);
     }
 
     public function edit($id)
     {
-        $dados["{{tableName}}"] = Service::get($this->tabela, $this->campo, $id);
+        $dados["{{tableName}}"] = Service::get($this->{{tabelaOuView}}, $this->campo, $id);
+{{fieldCreate}}
         $dados["view"] = "{{ModelName}}/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -37,6 +37,7 @@ class {{ModelName}}Controller extends Controller
     public function create()
     {
         $dados["{{tableName}}"] = Flash::getForm();
+{{fieldCreate}}
         $dados["view"] = "{{ModelName}}/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -51,7 +52,7 @@ class {{ModelName}}Controller extends Controller
                 // Excluir a imagem, se existir               
 {{excluiImagem}}
                 // Excluir
-                {{ModelName}}Service::excluir($this->tabela, $this->campo, $id);
+                {{ModelName}}Service::excluir($id);
             }
         }
     }
@@ -68,13 +69,13 @@ class {{ModelName}}Controller extends Controller
                 } else {
                     ${{modelName}}->{{tableName}}_id = 0;                         
                 }
-                {{fieldDoController}}                
+{{fieldDoController}}                
                
             }
 
 
             Flash::setForm(${{modelName}});
-            if ({{ModelName}}Service::salvar(${{modelName}}, $this->campo, $this->tabela) > 1) //se é maior que um inseriu novo 
+            if ({{ModelName}}Service::salvar(${{modelName}}) > 1) //se é maior que um inseriu novo 
             {
                 $this->redirect(URL_BASE   . "{{ModelName}}");
             } else {
