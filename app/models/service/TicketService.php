@@ -37,11 +37,21 @@ class TicketService
         }
 
         return Service::salvar($Ticket, self::CAMPO, $validacao->listaErros(), self::TABELA);
-
     }  
 
     public static function excluir($id)
     {
         Service::excluir(self::TABELA, self::CAMPO, $id);
+    }
+    public static function lista($parametros)
+    {
+        $dao = new TicketDao();
+        return $dao->lista($parametros);
+    }
+
+    public static function quantidadeDeLinhas($valor_pesquisa)
+    {
+        $dao = new TicketDao();
+        return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
 }

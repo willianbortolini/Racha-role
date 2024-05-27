@@ -363,7 +363,7 @@ $fields = [
         'type' => 'INT',
         'attributes' => 'AUTO_INCREMENT PRIMARY KEY',
         'label' => 'Ticket ID',
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ],
     [
         'name' => 'user_id',
@@ -375,28 +375,28 @@ $fields = [
             'field' => 'usuarios_id',
             'nome' => 'usuario'
         ],
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ],
     [
         'name' => 'subject',
         'type' => 'VARCHAR(255)',
         'attributes' => 'NOT NULL',
         'label' => 'Subject',
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ],
     [
         'name' => 'imagem_perfil',
         'type' => 'img',
         'attributes' => '',
         'label' => 'Imagem de perfil',
-        'ShowInTable' => 'true'
+        'ShowInTable' => false
     ],
     [
         'name' => 'description',
         'type' => 'TEXT',
         'attributes' => 'NOT NULL',
         'label' => 'Description',
-        'ShowInTable' => 'true'
+        'ShowInTable' => false
     ],
     [
         'name' => 'status',
@@ -404,7 +404,7 @@ $fields = [
         'values' => ['Open', 'In Progress', 'Closed'],
         'attributes' => "NOT NULL DEFAULT 'Open'",
         'label' => 'Status',
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ],
     [
         'name' => 'priority',
@@ -412,21 +412,21 @@ $fields = [
         'values' => ['Low', 'Medium', 'High', 'Urgent'],
         'attributes' => "NOT NULL DEFAULT 'Medium'",
         'label' => 'Priority',
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ],
     [
         'name' => 'created_at',
         'type' => 'TIMESTAMP',
         'attributes' => 'DEFAULT CURRENT_TIMESTAMP',
         'label' => 'Created At',
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ],
     [
         'name' => 'updated_at',
         'type' => 'TIMESTAMP',
         'attributes' => 'DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
         'label' => 'Updated At',
-        'ShowInTable' => 'true'
+        'ShowInTable' => true
     ]
 ];
 								

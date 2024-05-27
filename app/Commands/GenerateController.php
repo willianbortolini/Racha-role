@@ -66,6 +66,9 @@ class GenerateController
         $fieldDoController = '';
         $excluiImagem = '';
         $fieldCreate = '';
+        $listaDeColunasDaTabela = '';
+        $fieldsRetornoDaLista = '';
+        $countColunasDaTabela = 0;
         $chavesEstrangeiras = [];
         foreach ($fields as $input) {
             $fieldName = $input['name'];
@@ -84,6 +87,12 @@ class GenerateController
                 }
             }
 
+            if ($input['ShowInTable'] == true){
+                $listaDeColunasDaTabela .= "         $countColunasDaTabela => '".$input['name']."',\n";
+                $fieldsRetornoDaLista .= '            $registro[] = $coluna->'.$input['name'].';'."\n";
+                $countColunasDaTabela += 1;
+            }
+
             //adiciona os fields do enum para o create e edit
             if ($inputType == 'enum') {
                 $fieldCreate .= '        $dados["' . $fieldName . '"] = service::getEnumValues($this->tabela, "' . $fieldName . '");' . "\n";
@@ -98,6 +107,8 @@ class GenerateController
             }
         }
         $fieldCreate = rtrim($fieldCreate, "\n");
+        $listaDeColunasDaTabela = rtrim($listaDeColunasDaTabela, ",\n");
+        $fieldsRetornoDaLista = rtrim($fieldsRetornoDaLista, ",\n");
         //controller
         // Replace placeholders in the controller template with actual values
         $template = file_get_contents(__DIR__ . '/ControllerTemplate.txt');
@@ -111,6 +122,8 @@ class GenerateController
             $template = str_replace('{{constanteView}}', '', $template);
             $template = str_replace('{{tabelaOuView}}', 'tabela', $template); 
         }
+        $template = str_replace('{{listaDeColunasDaTabela}}', $listaDeColunasDaTabela, $template);
+        $template = str_replace('{{fieldsRetornoDaLista}}', $fieldsRetornoDaLista, $template);
         $template = str_replace('{{ModelName}}', $ModelName, $template);
         $template = str_replace('{{modelName}}', $modelName, $template);
         $template = str_replace('{{tableName}}', $tableName, $template);

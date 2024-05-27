@@ -57,6 +57,53 @@ class {{ModelName}}Controller extends Controller
         }
     }
 
+    public function list()
+    {
+        $dados_requisicao = $_REQUEST;
+
+        // Lista de colunas da tabela
+        $colunas = [
+{{listaDeColunasDaTabela}}
+        ];
+
+        if (!empty($dados_requisicao['search']['value'])) {
+            $valor_pesquisa = "%" . $dados_requisicao['search']['value'] . "%";
+        } else {
+            $valor_pesquisa = "";
+        }
+        $row_qnt_usuarios = {{ModelName}}Service::quantidadeDeLinhas($valor_pesquisa);
+
+        $parametros = [
+            'inicio' => intval($dados_requisicao['start']),
+            'quantidade' => intval($dados_requisicao['length']),
+            'colunaOrder' => $colunas[$dados_requisicao['order'][0]['column']],
+            'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
+            'valor_pesquisa' => $valor_pesquisa
+        ];
+        $listaRetorno = {{ModelName}}Service::lista($parametros);
+        $dados = [];
+        foreach ($listaRetorno as $coluna) {
+            $registro = [];
+{{fieldsRetornoDaLista}}
+            $registro[] = "<a href='" . URL_BASE . "User/edit/" . $coluna->{{tableName}}_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
+            <button onclick='deletarItem(" . $coluna->{{tableName}}_id . ")' type='button'
+                class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
+                data-bs-target='#deleteModal'>
+                Deletar
+            </button>";
+            $dados[] = $registro;
+        }
+
+        $resultado = [
+            "draw" => intval($dados_requisicao['draw']),
+            "recordsTotal" => $row_qnt_usuarios->total,
+            "recordsFiltered" => $row_qnt_usuarios->total,
+            "data" => $dados
+        ];
+
+        echo json_encode($resultado);
+    }
+
     public function save()
     {
         $csrfToken = $_POST['csrf_token'];
