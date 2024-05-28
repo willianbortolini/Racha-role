@@ -11,7 +11,7 @@ use Google\Client;
 use Google\Service\Oauth2 as ServiceOauth2;
 use GuzzleHttp\Client as GuzzleClient;
 use Google\Service\Oauth2\Userinfo;
-use app\models\service\UsuarioService;
+use app\models\service\UsersService;
 
 class LoginService
 {
@@ -43,51 +43,37 @@ class LoginService
         $client->setAccessToken($token['access_token']);
         $googleService = new ServiceOauth2($client);
         $usuarioGoogle = $googleService->userinfo->get();
-
         return self::loginPorEmail($usuarioGoogle->email,$usuarioGoogle->name);
        
     }
 
     public static function loginPorEmail($email,$nome = ' '){
 
-        $resultado = service::get("usuarios","email",$email);
-        
+        $resultado = service::get("users","email",$email);        
         if ($resultado) {
             //se tem loga
-            $_SESSION['id'] = $resultado->usuarios_id;
+            $_SESSION['id'] = $resultado->users_id;
             $_SESSION['nivel'] = $resultado->nivel_de_acesso;
             $csrfToken = bin2hex(random_bytes(32));
-            $_SESSION['csrf_token'] = $csrfToken;
-
-            //salva o acesso
-            $validaSalva = [];
-            $dataQtdLogin = new \stdClass();
-            $dataQtdLogin->usuarios_id = $resultado->usuarios_id;
-            date_default_timezone_set('America/Sao_Paulo');
-            $hoje = date('Y-m-d H:i:s');
-            $dataQtdLogin->ultimo_acesso = $hoje;
-            $dataQtdLogin->qtd_acessos = $resultado->qtd_acessos + 1;
-            Service::salvar($dataQtdLogin, "usuarios_id", $validaSalva, "usuarios");
+            $_SESSION['csrf_token'] = $csrfToken;           
             return 1;
         } else {
             //se não tem cria novo usuario 
             $novoUsuario = new \stdClass();
             $novoUsuario->email = $email;
-            $novoUsuario->usuario = $nome;
-            $novoUsuario->senha = $nome . '_Curso1';
-            $novoUsuario->confirmacao = $novoUsuario->senha;
+            $novoUsuario->username = $nome;
+            $novoUsuario->password = $nome . '_Cadeopix1';
+            $novoUsuario->confirmacao = $novoUsuario->password;
             $novoUsuario->cookies = 1;
             $novoUsuario->politica = 1;
-            $novoUsuario->usuarios_id = 0;
-            $novoUsuario->nivel_de_acesso = 1;
+            $novoUsuario->users_id = 0;
             
-            $usuarioCriado = UsuarioService::salvar($novoUsuario, "usuarios_id", "usuarios");
-            if ($usuarioCriado) {
-                
+            $usuarioCriado = UsersService::salvar($novoUsuario, "users_id", "users");
+            if ($usuarioCriado) {                
                 $_SESSION['id'] = $usuarioCriado;
                 $_SESSION['nivel'] = 1;
                 $csrfToken = bin2hex(random_bytes(32));
-                $_SESSION['csrf_token'] = $csrfToken;
+                $_SESSION['csrf_token'] = $csrfToken;                
                 return 1;
             }
         }

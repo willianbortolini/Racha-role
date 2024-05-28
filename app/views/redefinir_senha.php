@@ -15,7 +15,7 @@
                         <input type="password" class="form-control rounded-3" name="confirmacao" id="confirmacao" placeholder="Confirme a Senha">
                         <label for="confirmacao">Confirmação de Senha</label>
                     </div>
-                    <input type="hidden" name="usuarios_id" value="<?php echo $usuario->usuarios_id; ?>">
+                    <input type="hidden" name="users_id" value="<?php echo $usuario->users_id; ?>">
                     <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Salvar</button>
                 </form>
             </div>

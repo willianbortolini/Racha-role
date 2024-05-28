@@ -44,18 +44,8 @@ class UsersValidacao{
         $validacao = new Validacao(); 
         
         $validacao->setData("email", $usuario->email);
-        $validacao->setData("usuario", $usuario->usuario);
-        $validacao->setData("cpf", $usuario->cpf);
-        $validacao->setData("data_nascimento", $usuario->data_nascimento);
-        $validacao->setData("telefone", $usuario->telefone);
-        $validacao->setData("profissao", $usuario->profissao);
-        $validacao->setData("bairro", $usuario->bairro);
-        $validacao->setData("cidade", $usuario->cidade);
-        $validacao->setData("endereco", $usuario->endereco);
-        $validacao->setData("estado", $usuario->estado);
-        $validacao->setData("cep", $usuario->cep);
-        $validacao->setData("complemento", $usuario->complemento);
-        $validacao->setData("numero", $usuario->numero);
+        $validacao->setData("username", $usuario->username);
+        $validacao->setData("password", $usuario->password);
         
         $validacao->getData("email")->isVazio();
         $validacao->getData("email")->isEmail();

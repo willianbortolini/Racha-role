@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" class="form-control" id="email" name="email"
-                            value="<?php echo (isset($usuarios->email)) ? $usuarios->email : ''; ?>" required>
+                            value="<?php echo (isset($users->email)) ? $users->email : ''; ?>" required>
                     </div>
 
                     <div class="form-group">

@@ -6,7 +6,7 @@ use app\core\Controller;
 use app\core\Flash;
 use app\models\service\LoginService;
 use app\models\service\Service;
-use app\models\service\UsuarioService;
+use app\models\service\UsersService;
 
 class LoginController extends Controller
 {
@@ -26,8 +26,8 @@ class LoginController extends Controller
     }
 
     public function google()
-    {
-        if (isset($_GET['code'])) {
+    {        
+        if (isset($_GET['code'])) {           
             LoginService::loginGoogle($_GET['code']);
             Flash::limpaErro();
             Flash::limpaMsg();
@@ -76,15 +76,15 @@ class LoginController extends Controller
     public function recuperarSenha()
     {
         $email = isset($_POST["email"]) ? filter_input(INPUT_POST, "email") : null;
-        $usuario = Service::getGeral("usuarios", "email", "=", $email);
+        $usuario = Service::getGeral("Users", "email", "=", $email);
 
         if ($usuario) {
             //coloca o codigo no capo de recuperação
-            $stringParaCriptografar = "f" . $usuario->usuarios_id . "d" . hoje();
+            $stringParaCriptografar = "f" . $usuario->Users_id . "d" . hoje();
             $st = crypt($stringParaCriptografar, 'rl');
             $codigo_acesso = slug($st);
-            $usuarios_id = $usuario->usuarios_id;
-            Service::editar(["usuarios_id" => $usuarios_id, "recuperacao" => $codigo_acesso], "usuarios_id", "usuarios");
+            $Users_id = $usuario->Users_id;
+            Service::editar(["Users_id" => $Users_id, "recuperacao" => $codigo_acesso], "Users_id", "Users");
             $corpoEmail = "<style type='text/css'>"
                 . ".botao-email{border: solid 1px #21dc85;background: #60e2a6;cursor: pointer;font-size: 17px;padding: 5px 30px;margin: 5px;text-align: center;text-transform: uppercase;text-decoration: none;color:black;}"
                 . "</style>"
@@ -106,7 +106,7 @@ class LoginController extends Controller
     {
 
         if ($codigo != "") {
-            $usuario = Service::getGeral("usuarios", "recuperacao", "=", $codigo);
+            $usuario = Service::getGeral("Users", "recuperacao", "=", $codigo);
             if ($usuario) {
                 $dados["usuario"] = $usuario;
                 $dados["view"] = "redefinir_senha";
@@ -121,15 +121,15 @@ class LoginController extends Controller
     public function redefinirSenhaSalvar()
     {
         $usuario = new \stdClass();
-        $usuario->usuarios_id = $_POST["usuarios_id"];
-        $getUsuario = Service::getGeral("usuarios", "usuarios_id", "=", $usuario->usuarios_id);
+        $usuario->users_id = $_POST["users_id"];
+        $getUsuario = Service::getGeral("users", "users_id", "=", $usuario->users_id);
         $usuario->senha = $_POST['senha'];
         $usuario->confirmacao = $_POST['confirmacao'];
         $usuario->recuperacao = "";
         $recuperacao = $_POST['recuperacao'];
 
         Flash::setForm($usuario);
-        if (UsuarioService::recuperaSenha($usuario, "usuario_id", "usuarios")) {
+        if (UsersService::recuperaSenha($usuario, "usuario_id", "users")) {
             $retornoUsusario = LoginService::login($getUsuario->email, $_POST['senha']);
 
             if ($retornoUsusario == 1) {
