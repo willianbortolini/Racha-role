@@ -5,23 +5,20 @@
     <?php echo (isset($tickets->tickets_id)) ? 'Editar Tickets' : 'Adicionar Tickets'; ?>
 </h1>
 
-<form action="<?php echo URL_BASE   . "Ticket/save" ?>" method="POST" enctype="multipart/form-data">
-
-    <div class="form-group mb-2">
-        <label for="tickets_id">Ticket ID</label>
-        <input type="INT" class="form-control" id="tickets_id" name="tickets_id"
-        value="<?php echo (isset($tickets->tickets_id)) ? $tickets->tickets_id : ''; ?>" required>
-    </div>
+<form action="<?php echo URL_BASE   . "Tickets/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div class="form-group mb-2">
         <label for="user_id">User ID</label>
-        <input type="INT" class="form-control" id="user_id" name="user_id"
-        value="<?php echo (isset($tickets->user_id)) ? $tickets->user_id : ''; ?>" required>
+        <select class="form-select" aria-label="Default select example" name="user_id">
+            <?php foreach ($usuarios as $item) {
+                echo "<option value='$item->usuarios_id'". ($item->usuarios_id == $tickets->user_id ? "selected" : "") . ">$item->usuario</option>";
+            } ?>
+        </select>
     </div>
 
     <div class="form-group mb-2">
         <label for="subject">Subject</label>
-        <input type="VARCHAR(255)" class="form-control" id="subject" name="subject"
+        <input type="text" class="form-control" id="subject" name="subject"
         value="<?php echo (isset($tickets->subject)) ? $tickets->subject : ''; ?>" required>
     </div>
 
@@ -52,34 +49,33 @@
 
     <div class="form-group mb-2">
         <label for="description">Description</label>
-        <input type="TEXT" class="form-control" id="description" name="description"
-        value="<?php echo (isset($tickets->description)) ? $tickets->description : ''; ?>" required>
+        <textarea class="form-control" id="description" name="description" rows="5"
+        required><?php echo (isset($tickets->description)) ? $tickets->description : ''; ?></textarea>
+    </div>
+
+    <div class="form-group mb-2">
+        <label for="CPF">CPF</label>
+        <input type="text" class="form-control" id="CPF" name="CPF"
+        value="<?php echo (isset($tickets->CPF)) ? $tickets->CPF : ''; ?>" required>
     </div>
 
     <div class="form-group mb-2">
         <label for="status">Status</label>
-        <input type="enum" class="form-control" id="status" name="status"
-        value="<?php echo (isset($tickets->status)) ? $tickets->status : ''; ?>" required>
+        <select class="form-select" aria-label="Default select example" name="status">
+            <?php foreach ($status as $item) {
+                 echo "<option value='$item'". (isset($tickets->status) && $item == $tickets->status ? "selected" : "") . ">$status</option>";
+            } ?>
+        </select>
     </div>
 
     <div class="form-group mb-2">
         <label for="priority">Priority</label>
-        <input type="enum" class="form-control" id="priority" name="priority"
-        value="<?php echo (isset($tickets->priority)) ? $tickets->priority : ''; ?>" required>
+        <select class="form-select" aria-label="Default select example" name="priority">
+            <?php foreach ($priority as $item) {
+                 echo "<option value='$item'". (isset($tickets->priority) && $item == $tickets->priority ? "selected" : "") . ">$priority</option>";
+            } ?>
+        </select>
     </div>
-
-    <div class="form-group mb-2">
-        <label for="created_at">Created At</label>
-        <input type="TIMESTAMP" class="form-control" id="created_at" name="created_at"
-        value="<?php echo (isset($tickets->created_at)) ? $tickets->created_at : ''; ?>" required>
-    </div>
-
-    <div class="form-group mb-2">
-        <label for="updated_at">Updated At</label>
-        <input type="TIMESTAMP" class="form-control" id="updated_at" name="updated_at"
-        value="<?php echo (isset($tickets->updated_at)) ? $tickets->updated_at : ''; ?>" required>
-    </div>
-
 
     <input type="hidden" name="tickets_id" value="<?php echo (isset($tickets->tickets_id)) ? $tickets->tickets_id : NULL; ?>">
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -89,7 +85,7 @@
             <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
         <div class="col-auto">
-            <a href="<?php echo URL_BASE   . "Ticket" ?>" class="btn btn-primary">Voltar</a>
+            <a href="<?php echo URL_BASE   . "Tickets" ?>" class="btn btn-primary">Voltar</a>
         </div>
     </div>
 </form>

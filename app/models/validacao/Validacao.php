@@ -7,8 +7,7 @@ class Validacao {
         $validacao = new Validacao();    
     
         // Fazendo a validação
-        //$validacao->getData("s_name")->isVazio();          
-        
+   
         return $validacao;
     }
 }

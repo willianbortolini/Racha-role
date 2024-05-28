@@ -2,7 +2,7 @@
 <div class="row col-12">
     <div class="card col-12 m-2 m-md-4 p-4 p-md-4">
         <div class="col-md-12">
-            <a href="<?php echo URL_BASE . 'Ticket/create'?>" class="btn btn-primary mb-3">Adicionar um
+            <a href="<?php echo URL_BASE . 'Tickets/create'?>" class="btn btn-primary mb-3">Adicionar um
                 Tickets</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
@@ -55,14 +55,14 @@
             "serverSide": true,
             "responsive": true,
             "autoWidth": false,
-            "ajax": URL_BASE + "Ticket/lista",
+            "ajax": URL_BASE + "Tickets/lista",
             "language": {
                 "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
             }
         });
     });
 
-    controller = 'Ticket';
+    controller = 'Tickets';
     var idLinha = 0;
     function deletarItem(id) {
         idLinha = id;

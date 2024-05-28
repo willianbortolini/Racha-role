@@ -8,16 +8,29 @@ use app\util\UtilService;
 
 class Service
 {
-    public static function salvar($, $campo, $tabela)
+    const TABELA = ""; 
+    const CAMPO = "_id";     
+
+    public static function salvar($)
     {
         $validacao = Validacao::salvar($);
-
-        return Service::salvar($, $campo, $validacao->listaErros(), $tabela);
-
+        
+        return Service::salvar($, self::CAMPO, $validacao->listaErros(), self::TABELA);
     }  
 
-    public static function excluir($tabela, $campo, $id)
+    public static function excluir($id)
     {
-        Service::excluir($tabela, $campo, $id);
+        Service::excluir(self::TABELA, self::CAMPO, $id);
+    }
+    public static function lista($parametros)
+    {
+        $dao = new Dao();
+        return $dao->lista($parametros);
+    }
+
+    public static function quantidadeDeLinhas($valor_pesquisa)
+    {
+        $dao = new Dao();
+        return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
 }

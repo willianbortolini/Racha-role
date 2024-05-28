@@ -1,36 +1,25 @@
-<div class="container">
-    <div class="row">
+<h1  class="ms-3"></h1>
+<div class="row col-12">
+    <div class="card col-12 m-2 m-md-4 p-4 p-md-4">
         <div class="col-md-12">
-            <h1 class="mt-1">Listagem de s</h1>
-            <a href="<?php echo URL_BASE   . "/create" ?>" class="btn btn-primary mb-3">Adicionar </a>
+            <a href="<?php echo URL_BASE . '/create'?>" class="btn btn-primary mb-3">Adicionar um
+                </a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>
-                    <tr>                        
+                    <tr>
 
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($ as $item) { ?>
-                        <tr>
-                      
-                            <td> 
-                                <a href="<?php echo URL_BASE   . "/edit/" . $item->_id ?>"
-                                    class="btn btn-primary btn-sm">Editar</a>
-
-                                <button onclick="deletarItem(<?php echo $item->_id; ?>)" type="button"
-                                    class="btn btn-danger btn-sm deletar" data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal">
-                                    Deletar
-                                </button>
-
-                            </td>   
-                        </tr>
-                    <?php } ?>
+                    
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="col-auto">
+        <a href="<?php echo URL_BASE ?>" class="btn btn-primary">Voltar</a>
     </div>
 </div>
 
@@ -53,23 +42,18 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         var table = new DataTable('table.display', {
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "info": true,
-            "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
             "responsive": true,
-             
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
-            },
+            "autoWidth": false,
+            "ajax": URL_BASE + "/lista",
+            "language": {
+                "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            }
         });
-
     });
 
     controller = '';

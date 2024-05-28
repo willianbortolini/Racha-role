@@ -7,8 +7,7 @@ class {{ModelName}}Validacao {
         $validacao = new Validacao();    
 {{validacaoField}}    
         // Fazendo a validação
-        //$validacao->getData("{{ModelName}}s_name")->isVazio();          
-        
+{{validacaoParametros}}   
         return $validacao;
     }
 }

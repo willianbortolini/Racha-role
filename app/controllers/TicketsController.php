@@ -4,11 +4,11 @@ namespace app\controllers;
 
 use app\core\Controller;
 use app\util\UtilService;
-use app\models\service\TicketService;
+use app\models\service\TicketsService;
 use app\core\Flash;
 use app\models\service\Service;
 
-class TicketController extends Controller
+class TicketsController extends Controller
 {
     private $tabela = "tickets";
     private $campo = "tickets_id";
@@ -22,7 +22,7 @@ class TicketController extends Controller
     public function index()
     {
         $dados["tickets"] = Service::lista($this->view);
-        $dados["view"] = "Ticket/Show";
+        $dados["view"] = "Tickets/Show";
         $this->load("templateBootstrap", $dados);
     }
 
@@ -32,7 +32,7 @@ class TicketController extends Controller
         $dados["usuarios"] = service::lista("usuarios");
         $dados["status"] = service::getEnumValues($this->tabela, "status");
         $dados["priority"] = service::getEnumValues($this->tabela, "priority");
-        $dados["view"] = "Ticket/Edit";
+        $dados["view"] = "Tickets/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
@@ -42,7 +42,7 @@ class TicketController extends Controller
         $dados["usuarios"] = service::lista("usuarios");
         $dados["status"] = service::getEnumValues($this->tabela, "status");
         $dados["priority"] = service::getEnumValues($this->tabela, "priority");
-        $dados["view"] = "Ticket/Edit";
+        $dados["view"] = "Tickets/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
@@ -60,7 +60,7 @@ class TicketController extends Controller
                 }
 
                 // Excluir
-                TicketService::excluir($id);
+                TicketsService::excluir($id);
             }
         }
     }
@@ -84,7 +84,7 @@ class TicketController extends Controller
         } else {
             $valor_pesquisa = "";
         }
-        $row_qnt_usuarios = TicketService::quantidadeDeLinhas($valor_pesquisa);
+        $row_qnt_usuarios = TicketsService::quantidadeDeLinhas($valor_pesquisa);
 
         $parametros = [
             'inicio' => intval($dados_requisicao['start']),
@@ -93,7 +93,7 @@ class TicketController extends Controller
             'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
             'valor_pesquisa' => $valor_pesquisa
         ];
-        $listaRetorno = TicketService::lista($parametros);
+        $listaRetorno = TicketsService::lista($parametros);
         $dados = [];
         foreach ($listaRetorno as $coluna) {
             $registro = [];
@@ -126,40 +126,40 @@ class TicketController extends Controller
     {
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
-            $ticket = new \stdClass();
+            $tickets = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 if (isset($_POST["tickets_id"]) && is_numeric($_POST["tickets_id"]) && $_POST["tickets_id"] > 0) {                  
-                    $ticket->tickets_id = $_POST["tickets_id"];                    
+                    $tickets->tickets_id = $_POST["tickets_id"];                    
                 } else {
-                    $ticket->tickets_id = 0;                         
+                    $tickets->tickets_id = 0;                         
                 }
                 if (isset($_POST["user_id"]))
-                   $ticket->user_id = $_POST["user_id"];
+                   $tickets->user_id = $_POST["user_id"];
                 if (isset($_POST["subject"]))
-                   $ticket->subject = $_POST["subject"];
+                   $tickets->subject = $_POST["subject"];
                 if (isset($_POST["description"]))
-                   $ticket->description = $_POST["description"];
+                   $tickets->description = $_POST["description"];
                 if (isset($_POST["CPF"]))
-                   $ticket->CPF = $_POST["CPF"];
+                   $tickets->CPF = $_POST["CPF"];
                 if (isset($_POST["status"]))
-                   $ticket->status = $_POST["status"];
+                   $tickets->status = $_POST["status"];
                 if (isset($_POST["priority"]))
-                   $ticket->priority = $_POST["priority"];
+                   $tickets->priority = $_POST["priority"];
                 
                
             }
 
 
-            Flash::setForm($ticket);
-            if (TicketService::salvar($ticket) > 1) //se é maior que um inseriu novo 
+            Flash::setForm($tickets);
+            if (TicketsService::salvar($tickets) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "Ticket");
+                $this->redirect(URL_BASE   . "Tickets");
             } else {
-                if (!$ticket->tickets_id) {
-                    $this->redirect(URL_BASE   . "Ticket/create");
+                if (!$tickets->tickets_id) {
+                    $this->redirect(URL_BASE   . "Tickets/create");
                 } else {
-                    $this->redirect(URL_BASE   . "Ticket/edit/" . $ticket->tickets_id);
+                    $this->redirect(URL_BASE   . "Tickets/edit/" . $tickets->tickets_id);
                 }
             }
         }

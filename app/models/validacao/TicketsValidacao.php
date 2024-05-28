@@ -2,16 +2,16 @@
 namespace app\models\validacao;
 use app\core\Validacao;
 
-class TicketValidacao {
-    public static function salvar($ticket) {
+class TicketsValidacao {
+    public static function salvar($tickets) {
         $validacao = new Validacao();    
-        $validacao->setData("user_id", $ticket->user_id, "User ID");
-        $validacao->setData("subject", $ticket->subject, "Subject");
-        $validacao->setData("imagem_perfil", $ticket->imagem_perfil, "Imagem de perfil");
-        $validacao->setData("description", $ticket->description, "Description");
-        $validacao->setData("CPF", $ticket->CPF, "CPF");
-        $validacao->setData("status", $ticket->status, "Status");
-        $validacao->setData("priority", $ticket->priority, "Priority");
+        $validacao->setData("user_id", $tickets->user_id, "User ID");
+        $validacao->setData("subject", $tickets->subject, "Subject");
+        $validacao->setData("imagem_perfil", $tickets->imagem_perfil, "Imagem de perfil");
+        $validacao->setData("description", $tickets->description, "Description");
+        $validacao->setData("CPF", $tickets->CPF, "CPF");
+        $validacao->setData("status", $tickets->status, "Status");
+        $validacao->setData("priority", $tickets->priority, "Priority");
     
         // Fazendo a validação
         $validacao->getData("user_id")->isVazio();

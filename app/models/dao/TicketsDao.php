@@ -2,7 +2,7 @@
 namespace app\models\dao;
 use app\core\Model;
 
-class TicketDao extends Model
+class TicketsDao extends Model
 { 
     public function lista($parametros)
     {

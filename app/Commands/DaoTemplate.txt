@@ -12,22 +12,17 @@ class {{ModelName}}Dao extends Model
                     FROM {{tableName}}
                     WHERE {{tableName}}_id > 0 ";
 
-            if ($parametros['valor_pesquisa'] != '') {
-                $sql .= " AND ( usuario LIKE '" . $parametros['valor_pesquisa'] . "' ";
-                $sql .= " OR celular LIKE '" . $parametros['valor_pesquisa'] . "' ";
-                $sql .= " OR fone LIKE '" . $parametros['valor_pesquisa'] . "' ";
-                $sql .= " OR estado LIKE '" . $parametros['valor_pesquisa'] . "' ";
-                $sql .= " OR cidade LIKE '" . $parametros['valor_pesquisa'] . "' ";
-                $sql .= " OR bairro LIKE '" . $parametros['valor_pesquisa'] . "' ";
-                $sql .= " OR email LIKE '" . $parametros['valor_pesquisa'] . "' ) ";
+            $valor_pesquisa = $parametros['valor_pesquisa'];
+
+            if ($valor_pesquisa != '') {
+{{fieldsDePesquisa}}
             }
 
             $sql .= " ORDER BY " . $parametros['colunaOrder'] . " " . $parametros['direcaoOrdenacao'] . " LIMIT " . $parametros['inicio'] . " , " . $parametros['quantidade'] . " ";
 
-            //i($sql);
             return self::select($this->db, $sql, true);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -40,17 +35,11 @@ class {{ModelName}}Dao extends Model
                     WHERE {{tableName}}_id > 0 ";
 
             if ($valor_pesquisa != '') {
-                $sql .= " AND ( usuario LIKE '" . $valor_pesquisa . "' ";
-                $sql .= " OR celular LIKE '" . $valor_pesquisa . "' ";
-                $sql .= " OR fone LIKE '" . $valor_pesquisa . "' ";
-                $sql .= " OR estado LIKE '" . $valor_pesquisa . "' ";
-                $sql .= " OR cidade LIKE '" . $valor_pesquisa . "' ";
-                $sql .= " OR bairro LIKE '" . $valor_pesquisa . "' ";
-                $sql .= " OR email LIKE '" . $valor_pesquisa . "' ) ";
+{{fieldsDePesquisa}}
             }
             return self::select($this->db, $sql, false);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
     }  
    
