@@ -1,4 +1,7 @@
-coisas para resolver
-colocar o criar uma opção no edit da composição
-fazer opção de inutilizar os produtos que não podem mais ser deletados
-concertar a parada de adicionar imagem
+- [x] #739
+- [ ] https://github.com/octo-org/octo-repo/issues/740
+- [ ] Add delight to the experience when all tasks are complete :tada:# public_html
+
+
+//comando para rodar o composer no servidor
+composer install --ignore-platform-reqs

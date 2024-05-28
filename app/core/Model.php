@@ -65,6 +65,28 @@ abstract class Model
         }        
     }
 
+    function enumValues($conn, $table, $column) {
+        $sql = "SELECT COLUMN_TYPE 
+                FROM information_schema.COLUMNS 
+                WHERE TABLE_NAME = :table 
+                AND COLUMN_NAME = :column";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':table', $table);
+        $stmt->bindValue(':column', $column);
+        $stmt->execute();
+    
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $enum_values = $row['COLUMN_TYPE'];
+            $enum_values = str_replace("enum('", "", $enum_values);
+            $enum_values = str_replace("')", "", $enum_values);
+            $enum_values = explode("','", $enum_values);
+            return $enum_values;
+        } else {
+            return [];
+        }
+    }
+
     //Retorna uma lista da tabela
     function all($conn, $tabela, $ordem)
     {

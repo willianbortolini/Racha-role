@@ -1,13 +1,13 @@
 {
   "background_color": "#ffffff",
-  "description": "Gerenciamento de representantes.",
+  "description": "Sistema de inventario",
   "dir": "ltr",
   "display": "standalone",
-  "name": "w9b2",
+  "name": "invtrack",
   "orientation": "any",
   "scope": "/",
-  "short_name": "w9b2",
-  "start_url": "https://w9b2.com/login",
+  "short_name": "invtrack",
+  "start_url": "https://invtrack.tech",
   "theme_color": "#ffffff",
   "categories": [
     "utilities"
@@ -15,12 +15,12 @@
   "screenshots": [],
   "icons": [
     {
-      "src": "/logoApp.png",
+      "src": "logoApp.png",
       "sizes": "500x500",
       "type": "image/png"
     }
   ],
   "shortcuts": [],
-  "id": "App de gerenciamento de representantes.",
+  "id": "invtrack",
   "iarc_rating_id": "18"
 }

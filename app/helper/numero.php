@@ -1,9 +1,6 @@
 <?php
 function moedaBr($valor){
-    if ($valor === null) {
-        return ''; 
-    }
-    return 'R$ ' . number_format($valor,2,",",".");
+    return number_format($valor,2,",",".");
 }
 
 function moedaEN($string){
@@ -33,6 +30,8 @@ function removerFormatacaoNumero( $strNumero ){
     return $resultado;
     
 }
+
+
 
 function valorPorExtenso( $valor = 0, $bolExibirMoeda = true, $bolPalavraFeminina = false ) {
     $valor = removerFormatacaoNumero( $valor );
@@ -111,12 +110,4 @@ function valorPorExtenso( $valor = 0, $bolExibirMoeda = true, $bolPalavraFeminin
     
     return($rt ? trim( $rt ) : "zero");
     
-}
-
-function removeZerosADireita($number) {
-    $formatted = rtrim($number, '0');
-    if (intval($formatted) == $formatted) {
-        return strval(intval($formatted));
-    }
-    return $formatted;
 }
