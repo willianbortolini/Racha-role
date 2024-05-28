@@ -1,0 +1,13 @@
+<?php
+namespace app\models\validacao;
+use app\core\Validacao;
+
+class {{ModelName}}Validacao {
+    public static function salvar(${{modelName}}) {
+        $validacao = new Validacao();    
+{{validacaoField}}    
+        // Fazendo a validação
+{{validacaoParametros}}   
+        return $validacao;
+    }
+}

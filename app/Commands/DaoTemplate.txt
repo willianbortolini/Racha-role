@@ -1,0 +1,46 @@
+<?php
+namespace app\models\dao;
+use app\core\Model;
+
+class {{ModelName}}Dao extends Model
+{ 
+    public function lista($parametros)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "SELECT * 
+                    FROM {{tableName}}
+                    WHERE {{tableName}}_id > 0 ";
+
+            $valor_pesquisa = $parametros['valor_pesquisa'];
+
+            if ($valor_pesquisa != '') {
+{{fieldsDePesquisa}}
+            }
+
+            $sql .= " ORDER BY " . $parametros['colunaOrder'] . " " . $parametros['direcaoOrdenacao'] . " LIMIT " . $parametros['inicio'] . " , " . $parametros['quantidade'] . " ";
+
+            return self::select($this->db, $sql, true);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function quantidadeDeLinhas($valor_pesquisa)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "SELECT count({{tableName}}_id) total
+                    FROM {{tableName}}
+                    WHERE {{tableName}}_id > 0 ";
+
+            if ($valor_pesquisa != '') {
+{{fieldsDePesquisa}}
+            }
+            return self::select($this->db, $sql, false);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }  
+   
+}
