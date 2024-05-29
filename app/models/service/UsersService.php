@@ -26,7 +26,7 @@ class UsersService {
     }
 
     public static function recuperaSenha($usuario, $campo, $tabela) {        
-        $validacao = UsersValidacao::recuperaSenha($usuario);         
+        $validacao = UsersValidacao::recuperapassword($usuario);         
         unset($usuario->confirmacao); 
         if(isset($usuario->senha)){
             $usuario->senha = password_hash($usuario->senha,PASSWORD_DEFAULT);
