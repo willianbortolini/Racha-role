@@ -76,7 +76,7 @@ class LoginController extends Controller
     public function recuperarSenha()
     {
         $email = isset($_POST["email"]) ? filter_input(INPUT_POST, "email") : null;
-        $usuario = Service::getGeral("Users", "email", "=", $email);
+        $usuario = Service::getGeral("users", "email", "=", $email);
 
         if ($usuario) {
             //coloca o codigo no capo de recuperação
@@ -84,7 +84,7 @@ class LoginController extends Controller
             $st = crypt($stringParaCriptografar, 'rl');
             $codigo_acesso = slug($st);
             $Users_id = $usuario->users_id;
-            Service::editar(["Users_id" => $Users_id, "recuperacao" => $codigo_acesso], "Users_id", "Users");
+            Service::editar(["users_id" => $Users_id, "recuperacao" => $codigo_acesso], "users_id", "users");
             $corpoEmail = "<style type='text/css'>"
                 . ".botao-email{border: solid 1px #21dc85;background: #60e2a6;cursor: pointer;font-size: 17px;padding: 5px 30px;margin: 5px;text-align: center;text-transform: uppercase;text-decoration: none;color:black;}"
                 . "</style>"
@@ -106,7 +106,7 @@ class LoginController extends Controller
     {
 
         if ($codigo != "") {
-            $usuario = Service::getGeral("Users", "recuperacao", "=", $codigo);
+            $usuario = Service::getGeral("users", "recuperacao", "=", $codigo);
             if ($usuario) {
                 $dados["usuario"] = $usuario;
                 $dados["view"] = "redefinir_senha";
