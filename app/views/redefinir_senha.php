@@ -8,8 +8,8 @@
             <div class="modal-body p-5 pt-0">
                 <form action="<?php echo URL_BASE . 'login/redefinirSenhaSalvar'; ?>" method="post">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control rounded-3" name="senha" id="senha" placeholder="Senha">
-                        <label for="senha">Senha</label>
+                        <input type="password" class="form-control rounded-3" name="password" id="password" placeholder="Senha">
+                        <label for="password">Senha</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control rounded-3" name="confirmacao" id="confirmacao" placeholder="Confirme a Senha">

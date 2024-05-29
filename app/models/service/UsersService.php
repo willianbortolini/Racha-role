@@ -28,8 +28,8 @@ class UsersService {
     public static function recuperaSenha($usuario, $campo, $tabela) {        
         $validacao = UsersValidacao::recuperapassword($usuario);         
         unset($usuario->confirmacao); 
-        if(isset($usuario->senha)){
-            $usuario->senha = password_hash($usuario->senha,PASSWORD_DEFAULT);
+        if(isset($usuario->password)){
+            $usuario->password = password_hash($usuario->password,PASSWORD_DEFAULT);
         }
          return Service::salvar($usuario, $campo, $validacao->listaErros(), $tabela);
     }

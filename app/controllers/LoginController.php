@@ -123,20 +123,17 @@ class LoginController extends Controller
         $usuario = new \stdClass();
         $usuario->users_id = $_POST["users_id"];
         $getUsuario = Service::getGeral("users", "users_id", "=", $usuario->users_id);
-        $usuario->senha = $_POST['senha'];
+        $usuario->password = $_POST['password'];
         $usuario->confirmacao = $_POST['confirmacao'];
         $usuario->recuperacao = "";
-        $recuperacao = $_POST['recuperacao'];
-
         Flash::setForm($usuario);
-        if (UsersService::recuperaSenha($usuario, "usuario_id", "users")) {
-            $retornoUsusario = LoginService::login($getUsuario->email, $_POST['senha']);
-
+        if (UsersService::recuperaSenha($usuario, "users_id", "users") > 0) {
+            $retornoUsusario = LoginService::login($getUsuario->email, $_POST['password']);
             if ($retornoUsusario == 1) {
                 $this->redirect(URL_BASE);
             } else {
                 $dados["erro"] = "Email ou senha invalidos";
-                $this->redirect(URL_BASE . "Login/redefinirSenha/" . $recuperacao);
+                $this->redirect(URL_BASE . "Login/redefinirSenha/" . $getUsuario->recuperacao);
             }
         } else {
             $this->redirect(URL_BASE . "Login/redefinirSenha/" . $getUsuario->recuperacao);

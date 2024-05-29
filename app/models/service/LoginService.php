@@ -91,12 +91,14 @@ class LoginService
         $erros = $validacao->listaErros();
         
         if (!$erros) {            
-            $resultado = service::get("users","email",$valida->email);        
+            $resultado = service::get("users","email",$valida->email); 
+                   
             if ($resultado) {
                 if (password_verify($password, $resultado->password)) {
                     $_SESSION['id'] = $resultado->users_id;
                     $csrfToken = bin2hex(random_bytes(32));
-                    $_SESSION['csrf_token'] = $csrfToken;                    
+                    $_SESSION['csrf_token'] = $csrfToken;    
+                                   
                     return 1;
                 }
             }
