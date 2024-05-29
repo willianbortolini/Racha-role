@@ -80,10 +80,10 @@ class LoginController extends Controller
 
         if ($usuario) {
             //coloca o codigo no capo de recuperação
-            $stringParaCriptografar = "f" . $usuario->Users_id . "d" . hoje();
+            $stringParaCriptografar = "f" . $usuario->users_id . "d" . hoje();
             $st = crypt($stringParaCriptografar, 'rl');
             $codigo_acesso = slug($st);
-            $Users_id = $usuario->Users_id;
+            $Users_id = $usuario->users_id;
             Service::editar(["Users_id" => $Users_id, "recuperacao" => $codigo_acesso], "Users_id", "Users");
             $corpoEmail = "<style type='text/css'>"
                 . ".botao-email{border: solid 1px #21dc85;background: #60e2a6;cursor: pointer;font-size: 17px;padding: 5px 30px;margin: 5px;text-align: center;text-transform: uppercase;text-decoration: none;color:black;}"
@@ -92,7 +92,7 @@ class LoginController extends Controller
                 . "Clique no botão abaixo para cadastrar uma nova senha.<br>"
                 . "<p><a class='botao-email' href='" . URL_BASE . "login/redefinirSenha/" . $codigo_acesso . "'>Redefinir</a></p><br>";
 
-            $de = "recuperacaosenha@cursoswill.site";
+            $de = "recuperacaosenha@invtrack.tech";
             $from = "solicitacao@cursoswill.site";
             $resposta = Service::email($usuario->email, "Recuperação senha W9B2", $corpoEmail, $de, $from);
             Flash::setMsg("Email de recuperação enviado ", 1);
