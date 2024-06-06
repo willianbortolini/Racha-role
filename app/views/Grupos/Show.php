@@ -1,14 +1,16 @@
-<h1  class="ms-3">{{name}}</h1>
+<h1  class="ms-3">Grupos</h1>
 <div class="row col-12">
     <div class="card col-12 m-2 m-md-4 p-4 p-md-4">
         <div class="col-md-12">
-            <a href="<?php echo URL_BASE . '{{ModelName}}/create'?>" class="btn btn-primary mb-3">Adicionar um
-                {{name}}</a>
+            <a href="<?php echo URL_BASE . 'Grupos/create'?>" class="btn btn-primary mb-3">Adicionar um
+                Grupos</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>
                     <tr>
-{{titulos}}
+                        <th>ID</th>
+                        <th>Nome</th>
+
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -49,14 +51,14 @@
             "serverSide": true,
             "responsive": true,
             "autoWidth": false,
-            "ajax": URL_BASE + "{{ModelName}}/list",
+            "ajax": URL_BASE + "Grupos/list",
             "language": {
                 "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
             }
         });
     });
 
-    controller = '{{ModelName}}';
+    controller = 'Grupos';
     var idLinha = 0;
     function deletarItem(id) {
         idLinha = id;

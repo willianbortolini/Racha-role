@@ -1,0 +1,54 @@
+{
+    "name": "Saldos",
+    "tableName": "saldos",
+    "fields": [
+        {
+            "name": "saldos_id",
+            "type": "INT",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": true
+        },
+        {
+            "name": "devedor_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Devedor",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "credor_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Credor",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "valor",
+            "type": "DECIMAL(10, 2)",
+            "attributes": "NOT NULL",
+            "label": "Valor",
+            "ShowInTable": true,
+            "generateInput": "number"
+        },
+        {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "attributes": "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+            "label": "Atualizado em",
+            "ShowInTable": false
+        }
+    ]
+}

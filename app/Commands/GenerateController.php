@@ -1,11 +1,11 @@
 <?php
+namespace app\Commands;
 
 if ($_SERVER["HTTP_HOST"] !== 'localhost') {
     echo "<h1>Acesso negado</h1>";
     exit;
 }
 
-namespace app\Commands;
 
 use LDAP\Result;
 
@@ -38,11 +38,13 @@ class GenerateController
         $sql .= implode(",\n", $fieldDefinitions);
 
         // Adiciona chaves estrangeiras no final da criação da tabela
+        $precisaDeView = false;
         foreach ($fields as $field) {
             if (isset($field['foreign'])) {
                 $sql .= ",\n    FOREIGN KEY ({$field['name']}) REFERENCES {$field['foreign']['table']}({$field['foreign']['field']})";
                 $joins[] = "JOIN {$field['foreign']['table']} f_{$field['name']} ON t.{$field['name']} = f_{$field['name']}.{$field['foreign']['field']}";
-                $selectFields[] = "f_{$field['name']}.{$field['foreign']['nome']} AS {$field['foreign']['table']}_nome";
+                $selectFields[] = "f_{$field['name']}.{$field['foreign']['nome']} AS {$field['name']}_nome";
+                $precisaDeView = true;
             }
         }
 
@@ -50,15 +52,17 @@ class GenerateController
 
         file_put_contents(__DIR__ . '/../migrations/' . date('Y_m_d_His') . "_create_{$tableName}_table.sql", $sql);
 
-        // Adicionar a criação de uma VIEW que traz os valores da tabela estrangeira
-        $viewSql = "CREATE VIEW vw_{$tableName} AS\n";
-        $viewSql .= "SELECT " . implode(", ", $selectFields) . "\n";
-        $viewSql .= "FROM $tableName t\n";
-        if (!empty($joins)) {
-            $viewSql .= implode("\n", $joins) . "\n";
-        }
+        if ($precisaDeView) {
+            // Adicionar a criação de uma VIEW que traz os valores da tabela estrangeira
+            $viewSql = "CREATE VIEW vw_{$tableName} AS\n";
+            $viewSql .= "SELECT " . implode(", ", $selectFields) . "\n";
+            $viewSql .= "FROM $tableName t\n";
+            if (!empty($joins)) {
+                $viewSql .= implode("\n", $joins) . "\n";
+            }
 
-        file_put_contents(__DIR__ . '/../migrations/' . date('Y_m_d_His') . "_create_vw_{$tableName}_view.sql", $viewSql);
+            file_put_contents(__DIR__ . '/../migrations/' . date('Y_m_d_His') . "_create_vw_{$tableName}_view.sql", $viewSql);
+        }
     }
 
     public function generateControler($modelName, $tableName, $fields)
@@ -85,8 +89,11 @@ class GenerateController
                 $excluiImagem .= "                if (isset(\$existe_imagem->$fieldName) && \$existe_imagem->$fieldName != '') {\n";
                 $excluiImagem .= "                    UtilService::deletarImagens(\$existe_imagem->$fieldName);\n";
                 $excluiImagem .= "                }\n";
+            } else if ((isset($input['generateInput'])) && ($input['generateInput'] == 'check')) {
+                $fieldDoController .= "                if (isset(\$_POST['$fieldName']))\n";
+                $fieldDoController .= "                     \${{modelName}}->$fieldName = (\$_POST['$fieldName'] == 'on') ? 1 : 0;\n";
             } else {
-                if (($input['name'] != 'created_at') and ($input['name'] != 'updated_at') and ($input['name'] != $tableName . '_id')) {
+                if (($input['name'] != 'created_at') && ($input['name'] != 'updated_at') and ($input['name'] != $tableName . '_id')) {
                     $fieldDoController .= "                if (isset(\$_POST[\"$fieldName\"]))\n";
                     $fieldDoController .= "                   \${{modelName}}->{$fieldName} = \$_POST[\"$fieldName\"];\n";
                 }
@@ -94,7 +101,11 @@ class GenerateController
 
             if ((isset($input['ShowInTable'])) && ($input['ShowInTable'] == true)) {
                 $listaDeColunasDaTabela .= "         $countColunasDaTabela => '" . $input['name'] . "',\n";
-                $fieldsRetornoDaLista .= '            $registro[] = $coluna->' . $input['name'] . ';' . "\n";
+                if ($inputType == 'img') {
+                    $fieldsRetornoDaLista .= '            $registro[] = \'<img src="\' . URL_IMAGEM_150 . $coluna->' . $input['name'] . ' .\'" class="img-thumbnail" alt="Miniatura">\';' . "\n";
+                } else {
+                    $fieldsRetornoDaLista .= '            $registro[] = $coluna->' . $input['name'] . ';' . "\n";
+                }
                 $countColunasDaTabela += 1;
             }
 
@@ -102,6 +113,7 @@ class GenerateController
             if ($inputType == 'enum') {
                 $fieldCreate .= '        $dados["' . $fieldName . '"] = service::getEnumValues($this->tabela, "' . $fieldName . '");' . "\n";
             }
+
 
             // Adiciona chaves estrangeiras no create e edit
             if (isset($input['foreign'])) {
@@ -114,6 +126,8 @@ class GenerateController
         $fieldCreate = rtrim($fieldCreate, "\n");
         $listaDeColunasDaTabela = rtrim($listaDeColunasDaTabela, ",\n");
         $fieldsRetornoDaLista = rtrim($fieldsRetornoDaLista, ",\n");
+
+       
         //controller
         // Replace placeholders in the controller template with actual values
         $template = file_get_contents(__DIR__ . '/ControllerTemplate.txt');
@@ -211,12 +225,17 @@ class GenerateController
         $validacaoField = '';
         $validacaoParametros = '';
         foreach ($fields as $input) {
-            if ((isset($input['generateInput'])) && ($input['generateInput'] == true)) {
-                $validacaoField .= "        \$validacao->setData(\"" . $input['name'] . "\", \${{modelName}}->" . $input['name'] . ", \"" . $input['label'] . "\");\n";
-                $validacaoParametros .= '        $validacao->getData("' . $input['name'] . '")->isVazio();' . "\n";
-                if (isset($input['validation'])) {
+            if (isset($input['generateInput'])) {
+                if ($input['generateInput'] != 'img') {
+                    $validacaoField .= "        \$validacao->setData(\"" . $input['name'] . "\", \${{modelName}}->" . $input['name'] . ", \"" . $input['label'] . "\");\n";
+                    $validacaoParametros .= '        $validacao->getData("' . $input['name'] . '")->isVazio();' . "\n";
+                }
+                if (isset($input['validation']) && ($input['validation'] != '')) {
                     foreach ($input['validation'] as $validacao) {
-                        $validacaoParametros .= '        $validacao->getData("' . $input['name'] . '")->' . $validacao . ';' . "\n";
+                        if ($input['generateInput'] != 'img') {
+                            $validacaoParametros .= '        $validacao->getData("' . $input['name'] . '")->' . $validacao . ';' . "\n";
+                        }
+
                     }
                 }
             }
@@ -277,12 +296,18 @@ class GenerateController
                     $inputCode .= "            } ?>\n";
                     $inputCode .= "        </select>\n";
                     $inputCode .= "    </div>\n\n";
+                } elseif ($inputType === 'check') {
+                    $inputCode .= '<div class="form-group mb-2 col-12 col-md-2 ">' . "\n";
+                    $inputCode .= '    <input type="hidden" name="' . $fieldName . '" value="off">' . "\n";
+                    $inputCode .= '    <input type="checkbox" class="form-check-input" id="' . $fieldName . '" value="on" <?php echo (isset($' . $tableName . '->' . $fieldName . ') && $' . $tableName . '->' . $fieldName . ' == 1) ? "checked" : ""; ?> name="' . $fieldName . '">' . "\n";
+                    $inputCode .= '    <label for="' . $fieldName . '">' . $labelText . '</label>' . "\n";
+                    $inputCode .= '</div>';
                 } elseif ($inputType === 'enum') {
                     $inputCode .= "    <div class=\"form-group mb-2\">\n";
                     $inputCode .= "        <label for=\"{$fieldName}\">{$labelText}</label>\n";
                     $inputCode .= "        <select class=\"form-select\" aria-label=\"Default select example\" name=\"{$fieldName}\">\n";
                     $inputCode .= "            <?php foreach (\${$fieldName} as \$item) {\n";
-                    $inputCode .= "                 echo \"<option value='\$item'\". (isset(\${{tableName}}->{$fieldName}) && \$item == \${{tableName}}->{$fieldName} ? \"selected\" : \"\") . \">\${$fieldName}</option>\";\n";
+                    $inputCode .= "                 echo \"<option value='\$item'\". (isset(\${{tableName}}->{$fieldName}) && \$item == \${{tableName}}->{$fieldName} ? \"selected\" : \"\") . \">\$item</option>\";\n";
                     $inputCode .= "            } ?>\n";
                     $inputCode .= "        </select>\n";
                     $inputCode .= "    </div>\n\n";
@@ -344,7 +369,8 @@ class GenerateController
         file_put_contents($viewEditPath, $viewEdit);
     }
 
-    public function generate($params) {
+    public function generate($params)
+    {
         $name = $params['name'];
         $tableName = $params['tableName'];
         $fields = $params['fields'];

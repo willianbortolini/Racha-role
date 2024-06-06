@@ -1,0 +1,46 @@
+{
+    "name": "Posições do orçamento",
+    "tableName": "posicao_orcamento",
+    "fields": [
+        {
+            "name": "posicao_orcamento_id",
+            "type": "INTEGER",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": false,
+            "generateInput": "",
+            "validation": "",
+            "foreign": null
+        },
+        {
+            "name": "descricao",
+            "type": "VARCHAR(100)",
+            "attributes": "NOT NULL",
+            "label": "Título da coluna",
+            "ShowInTable": true,
+            "generateInput": "text",
+            "validation": "",
+            "foreign": null
+        },
+        {
+            "name": "ativo",
+            "type": "INTEGER(1)",
+            "attributes": "NOT NULL DEFAULT 0",
+            "label": "Ativo",
+            "ShowInTable": true,
+            "generateInput": "check",
+            "validation": "",
+            "foreign": null
+        },
+        {
+            "name": "ordem",
+            "type": "integer(2)",
+            "attributes": "NOT NULL DEFAULT 0",
+            "label": "Ordem de exibição",
+            "ShowInTable": true,
+            "generateInput": "number",
+            "validation": "",
+            "foreign": null
+        }
+    ]
+}

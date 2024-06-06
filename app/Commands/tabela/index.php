@@ -46,7 +46,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="fieldAttributes1">Atributos:</label>
-                                <input placeholder="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" title="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" type="text" class="form-control" name="fields[0][attributes]" id="fieldAttributes1" required>
+                                <input placeholder="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" title="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" type="text" class="form-control" name="fields[0][attributes]" id="fieldAttributes1">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="fieldLabel1">Texto que representa o campo:</label>
@@ -56,15 +56,17 @@
 
                             <div class="form-group col-md-2 mt-4">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="fields[0][ShowInTable]" id="fieldShowInTable1" value="true" required>
+                                    <input type="checkbox" class="form-check-input" name="fields[0][ShowInTable]" id="fieldShowInTable1" value="true">
                                     <label class="form-check-label" for="fieldShowInTable1">Mostra na tabela?</label>
                                 </div>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="generateInput1">Tipo do input no editar:</label>
-                                <select class="form-control" name="fields[0][generateInput]" id="generateInput1" required>
+                                <select class="form-control" name="fields[0][generateInput]" id="generateInput1">
                                     <option value=""></option>
-                                    <option value="text">text</option>
+                                    <option value="text">text</option>                                    
+                                    <option value="number">number</option>
+                                    <option value="check">check</option>
                                     <option value="img">img</option>
                                     <option value="select">select</option>
                                     <option value="textArea">textArea</option>
@@ -81,15 +83,15 @@
                             <legend class="w-auto">Chave estrangeira</legend>
                             <div class="form-group col-md-3">
                                 <label for="fieldForeignTable1">Tabela</label>
-                                <input type="text" class="form-control" name="fields[0][foreign][table]" id="fieldForeignTable1" required>
+                                <input type="text" class="form-control" name="fields[0][foreign][table]" id="fieldForeignTable1">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="fieldForeignField1">Coluna id</label>
-                                <input type="text" class="form-control" name="fields[0][foreign][field]" id="fieldForeignField1" required>
+                                <input type="text" class="form-control" name="fields[0][foreign][field]" id="fieldForeignField1">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="fieldForeignNome1">Coluna Nome</label>
-                                <input type="text" class="form-control" name="fields[0][foreign][nome]" id="fieldForeignNome1" required>
+                                <input type="text" class="form-control" name="fields[0][foreign][nome]" id="fieldForeignNome1">
                             </div>
                         </fieldset>
                     </div>
@@ -123,7 +125,7 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="fieldAttributes${fieldCount}">Atributos:</label>
-                <input placeholder="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" title="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" type="text" class="form-control" name="fields[${fieldCount - 1}][attributes]" id="fieldAttributes${fieldCount}" required>
+                <input placeholder="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" title="NOT NULL DEFAULT 'desligado', DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,AUTO_INCREMENT PRIMARY KEY" type="text" class="form-control" name="fields[${fieldCount - 1}][attributes]" id="fieldAttributes${fieldCount}" >
             </div>
             <div class="form-group col-md-3">
                 <label for="fieldLabel${fieldCount}">Texto que representa o campo:</label>
@@ -137,9 +139,11 @@
             </div>
             <div class="form-group col-md-2">
                 <label for="generateInput${fieldCount}">Tipo do input no editar:</label>
-                <select class="form-control" name="fields[${fieldCount - 1}][generateInput]" id="generateInput${fieldCount}" required>
+                <select class="form-control" name="fields[${fieldCount - 1}][generateInput]" id="generateInput${fieldCount}" >
                     <option value=""></option>
                     <option value="text">text</option>
+                    <option value="number">number</option>
+                    <option value="check">check</option>                    
                     <option value="img">img</option>
                     <option value="select">select</option>
                     <option value="textArea">textArea</option>
@@ -157,15 +161,15 @@
             <legend class="w-auto">Chave estrangeira</legend>
             <div class="form-group col-md-3">
                 <label for="fieldForeignTable${fieldCount}">Tabela</label>
-                <input type="text" class="form-control" name="fields[${fieldCount - 1}][foreign][table]" id="fieldForeignTable${fieldCount}" required>
+                <input type="text" class="form-control" name="fields[${fieldCount - 1}][foreign][table]" id="fieldForeignTable${fieldCount}" >
             </div>
             <div class="form-group col-md-3">
                 <label for="fieldForeignField${fieldCount}">Coluna id</label>
-                <input type="text" class="form-control" name="fields[${fieldCount - 1}][foreign][field]" id="fieldForeignField${fieldCount}" required>
+                <input type="text" class="form-control" name="fields[${fieldCount - 1}][foreign][field]" id="fieldForeignField${fieldCount}" >
             </div>
             <div class="form-group col-md-3">
                 <label for="fieldForeignNome${fieldCount}">Coluna Nome</label>
-                <input type="text" class="form-control" name="fields[${fieldCount - 1}][foreign][nome]" id="fieldForeignNome${fieldCount}" required>
+                <input type="text" class="form-control" name="fields[${fieldCount - 1}][foreign][nome]" id="fieldForeignNome${fieldCount}" >
             </div>
         </fieldset>
     `;

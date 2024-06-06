@@ -1,6 +1,5 @@
 {
     "name": "Tickets",
-    "modelName": "Ticket",
     "tableName": "tickets",
     "fields": [
         {

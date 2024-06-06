@@ -9,16 +9,16 @@ use Exception;
 class Service
 {
 
-    public static function lista($tabela)
+    public static function lista($tabela, $ordem = 'DESC')
     {
         $dao = new Dao();
-        return $dao->lista($tabela);
+        return $dao->lista($tabela, $ordem);
     }
 
-    public static function get($tabela, $campo, $valor, $eh_lista = false)
+    public static function get($tabela, $campo, $valor, $eh_lista = false, $ordem = 'DESC')
     {
         $dao = new Dao();
-        return $dao->get($tabela, $campo, $valor, $eh_lista);
+        return $dao->get($tabela, $campo, $valor, $eh_lista, $ordem);
     }
 
     public static function getSemEmpresa($tabela, $campo, $valor, $eh_lista = false)

@@ -1,0 +1,54 @@
+{
+    "name": "Participantes Despesas",
+    "tableName": "participantes_despesas",
+    "fields": [
+        {
+            "name": "participantes_despesas_id",
+            "type": "INT",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": true
+        },
+        {
+            "name": "despesas_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID da Despesa",
+            "foreign": {
+                "table": "despesas",
+                "field": "despesas_id",
+                "nome": "descricao"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "users_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Usuário",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "valor",
+            "type": "DECIMAL(10, 2)",
+            "attributes": "NOT NULL",
+            "label": "Valor",
+            "ShowInTable": true,
+            "generateInput": "number"
+        },
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "attributes": "DEFAULT CURRENT_TIMESTAMP",
+            "label": "Criado em",
+            "ShowInTable": false
+        }
+    ]
+}

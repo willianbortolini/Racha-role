@@ -1,0 +1,36 @@
+{
+    "name": "Grupos",
+    "tableName": "grupos",
+    "fields": [
+        {
+            "name": "grupos_id",
+            "type": "INT",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": true
+        },
+        {
+            "name": "nome",
+            "type": "VARCHAR(100)",
+            "attributes": "NOT NULL",
+            "label": "Nome",
+            "ShowInTable": true,
+            "generateInput": "text"
+        },
+        {
+            "name": "foto",
+            "type": "img",
+            "attributes": "",
+            "label": "Foto",
+            "ShowInTable": false,
+            "generateInput": "img"
+        },
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "attributes": "DEFAULT CURRENT_TIMESTAMP",
+            "label": "Criado em",
+            "ShowInTable": false
+        }
+    ]
+}

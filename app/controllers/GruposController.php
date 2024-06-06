@@ -4,15 +4,15 @@ namespace app\controllers;
 
 use app\core\Controller;
 use app\util\UtilService;
-use app\models\service\{{ModelName}}Service;
+use app\models\service\GruposService;
 use app\core\Flash;
 use app\models\service\Service;
 
-class {{ModelName}}Controller extends Controller
+class GruposController extends Controller
 {
-    private $tabela = "{{tableName}}";
-    private $campo = "{{tableName}}_id";
-    {{constanteView}}
+    private $tabela = "grupos";
+    private $campo = "grupos_id";
+    
 
     public function __construct()
     {
@@ -21,24 +21,24 @@ class {{ModelName}}Controller extends Controller
 
     public function index()
     {
-        $dados["{{tableName}}"] = Service::lista($this->{{tabelaOuView}});
-        $dados["view"] = "{{ModelName}}/Show";
+        $dados["grupos"] = Service::lista($this->tabela);
+        $dados["view"] = "Grupos/Show";
         $this->load("templateBootstrap", $dados);
     }
 
     public function edit($id)
     {
-        $dados["{{tableName}}"] = Service::get($this->{{tabelaOuView}}, $this->campo, $id);
-{{fieldCreate}}
-        $dados["view"] = "{{ModelName}}/Edit";
+        $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);
+
+        $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
     public function create()
     {
-        $dados["{{tableName}}"] = Flash::getForm();
-{{fieldCreate}}
-        $dados["view"] = "{{ModelName}}/Edit";
+        $dados["grupos"] = Flash::getForm();
+
+        $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
@@ -50,9 +50,13 @@ class {{ModelName}}Controller extends Controller
                 $id = $_POST['id'];
                 
                 // Excluir a imagem, se existir               
-{{excluiImagem}}
+                $existe_imagem = service::get($this->tabela, $this->campo, $id);
+                if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
+                    UtilService::deletarImagens($existe_imagem->foto);
+                }
+
                 // Excluir
-                {{ModelName}}Service::excluir($id);
+                GruposService::excluir($id);
             }
         }
     }
@@ -63,7 +67,8 @@ class {{ModelName}}Controller extends Controller
 
         // Lista de colunas da tabela
         $colunas = [
-{{listaDeColunasDaTabela}}
+         0 => 'grupos_id',
+         1 => 'nome'
         ];
 
         if (!empty($dados_requisicao['search']['value'])) {
@@ -71,7 +76,7 @@ class {{ModelName}}Controller extends Controller
         } else {
             $valor_pesquisa = "";
         }
-        $row_qnt_usuarios = {{ModelName}}Service::quantidadeDeLinhas($valor_pesquisa);
+        $row_qnt_usuarios = GruposService::quantidadeDeLinhas($valor_pesquisa);
 
         $parametros = [
             'inicio' => intval($dados_requisicao['start']),
@@ -80,13 +85,14 @@ class {{ModelName}}Controller extends Controller
             'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
             'valor_pesquisa' => $valor_pesquisa
         ];
-        $listaRetorno = {{ModelName}}Service::lista($parametros);
+        $listaRetorno = GruposService::lista($parametros);
         $dados = [];
         foreach ($listaRetorno as $coluna) {
             $registro = [];
-{{fieldsRetornoDaLista}}
-            $registro[] = "<a href='" . URL_BASE . "{{ModelName}}/edit/" . $coluna->{{tableName}}_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->{{tableName}}_id . ")' type='button'
+            $registro[] = $coluna->grupos_id;
+            $registro[] = $coluna->nome;
+            $registro[] = "<a href='" . URL_BASE . "Grupos/edit/" . $coluna->grupos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
+            <button onclick='deletarItem(" . $coluna->grupos_id . ")' type='button'
                 class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
                 data-bs-target='#deleteModal'>
                 Deletar
@@ -108,28 +114,30 @@ class {{ModelName}}Controller extends Controller
     {
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
-            ${{modelName}} = new \stdClass();
+            $grupos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["{{tableName}}_id"]) && is_numeric($_POST["{{tableName}}_id"]) && $_POST["{{tableName}}_id"] > 0) {                  
-                    ${{modelName}}->{{tableName}}_id = $_POST["{{tableName}}_id"];                    
+                if (isset($_POST["grupos_id"]) && is_numeric($_POST["grupos_id"]) && $_POST["grupos_id"] > 0) {                  
+                    $grupos->grupos_id = $_POST["grupos_id"];                    
                 } else {
-                    ${{modelName}}->{{tableName}}_id = 0;                         
+                    $grupos->grupos_id = 0;                         
                 }
-{{fieldDoController}}                
+                if (isset($_POST["nome"]))
+                   $grupos->nome = $_POST["nome"];
+                
                
             }
 
 
-            Flash::setForm(${{modelName}});
-            if ({{ModelName}}Service::salvar(${{modelName}}) > 1) //se é maior que um inseriu novo 
+            Flash::setForm($grupos);
+            if (GruposService::salvar($grupos) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "{{ModelName}}");
+                $this->redirect(URL_BASE   . "Grupos");
             } else {
-                if (!${{modelName}}->{{tableName}}_id) {
-                    $this->redirect(URL_BASE   . "{{ModelName}}/create");
+                if (!$grupos->grupos_id) {
+                    $this->redirect(URL_BASE   . "Grupos/create");
                 } else {
-                    $this->redirect(URL_BASE   . "{{ModelName}}/edit/" . ${{modelName}}->{{tableName}}_id);
+                    $this->redirect(URL_BASE   . "Grupos/edit/" . $grupos->grupos_id);
                 }
             }
         }

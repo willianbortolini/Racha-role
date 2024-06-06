@@ -4,15 +4,15 @@ namespace app\controllers;
 
 use app\core\Controller;
 use app\util\UtilService;
-use app\models\service\{{ModelName}}Service;
+use app\models\service\SaldosService;
 use app\core\Flash;
 use app\models\service\Service;
 
-class {{ModelName}}Controller extends Controller
+class SaldosController extends Controller
 {
-    private $tabela = "{{tableName}}";
-    private $campo = "{{tableName}}_id";
-    {{constanteView}}
+    private $tabela = "saldos";
+    private $campo = "saldos_id";
+    private $view = "vw_saldos";
 
     public function __construct()
     {
@@ -21,24 +21,24 @@ class {{ModelName}}Controller extends Controller
 
     public function index()
     {
-        $dados["{{tableName}}"] = Service::lista($this->{{tabelaOuView}});
-        $dados["view"] = "{{ModelName}}/Show";
+        $dados["saldos"] = Service::lista($this->view);
+        $dados["view"] = "Saldos/Show";
         $this->load("templateBootstrap", $dados);
     }
 
     public function edit($id)
     {
-        $dados["{{tableName}}"] = Service::get($this->{{tabelaOuView}}, $this->campo, $id);
-{{fieldCreate}}
-        $dados["view"] = "{{ModelName}}/Edit";
+        $dados["saldos"] = Service::get($this->view, $this->campo, $id);
+        $dados["users"] = service::lista("users");
+        $dados["view"] = "Saldos/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
     public function create()
     {
-        $dados["{{tableName}}"] = Flash::getForm();
-{{fieldCreate}}
-        $dados["view"] = "{{ModelName}}/Edit";
+        $dados["saldos"] = Flash::getForm();
+        $dados["users"] = service::lista("users");
+        $dados["view"] = "Saldos/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
@@ -50,9 +50,9 @@ class {{ModelName}}Controller extends Controller
                 $id = $_POST['id'];
                 
                 // Excluir a imagem, se existir               
-{{excluiImagem}}
+
                 // Excluir
-                {{ModelName}}Service::excluir($id);
+                SaldosService::excluir($id);
             }
         }
     }
@@ -63,7 +63,10 @@ class {{ModelName}}Controller extends Controller
 
         // Lista de colunas da tabela
         $colunas = [
-{{listaDeColunasDaTabela}}
+         0 => 'saldos_id',
+         1 => 'devedor_id',
+         2 => 'credor_id',
+         3 => 'valor'
         ];
 
         if (!empty($dados_requisicao['search']['value'])) {
@@ -71,7 +74,7 @@ class {{ModelName}}Controller extends Controller
         } else {
             $valor_pesquisa = "";
         }
-        $row_qnt_usuarios = {{ModelName}}Service::quantidadeDeLinhas($valor_pesquisa);
+        $row_qnt_usuarios = SaldosService::quantidadeDeLinhas($valor_pesquisa);
 
         $parametros = [
             'inicio' => intval($dados_requisicao['start']),
@@ -80,13 +83,16 @@ class {{ModelName}}Controller extends Controller
             'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
             'valor_pesquisa' => $valor_pesquisa
         ];
-        $listaRetorno = {{ModelName}}Service::lista($parametros);
+        $listaRetorno = SaldosService::lista($parametros);
         $dados = [];
         foreach ($listaRetorno as $coluna) {
             $registro = [];
-{{fieldsRetornoDaLista}}
-            $registro[] = "<a href='" . URL_BASE . "{{ModelName}}/edit/" . $coluna->{{tableName}}_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->{{tableName}}_id . ")' type='button'
+            $registro[] = $coluna->saldos_id;
+            $registro[] = $coluna->devedor_id;
+            $registro[] = $coluna->credor_id;
+            $registro[] = $coluna->valor;
+            $registro[] = "<a href='" . URL_BASE . "Saldos/edit/" . $coluna->saldos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
+            <button onclick='deletarItem(" . $coluna->saldos_id . ")' type='button'
                 class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
                 data-bs-target='#deleteModal'>
                 Deletar
@@ -108,28 +114,34 @@ class {{ModelName}}Controller extends Controller
     {
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
-            ${{modelName}} = new \stdClass();
+            $saldos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["{{tableName}}_id"]) && is_numeric($_POST["{{tableName}}_id"]) && $_POST["{{tableName}}_id"] > 0) {                  
-                    ${{modelName}}->{{tableName}}_id = $_POST["{{tableName}}_id"];                    
+                if (isset($_POST["saldos_id"]) && is_numeric($_POST["saldos_id"]) && $_POST["saldos_id"] > 0) {                  
+                    $saldos->saldos_id = $_POST["saldos_id"];                    
                 } else {
-                    ${{modelName}}->{{tableName}}_id = 0;                         
+                    $saldos->saldos_id = 0;                         
                 }
-{{fieldDoController}}                
+                if (isset($_POST["devedor_id"]))
+                   $saldos->devedor_id = $_POST["devedor_id"];
+                if (isset($_POST["credor_id"]))
+                   $saldos->credor_id = $_POST["credor_id"];
+                if (isset($_POST["valor"]))
+                   $saldos->valor = $_POST["valor"];
+                
                
             }
 
 
-            Flash::setForm(${{modelName}});
-            if ({{ModelName}}Service::salvar(${{modelName}}) > 1) //se é maior que um inseriu novo 
+            Flash::setForm($saldos);
+            if (SaldosService::salvar($saldos) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "{{ModelName}}");
+                $this->redirect(URL_BASE   . "Saldos");
             } else {
-                if (!${{modelName}}->{{tableName}}_id) {
-                    $this->redirect(URL_BASE   . "{{ModelName}}/create");
+                if (!$saldos->saldos_id) {
+                    $this->redirect(URL_BASE   . "Saldos/create");
                 } else {
-                    $this->redirect(URL_BASE   . "{{ModelName}}/edit/" . ${{modelName}}->{{tableName}}_id);
+                    $this->redirect(URL_BASE   . "Saldos/edit/" . $saldos->saldos_id);
                 }
             }
         }

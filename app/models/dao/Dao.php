@@ -2,16 +2,32 @@
 namespace app\models\dao;
 use app\core\Model;
 
-class Dao extends Model{    
-    public function lista($tabela){
-        return  $this->all($this->db, $tabela);
-    }    
+class Dao extends Model{   
     
-    public function get($tabela, $campo, $valor, $eh_lista){
-        return  $this->find($this->db,$campo, $valor, $tabela, $eh_lista);
+    public function getDBConnection(){
+        return  $this->db;
+    } 
+    public function lista($tabela, $ordem){
+        return  $this->all($this->db, $tabela, $ordem);
+    }        
+    public function get($tabela, $campo, $valor, $eh_lista, $ordem){
+        return  $this->find($this->db,$campo, $valor, $tabela, $eh_lista, $ordem);
+    } 
+
+    public function colunasDaTabela($tabela){
+        return  $this->colunas($this->db,$tabela);
+    } 
+
+    public function getEnumValues($tabela, $campo){
+        return  $this->enumValues($this->db, $tabela, $campo);
     } 
     
-    public function getSemEmpresa($tabela, $campo, $valor, $eh_lista, $empresa=null){
+
+    public function getJoin($tabela, $campo, $valor,$joins, $eh_lista){
+        return  $this->findJoin($this->db,$campo, $valor, $tabela,$joins, $eh_lista);
+    } 
+    
+    public function getSemEmpresa($tabela, $campo, $valor, $eh_lista){
         return  $this->findSemEmpresa($this->db,$campo, $valor, $tabela, $eh_lista);
     }
     

@@ -1,0 +1,6 @@
+CREATE TABLE grupos (
+    grupos_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    foto VARCHAR(255) ,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
