@@ -15,6 +15,10 @@ abstract class Model
         $this->db = Conexao::getConexao();
     }
 
+    function setTabela($Atabela)
+    {
+        $tabela = $Atabela; 
+    }
     //Serve para fazer consultas utilizando parametros
     function consultar($conn, $sql, $parametro = array(), $isLista = true)
     {

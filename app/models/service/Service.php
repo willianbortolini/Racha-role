@@ -8,11 +8,6 @@ use Exception;
 
 class Service { 
     protected $tabela;
-    
-    public static function getDBConnection() {
-        $dao = new Dao();
-        return $dao->getDBConnection();
-    }
 
     public static function begin_tran() {
         $dao = new Dao();
@@ -44,6 +39,8 @@ class Service {
 
     public static function lista($tabela, $ordem = 'desc') {
         $dao = new Dao();
+        i($this::$tabela);
+        $dao->setTabela(self::$tabela);
         return $dao->lista($tabela, $ordem);
     }
 
