@@ -86,14 +86,11 @@ class UtilService
         return $usuario;
     }
 
-    public static function validaNivel($nivel)
+    public static function usuarioAutorizado($id)
     {
-        if ((isset($_SESSION['nivel'])) && ($_SESSION['nivel'] >= $nivel)) {
-            return true;
-        } else {
-            throw new Exception("Não autorizado", 401);           
-        }
-
+        if(!isset($_SESSION['id']) || ($id != $_SESSION['id'])){
+            throw new \Exception("Não autorizado", 401);     
+        }  
     }
 
 

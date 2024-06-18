@@ -21,7 +21,6 @@ class {{ModelName}}Controller extends Controller
 
     public function index()
     {
-        $dados["{{tableName}}"] = Service::lista($this->{{tabelaOuView}});
         $dados["view"] = "{{ModelName}}/Show";
         $this->load("templateBootstrap", $dados);
     }

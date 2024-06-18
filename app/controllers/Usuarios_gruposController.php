@@ -21,7 +21,6 @@ class Usuarios_gruposController extends Controller
 
     public function index()
     {
-        $dados["usuarios_grupos"] = Service::lista($this->view);
         $dados["view"] = "Usuarios_grupos/Show";
         $this->load("templateBootstrap", $dados);
     }

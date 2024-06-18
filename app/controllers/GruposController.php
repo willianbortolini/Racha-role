@@ -7,12 +7,13 @@ use app\util\UtilService;
 use app\models\service\GruposService;
 use app\core\Flash;
 use app\models\service\Service;
+use app\models\service\Usuarios_gruposService;
 
 class GruposController extends Controller
 {
     private $tabela = "grupos";
     private $campo = "grupos_id";
-    
+
 
     public function __construct()
     {
@@ -21,7 +22,8 @@ class GruposController extends Controller
 
     public function index()
     {
-        $dados["grupos"] = Service::lista($this->tabela);
+        $dados["grupos"] = GruposService::get($this->tabela, $this->campo, 1);
+        i($dados["grupos"]);
         $dados["view"] = "Grupos/Show";
         $this->load("templateBootstrap", $dados);
     }
@@ -48,7 +50,7 @@ class GruposController extends Controller
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-                
+
                 // Excluir a imagem, se existir               
                 $existe_imagem = service::get($this->tabela, $this->campo, $id);
                 if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
@@ -61,84 +63,55 @@ class GruposController extends Controller
         }
     }
 
-    public function list()
-    {
-        $dados_requisicao = $_REQUEST;
-
-        // Lista de colunas da tabela
-        $colunas = [
-         0 => 'grupos_id',
-         1 => 'nome'
-        ];
-
-        if (!empty($dados_requisicao['search']['value'])) {
-            $valor_pesquisa = "%" . $dados_requisicao['search']['value'] . "%";
-        } else {
-            $valor_pesquisa = "";
-        }
-        $row_qnt_usuarios = GruposService::quantidadeDeLinhas($valor_pesquisa);
-
-        $parametros = [
-            'inicio' => intval($dados_requisicao['start']),
-            'quantidade' => intval($dados_requisicao['length']),
-            'colunaOrder' => $colunas[$dados_requisicao['order'][0]['column']],
-            'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
-            'valor_pesquisa' => $valor_pesquisa
-        ];
-        $listaRetorno = GruposService::lista($parametros);
-        $dados = [];
-        foreach ($listaRetorno as $coluna) {
-            $registro = [];
-            $registro[] = $coluna->grupos_id;
-            $registro[] = $coluna->nome;
-            $registro[] = "<a href='" . URL_BASE . "Grupos/edit/" . $coluna->grupos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->grupos_id . ")' type='button'
-                class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
-                data-bs-target='#deleteModal'>
-                Deletar
-            </button>";
-            $dados[] = $registro;
-        }
-
-        $resultado = [
-            "draw" => intval($dados_requisicao['draw']),
-            "recordsTotal" => $row_qnt_usuarios->total,
-            "recordsFiltered" => $row_qnt_usuarios->total,
-            "data" => $dados
-        ];
-
-        echo json_encode($resultado);
-    }
-
     public function save()
     {
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
             $grupos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-                if (isset($_POST["grupos_id"]) && is_numeric($_POST["grupos_id"]) && $_POST["grupos_id"] > 0) {                  
-                    $grupos->grupos_id = $_POST["grupos_id"];                    
+                if (isset($_POST["grupos_id"]) && is_numeric($_POST["grupos_id"]) && $_POST["grupos_id"] > 0) {
+                    $grupos->grupos_id = $_POST["grupos_id"];
                 } else {
-                    $grupos->grupos_id = 0;                         
+                    $grupos->grupos_id = 0;
                 }
-                if (isset($_POST["nome"]))
-                   $grupos->nome = $_POST["nome"];
-                
-               
+                if (isset($_POST["nome"])) {
+                    $grupos->nome = $_POST["nome"];
+                }
             }
 
-
             Flash::setForm($grupos);
-            if (GruposService::salvar($grupos) > 1) //se é maior que um inseriu novo 
-            {
-                $this->redirect(URL_BASE   . "Grupos");
-            } else {
-                if (!$grupos->grupos_id) {
-                    $this->redirect(URL_BASE   . "Grupos/create");
+            Service::begin_tran();
+
+            try {
+                $grupos_id = GruposService::salvar($grupos);
+                if ($grupos_id > 1) {
+                    // Insere novo grupo e coloca o usuário atual como membro do grupo
+                    $usuarios_grupos = new GruposService;
+                    $usuarios_grupos->usuarios_grupos_id = 0;
+                    $usuarios_grupos->users_id = $_SESSION['id'];
+                    $usuarios_grupos->grupos_id = $grupos_id;
+
+                    if (Usuarios_gruposService::salvar($usuarios_grupos) > 1) {
+                        Service::commit();
+                        $this->redirect(URL_BASE . "Grupos");
+                    } else {
+                        Service::rollback();
+                        $this->redirect(URL_BASE . "Grupos/create");
+                        exit;
+                    }
                 } else {
-                    $this->redirect(URL_BASE   . "Grupos/edit/" . $grupos->grupos_id);
+                    if (!$grupos->grupos_id) {
+                        Service::rollback();
+                        $this->redirect(URL_BASE . "Grupos/create");
+                    } else {
+                        Service::commit();
+                        $this->redirect(URL_BASE . "Grupos/edit/" . $grupos->grupos_id);
+                    }
                 }
+            } catch (\Exception $e) {
+                Service::rollback();
+                $this->redirect(URL_BASE . "Grupos/create");
+                exit;
             }
         }
     }

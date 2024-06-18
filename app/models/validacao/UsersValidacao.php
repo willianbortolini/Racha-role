@@ -44,8 +44,6 @@ class UsersValidacao{
         $validacao = new Validacao(); 
         
         $validacao->setData("email", $usuario->email);
-        $validacao->setData("username", $usuario->username);
-        $validacao->setData("password", $usuario->password);
         
         $validacao->getData("email")->isVazio();
         $validacao->getData("email")->isEmail();

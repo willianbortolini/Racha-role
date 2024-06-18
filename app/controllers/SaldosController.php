@@ -21,7 +21,6 @@ class SaldosController extends Controller
 
     public function index()
     {
-        $dados["saldos"] = Service::lista($this->view);
         $dados["view"] = "Saldos/Show";
         $this->load("templateBootstrap", $dados);
     }

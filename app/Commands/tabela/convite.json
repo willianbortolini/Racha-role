@@ -1,0 +1,78 @@
+{
+    "name": "Convites",
+    "tableName": "convites",
+    "fields": [
+        {
+            "name": "convites_id",
+            "type": "INT",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": true
+        },
+        {
+            "name": "usuario_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Usuário",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "convidado_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Amigo",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "email",
+            "type": "VARCHAR(100)",
+            "attributes": "UNIQUE NOT NULL",
+            "label": "E-mail",
+            "ShowInTable": true,
+            "generateInput": "email"
+        },
+        {
+            "name": "telefone",
+            "type": "VARCHAR(20)",
+            "attributes": "",
+            "label": "Telefone",
+            "ShowInTable": true,
+            "generateInput": "text"
+        },
+        {
+            "name": "status",
+            "type": "enum",
+            "values": ["Pendente", "Aceito", "Recusado"],
+            "attributes": "NOT NULL DEFAULT 'Pendente'",
+            "label": "Status",
+            "ShowInTable": true,
+            "generateInput": "enum"
+        },        
+        {
+            "name": "aceitado_em",
+            "type": "TIMESTAMP",
+            "attributes": "",
+            "label": "Aceitado em",
+            "ShowInTable": false
+        },        
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "attributes": "DEFAULT CURRENT_TIMESTAMP",
+            "label": "Criado em",
+            "ShowInTable": false
+        }
+    ]
+}

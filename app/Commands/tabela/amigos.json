@@ -1,0 +1,55 @@
+{
+    "name": "Amigos",
+    "tableName": "amigos",
+    "fields": [
+        {
+            "name": "amigos_id",
+            "type": "INT",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": true
+        },
+        {
+            "name": "usuario_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Usuário",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "amigo_id",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Amigo",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "status",
+            "type": "enum",
+            "values": ["Pendente", "Aceito", "Recusado"],
+            "attributes": "NOT NULL DEFAULT 'Pendente'",
+            "label": "Status",
+            "ShowInTable": true,
+            "generateInput": "enum"
+        },
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "attributes": "DEFAULT CURRENT_TIMESTAMP",
+            "label": "Criado em",
+            "ShowInTable": false
+        }
+    ]
+}

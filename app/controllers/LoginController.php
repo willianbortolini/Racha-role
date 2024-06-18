@@ -96,9 +96,9 @@ class LoginController extends Controller
             $from = "solicitacao@cursoswill.site";
             $resposta = Service::email($usuario->email, "Recuperação senha W9B2", $corpoEmail, $de, $from);
             Flash::setMsg("Email de recuperação enviado ", 1);
-            $this->redirect(URL_BASE . "Login");
+            $this->redirect(URL_BASE);
         } else {
-            $this->redirect(URL_BASE . "Login");
+            $this->redirect(URL_BASE);
         }
     }
 

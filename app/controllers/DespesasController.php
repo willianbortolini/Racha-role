@@ -21,7 +21,6 @@ class DespesasController extends Controller
 
     public function index()
     {
-        $dados["despesas"] = Service::lista($this->view);
         $dados["view"] = "Despesas/Show";
         $this->load("templateBootstrap", $dados);
     }

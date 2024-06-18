@@ -6,12 +6,15 @@ use app\models\validacao\GruposValidacao;
 use app\models\dao\GruposDao;
 use app\util\UtilService;
 
-class GruposService
+class GruposService extends Service
 {
     const TABELA = "grupos"; 
     const CAMPO = "grupos_id";     
-
-    public static function salvar($Grupos)
+    public function __construct()
+    {
+        $this->tabela = self::TABELA;
+    }
+    /*public static function salvar($Grupos)
     {
         $validacao = GruposValidacao::salvar($Grupos);
         global $config_upload;
@@ -39,6 +42,13 @@ class GruposService
         return Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);
     }  
 
+    public static function gruposDoUsuario()
+    {
+        $dao = new GruposDao();
+        return $dao->gruposDoUsuario($_SESSION['id']);
+    }
+    
+
     public static function excluir($id)
     {
         Service::excluir(self::TABELA, self::CAMPO, $id);
@@ -53,5 +63,5 @@ class GruposService
     {
         $dao = new GruposDao();
         return $dao->quantidadeDeLinhas($valor_pesquisa);
-    }
+    }*/
 }

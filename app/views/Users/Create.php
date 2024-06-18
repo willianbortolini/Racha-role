@@ -15,7 +15,7 @@
 
             </div>
             <div class="modal-body p-5 pt-0">
-                <form action="<?PHP echo URL_BASE . 'Users/salvar' ?>" method="post">
+                <form action="<?PHP echo URL_BASE . 'Users/criar' ?>" method="post">
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" class="form-control" id="email" name="email"

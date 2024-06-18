@@ -21,7 +21,6 @@ class Participantes_despesasController extends Controller
 
     public function index()
     {
-        $dados["participantes_despesas"] = Service::lista($this->view);
         $dados["view"] = "Participantes_despesas/Show";
         $this->load("templateBootstrap", $dados);
     }
