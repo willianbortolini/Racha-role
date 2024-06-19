@@ -7,8 +7,8 @@ use app\models\dao\Dao;
 use Exception;
 
 class Service { 
-    protected $tabela;
 
+    protected static $tabela;
     public static function begin_tran() {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();
@@ -37,10 +37,10 @@ class Service {
         return $dao->getEnumValues($tabela, $campo);        
     }
 
-    public static function lista($tabela, $ordem = 'desc') {
+    public static function lista($tabela = null, $ordem = 'desc') {
+        $tabela = $tabela ?: static::$tabela;
+        
         $dao = new Dao();
-        i($this::$tabela);
-        $dao->setTabela(self::$tabela);
         return $dao->lista($tabela, $ordem);
     }
 

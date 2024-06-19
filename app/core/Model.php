@@ -15,10 +15,6 @@ abstract class Model
         $this->db = Conexao::getConexao();
     }
 
-    function setTabela($Atabela)
-    {
-        $tabela = $Atabela; 
-    }
     //Serve para fazer consultas utilizando parametros
     function consultar($conn, $sql, $parametro = array(), $isLista = true)
     {
@@ -94,7 +90,6 @@ abstract class Model
     //Retorna uma lista da tabela
     function all($conn, $tabela, $ordem)
     {
-        
         try {
             $primeiraColuna = $this->getPrimeiraColuna($conn, $tabela);
             $sql = "SELECT * FROM " . $tabela ." ORDER BY ".$primeiraColuna." " . $ordem ;
@@ -109,7 +104,7 @@ abstract class Model
     //Retorna uma consulta por um campo
     function find($conn, $campo, $valor, $tabela = null, $isLista = false, $ordem = 'desc')
     {
-        i($this->tabela);
+        
         $tabela = ($tabela) ? $tabela : $this->tabela;
 
         try {
@@ -130,7 +125,7 @@ abstract class Model
     }
 
     function getPrimeiraColuna($conn, $tabela)
-    {
+    {        
         $sql = "SHOW COLUMNS FROM $tabela";
         $stmt = $conn->prepare($sql);
         $stmt->execute();

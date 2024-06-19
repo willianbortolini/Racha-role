@@ -7,13 +7,14 @@ use app\models\dao\GruposDao;
 use app\util\UtilService;
 
 class GruposService extends Service
-{
-    const TABELA = "grupos"; 
-    const CAMPO = "grupos_id";     
+{   
+
     public function __construct()
     {
-        $this->tabela = self::TABELA;
+        static::$tabela = "grupos";
     }
+
+    
     /*public static function salvar($Grupos)
     {
         $validacao = GruposValidacao::salvar($Grupos);
