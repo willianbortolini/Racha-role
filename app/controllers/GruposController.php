@@ -23,7 +23,7 @@ class GruposController extends Controller
     public function index()
     {
         //$teste = new GruposService;
-        $dados["grupos"] = GruposService::lista();
+        $dados["grupos"] = GruposService::lista1();
         i($dados["grupos"]);
         $dados["view"] = "Grupos/Show";
         $this->load("templateBootstrap", $dados);

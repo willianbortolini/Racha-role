@@ -4,15 +4,26 @@ use app\core\Model;
 
 class Dao extends Model{   
     
+    protected $table;
+    
     public function getDBConnection(){
         return  $this->db;
     } 
+    
+    public function selectAll()
+    {
+        $sql = "SELECT * FROM " . $this->table;
+        $stmt = $this->getDBConnection()->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+    }
+
     public function lista($tabela, $ordem){
         return  $this->all($this->db, $tabela, $ordem);
     }        
-    public function get($tabela, $campo, $valor, $eh_lista, $ordem){
+    /*public function get($tabela, $campo, $valor, $eh_lista, $ordem){
         return  $this->find($this->db,$campo, $valor, $tabela, $eh_lista, $ordem);
-    } 
+    } */
 
     public function colunasDaTabela($tabela){
         return  $this->colunas($this->db,$tabela);
@@ -26,10 +37,6 @@ class Dao extends Model{
     public function getJoin($tabela, $campo, $valor,$joins, $eh_lista){
         return  $this->findJoin($this->db,$campo, $valor, $tabela,$joins, $eh_lista);
     } 
-    
-    public function getSemEmpresa($tabela, $campo, $valor, $eh_lista){
-        return  $this->findSemEmpresa($this->db,$campo, $valor, $tabela, $eh_lista);
-    }
     
     public function getGeral($tabela, $campo, $operador, $valor, $eh_lista){
         return  $this->findGeral($this->db,$campo,$operador, $valor, $tabela, $eh_lista);

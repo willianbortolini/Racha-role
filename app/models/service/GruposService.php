@@ -11,6 +11,11 @@ class GruposService extends Service
 
     protected static $tabela = "grupos";
 
+    protected static function createDao()
+    {
+        return new GruposDao();
+    }
+    
     
     /*public static function salvar($Grupos)
     {

@@ -9,10 +9,14 @@ abstract class Model
 {
     protected $db;
     protected $tabela;
+    protected $query;
+    protected $params = [];
 
     public function __construct()
     {
         $this->db = Conexao::getConexao();
+        $this->query = '';
+        $this->params = [];
     }
 
     //Serve para fazer consultas utilizando parametros
@@ -39,7 +43,7 @@ abstract class Model
     }
 
     //Serve para fazer consultas diversas, sem parâmetros
-    function select($conn, $sql, $isLista = true)
+    function executaQuery($conn, $sql, $isLista = true)
     {
         try {
             $stmt = $conn->query($sql);
@@ -162,27 +166,6 @@ abstract class Model
             throw new \Exception($e->getMessage());
         }
     }
-
-    //Retorna uma consulta por um campo
-    function findSemEmpresa($conn, $campo, $valor, $tabela = null, $isLista = false)
-    {
-
-        $tabela = ($tabela) ? $tabela : $this->tabela;
-        try {
-            $sql = "SELECT * FROM " . $tabela . " WHERE " . $campo . " =:campo ";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindValue(":campo", $valor);
-            $stmt->execute();
-            if ($isLista) {
-                return $stmt->fetchAll(\PDO::FETCH_OBJ);
-            } else {
-                return $stmt->fetch(\PDO::FETCH_OBJ);
-            }
-        } catch (\PDOException $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
 
     //Retorna uma consulta por um campo
     function findGeral($conn, $campo, $operador, $valor, $tabela = null, $isLista = false)
@@ -354,5 +337,62 @@ abstract class Model
         } catch (Exception $e) {
             throw new \Exception($e->getMessage());
         }
+    }
+
+    // Método para iniciar a consulta
+    public function select($columns = ['*'])
+    {
+        $columns = implode(', ', $columns);
+        $this->query = "SELECT $columns FROM " . $this->tabela;
+        return $this;
+    }
+
+    // Método para adicionar cláusulas WHERE
+    public function where($campo, $operador, $valor)
+    {
+        $this->params[$campo] = $valor;
+        if (strpos($this->query, 'WHERE') !== false) {
+            $this->query .= " AND $campo $operador :$campo";
+        } else {
+            $this->query .= " WHERE $campo $operador :$campo";
+        }
+        return $this;
+    }
+
+    // Método para adicionar cláusula ORDER BY
+    public function orderBy($campo, $ordem = 'ASC')
+    {
+        $this->query .= " ORDER BY $campo $ordem";
+        return $this;
+    }
+
+     // Método para executar a consulta
+     public function get($isLista = true)
+     {
+         try {
+             $stmt = $this->db->prepare($this->query);
+             foreach ($this->params as $chave => $valor) {
+                 $stmt->bindValue(":$chave", $valor);
+             }
+             $stmt->execute();
+             if ($isLista) {
+                 return $stmt->fetchAll(\PDO::FETCH_OBJ);
+             } else {
+                 return $stmt->fetch(\PDO::FETCH_OBJ);
+             }
+         } catch (PDOException $e) {
+             throw new Exception($e->getMessage());
+         }
+     }
+
+     public function like($field, $value)
+    {
+        $this->params[$field] = '%' . $value . '%';
+        if (strpos($this->query, 'WHERE') !== false) {
+            $this->query .= " AND $field LIKE :$field";
+        } else {
+            $this->query .= " WHERE $field LIKE :$field";
+        }
+        return $this;
     }
 }

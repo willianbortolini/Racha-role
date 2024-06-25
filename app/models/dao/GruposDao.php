@@ -4,6 +4,8 @@ use app\core\Model;
 
 class GruposDao extends Model
 { 
+    protected $table = 'grupos';
+    
     public function lista($parametros)
     {
         $conn = $this->db;
@@ -27,9 +29,6 @@ class GruposDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
-
-
-    
 
     public function gruposDoUsuario($user_id)
     {

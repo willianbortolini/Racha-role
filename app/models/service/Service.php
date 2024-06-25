@@ -9,6 +9,18 @@ use Exception;
 class Service { 
 
     protected static $tabela;
+
+    protected static function createDao()
+    {
+        return new Dao();
+    }
+
+    public static function lista1()
+    {
+        $dao = static::createDao();
+        return $dao->selectAll();
+    }
+
     public static function begin_tran() {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();
@@ -52,11 +64,6 @@ class Service {
     public static function getJoin($tabela, $campo, $valor, $joins = array(), $eh_lista = false) {
         $dao = new Dao();
         return $dao->getJoin($tabela, $campo, $valor,$joins, $eh_lista);
-    }
-
-    public static function getSemEmpresa($tabela, $campo, $valor, $eh_lista = false) {
-        $dao = new Dao();
-        return $dao->getSemEmpresa($tabela, $campo, $valor, $eh_lista);
     }
 
     public static function getEntre($tabela, $campo, $valor1, $valor2) {
