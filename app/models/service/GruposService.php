@@ -9,10 +9,7 @@ use app\util\UtilService;
 class GruposService extends Service
 {   
 
-    public function __construct()
-    {
-        static::$tabela = "grupos";
-    }
+    protected static $tabela = "grupos";
 
     
     /*public static function salvar($Grupos)
