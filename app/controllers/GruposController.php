@@ -22,17 +22,14 @@ class GruposController extends Controller
 
     public function index()
     {
-        //$teste = new GruposService;
-        $dados["grupos"] = GruposService::lista1();
-        i($dados["grupos"]);
+        $dados["grupos"] = GruposService::retrieve();
         $dados["view"] = "Grupos/Show";
         $this->load("templateBootstrap", $dados);
     }
 
     public function edit($id)
     {
-        $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);
-
+        $dados["grupos"] = GruposService::retrieve();
         $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -40,16 +37,14 @@ class GruposController extends Controller
     public function create()
     {
         $dados["grupos"] = Flash::getForm();
-
         $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
     public function delete()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
-            $csrfToken = $_POST['csrf_token'];
-            if ($csrfToken === $_SESSION['csrf_token']) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE' && ($_POST['csrf_token'] === $_SESSION['csrf_token'])) {
+
                 $id = $_POST['id'];
 
                 // Excluir a imagem, se existir               
@@ -57,10 +52,9 @@ class GruposController extends Controller
                 if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
                     UtilService::deletarImagens($existe_imagem->foto);
                 }
-
                 // Excluir
-                GruposService::excluir($id);
-            }
+                GruposService::excluirId($id);                
+            
         }
     }
 

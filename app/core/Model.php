@@ -8,7 +8,7 @@ use PDOException;
 abstract class Model
 {
     protected $db;
-    protected $tabela;
+    protected $table;
     protected $query;
     protected $params = [];
 
@@ -17,6 +17,17 @@ abstract class Model
         $this->db = Conexao::getConexao();
         $this->query = '';
         $this->params = [];
+    }
+
+    public function retrieve($columns = ['*'])
+    {
+        try {
+            $sql = "SELECT * FROM " . $this->table ." ";
+            $stmt = $this->db->query($sql);
+            return $stmt->fetchAll(\PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     //Serve para fazer consultas utilizando parametros
@@ -291,7 +302,7 @@ abstract class Model
 
     function edit($conn, $dados, $campo, $tabela = null)
     {
-        $tabela = ($tabela) ? $tabela : $this->tabela;
+        $tabela = ($tabela) ? $tabela : $this->table;
         $parametro = null;
 
         if (!$dados) {
@@ -321,32 +332,32 @@ abstract class Model
         }
     }
 
-    function del($conn, $campo, $valor, $tabela = null)
+    function del( $campo, $valor, $tabela = null)
     {
-        $tabela = ($tabela) ? $tabela : $this->tabela;
+        $tabela = ($tabela) ? $tabela : $this->table;
 
         if (!$campo || !$valor) {
             throw new Exception("É necessário enviar o campo e o valor para fazer a exclusão");
         }
         try {
             $sql = "DELETE FROM {$tabela} WHERE {$campo} = :valor";
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->bindValue(":valor", $valor);
             $stmt->execute();
             return $stmt->rowCount();
         } catch (Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
     // Método para iniciar a consulta
-    public function select($columns = ['*'])
+    public function select1($columns = ['*'])
     {
         $columns = implode(', ', $columns);
-        $this->query = "SELECT $columns FROM " . $this->tabela;
+        $this->query = "SELECT $columns FROM " . $this->table;
         return $this;
     }
-
+/*
     // Método para adicionar cláusulas WHERE
     public function where($campo, $operador, $valor)
     {
@@ -367,7 +378,7 @@ abstract class Model
     }
 
      // Método para executar a consulta
-     public function get($isLista = true)
+     public function get1($isLista = true)
      {
          try {
              $stmt = $this->db->prepare($this->query);
@@ -394,5 +405,5 @@ abstract class Model
             $this->query .= " WHERE $field LIKE :$field";
         }
         return $this;
-    }
+    }*/
 }

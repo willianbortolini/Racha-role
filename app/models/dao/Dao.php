@@ -9,6 +9,10 @@ class Dao extends Model{
     public function getDBConnection(){
         return  $this->db;
     } 
+
+    public function lista2($tabela, $ordem){
+        return  $this->all($this->db, $tabela, $ordem);
+    }  
     
     public function selectAll()
     {
@@ -20,10 +24,12 @@ class Dao extends Model{
 
     public function lista($tabela, $ordem){
         return  $this->all($this->db, $tabela, $ordem);
-    }        
-    /*public function get($tabela, $campo, $valor, $eh_lista, $ordem){
+    } 
+    
+       
+    public function get($tabela, $campo, $valor, $eh_lista, $ordem){
         return  $this->find($this->db,$campo, $valor, $tabela, $eh_lista, $ordem);
-    } */
+    } 
 
     public function colunasDaTabela($tabela){
         return  $this->colunas($this->db,$tabela);
@@ -77,8 +83,8 @@ class Dao extends Model{
         return $this->edit($this->db,  $valores,  $campo, $tabela);
     }
     
-    public function excluir($tabela, $campo, $valor){
+    /*public function excluir($tabela, $campo, $valor){
         return $this->del($this->db, $campo ,$valor , $tabela);
-    }
+    }*/
 }
 

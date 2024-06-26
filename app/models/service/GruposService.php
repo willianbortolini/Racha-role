@@ -9,7 +9,7 @@ use app\util\UtilService;
 class GruposService extends Service
 {   
 
-    protected static $tabela = "grupos";
+    protected static $table = "grupos";
 
     protected static function createDao()
     {
@@ -49,22 +49,18 @@ class GruposService extends Service
     {
         $dao = new GruposDao();
         return $dao->gruposDoUsuario($_SESSION['id']);
-    }
-    
+    }*/    
 
-    public static function excluir($id)
+    /*public static function excluir($tabela, $campo, $id)
     {
-        Service::excluir(self::TABELA, self::CAMPO, $id);
-    }
-    public static function lista($parametros)
+        $dao = static::createDao();
+        return $dao->excluir($tabela, $campo, $id);
+    }*/
+    /*public static function lista($parametros)
     {
         $dao = new GruposDao();
         return $dao->lista($parametros);
-    }
-
-    public static function quantidadeDeLinhas($valor_pesquisa)
-    {
-        $dao = new GruposDao();
-        return $dao->quantidadeDeLinhas($valor_pesquisa);
     }*/
+
+
 }

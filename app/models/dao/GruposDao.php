@@ -2,10 +2,15 @@
 namespace app\models\dao;
 use app\core\Model;
 
-class GruposDao extends Model
+class GruposDao extends Dao
 { 
     protected $table = 'grupos';
     
+    protected static function createDao()
+    {
+        return new GruposDao();
+    }
+    /*
     public function lista($parametros)
     {
         $conn = $this->db;
@@ -64,5 +69,5 @@ class GruposDao extends Model
             throw new \Exception($e->getMessage());
         }
     }  
-   
+   */
 }
