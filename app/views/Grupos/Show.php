@@ -1,36 +1,21 @@
-<h1 class="ms-3">Grupos</h1>
+<h1  class="ms-3">Grupos</h1>
 <div class="row col-12">
     <div class="card col-12 m-2 m-md-4 p-4 p-md-4">
         <div class="col-md-12">
-            <a href="<?php echo URL_BASE . 'Grupos/create' ?>" class="btn btn-primary mb-3">Adicionar um
+            <a href="<?php echo URL_BASE . 'Grupos/create'?>" class="btn btn-primary mb-3">Adicionar um
                 Grupos</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Nome</th>
+
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($grupos as $item) { ?>
-                        <tr>
-                            <td>
-                                <?php echo $item->nome; ?>
-                            </td>
-                            <td>
-                                <a href="<?php echo URL_BASE . "Grupos/edit/" . $item->grupos_id ?>"
-                                    class="btn btn-primary btn-sm">Editar</a>
-
-                                <button onclick="deletarItem(<?php echo $item->grupos_id; ?>)" type="button"
-                                    class="btn btn-danger btn-sm deletar" data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal">
-                                    Deletar
-                                </button>
-
-                            </td>
-                        </tr>
-                    <?php } ?>
+                    
                 </tbody>
             </table>
         </div>
@@ -60,21 +45,17 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         var table = new DataTable('table.display', {
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "info": true,
-            "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
             "responsive": true,
-            "pageLength": 20,
-
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
-            },
+            "autoWidth": false,
+            "ajax": URL_BASE + "Grupos/list",
+            "language": {
+                "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            }
         });
-
     });
 
     controller = 'Grupos';

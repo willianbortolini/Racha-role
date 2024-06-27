@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\core\Controller;
 use app\util\UtilService;
 use app\models\service\DespesasService;
+use app\models\service\Participantes_despesasService;
 use app\core\Flash;
 use app\models\service\Service;
 
@@ -49,7 +50,7 @@ class DespesasController extends Controller
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-                
+
                 // Excluir a imagem, se existir               
 
                 // Excluir
@@ -64,12 +65,12 @@ class DespesasController extends Controller
 
         // Lista de colunas da tabela
         $colunas = [
-         0 => 'despesas_id',
-         1 => 'descricao',
-         2 => 'valor',
-         3 => 'data',
-         4 => 'users_id',
-         5 => 'grupos_id'
+            0 => 'despesas_id',
+            1 => 'descricao',
+            2 => 'valor',
+            3 => 'data',
+            4 => 'users_id',
+            5 => 'grupos_id'
         ];
 
         if (!empty($dados_requisicao['search']['value'])) {
@@ -122,35 +123,55 @@ class DespesasController extends Controller
             $despesas = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["despesas_id"]) && is_numeric($_POST["despesas_id"]) && $_POST["despesas_id"] > 0) {                  
-                    $despesas->despesas_id = $_POST["despesas_id"];                    
+                if (isset($_POST["despesas_id"]) && is_numeric($_POST["despesas_id"]) && $_POST["despesas_id"] > 0) {
+                    $despesas->despesas_id = $_POST["despesas_id"];
                 } else {
-                    $despesas->despesas_id = 0;                         
+                    $despesas->despesas_id = 0;
                 }
                 if (isset($_POST["descricao"]))
-                   $despesas->descricao = $_POST["descricao"];
+                    $despesas->descricao = $_POST["descricao"];
                 if (isset($_POST["valor"]))
-                   $despesas->valor = $_POST["valor"];
+                    $despesas->valor = $_POST["valor"];
                 if (isset($_POST["data"]))
-                   $despesas->data = $_POST["data"];
+                    $despesas->data = $_POST["data"];
                 if (isset($_POST["users_id"]))
-                   $despesas->users_id = $_POST["users_id"];
+                    $despesas->users_id = $_POST["users_id"];
                 if (isset($_POST["grupos_id"]))
-                   $despesas->grupos_id = $_POST["grupos_id"];
+                    $despesas->grupos_id = $_POST["grupos_id"];
+
+                $participantes = $_POST['participantes']; // Array de IDs de participantes
                 
-               
             }
 
 
             Flash::setForm($despesas);
-            if (DespesasService::salvar($despesas) > 1) //se é maior que um inseriu novo 
+            $despesa = DespesasService::salvar($despesas);
+            if ($despesa > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "Despesas");
+                //criou
+                // Calcular a parte de cada participante
+                $parteDeCada = $despesas->valor / count($participantes);
+                
+                // Inserir participações na tabela de participations
+                foreach ($participantes as $participantes_id) {
+
+                    $participantes_despesas = new \stdClass();
+
+                    $participantes_despesas->participantes_despesas_id = 0;
+                    $participantes_despesas->despesas_id = $despesa;
+                    $participantes_despesas->users_id = $participantes_id;
+                    $participantes_despesas->devendo_para = $despesas->users_id;
+                    $participantes_despesas->valor = $parteDeCada;
+
+                    Participantes_despesasService::salvar($participantes_despesas);
+                
+                }
+                $this->redirect(URL_BASE . "Despesas");
             } else {
                 if (!$despesas->despesas_id) {
-                    $this->redirect(URL_BASE   . "Despesas/create");
+                    $this->redirect(URL_BASE . "Despesas/create");
                 } else {
-                    $this->redirect(URL_BASE   . "Despesas/edit/" . $despesas->despesas_id);
+                    $this->redirect(URL_BASE . "Despesas/edit/" . $despesas->despesas_id);
                 }
             }
         }

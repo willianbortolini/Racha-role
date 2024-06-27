@@ -18,7 +18,9 @@ class Participantes_despesasDao extends Model
                 $sql .= " AND ( participantes_despesas_id LIKE '" . $valor_pesquisa . "' 
                       OR despesas_id LIKE '" . $valor_pesquisa . "' 
                       OR users_id LIKE '" . $valor_pesquisa . "' 
+                      OR devendo_para LIKE '" . $valor_pesquisa . "' 
                       OR valor LIKE '" . $valor_pesquisa . "' 
+                      OR valor_pago LIKE '" . $valor_pesquisa . "' 
                 ) ";
             }
 
@@ -42,7 +44,9 @@ class Participantes_despesasDao extends Model
                 $sql .= " AND ( participantes_despesas_id LIKE '" . $valor_pesquisa . "' 
                       OR despesas_id LIKE '" . $valor_pesquisa . "' 
                       OR users_id LIKE '" . $valor_pesquisa . "' 
+                      OR devendo_para LIKE '" . $valor_pesquisa . "' 
                       OR valor LIKE '" . $valor_pesquisa . "' 
+                      OR valor_pago LIKE '" . $valor_pesquisa . "' 
                 ) ";
             }
             return self::select($this->db, $sql, false);

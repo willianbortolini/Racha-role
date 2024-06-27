@@ -24,9 +24,24 @@
     </div>
 
     <div class="form-group mb-2">
+        <label for="devendo_para">ID do pagador</label>
+        <select class="form-select" aria-label="Default select example" name="devendo_para">
+            <?php foreach ($users as $item) {
+                echo "<option value='$item->users_id'". ($item->users_id == $participantes_despesas->devendo_para ? "selected" : "") . ">$item->username</option>";
+            } ?>
+        </select>
+    </div>
+
+    <div class="form-group mb-2">
         <label for="valor">Valor</label>
         <input type="number" class="form-control" id="valor" name="valor"
         value="<?php echo (isset($participantes_despesas->valor)) ? $participantes_despesas->valor : ''; ?>" required>
+    </div>
+
+    <div class="form-group mb-2">
+        <label for="valor_pago">Valor pago</label>
+        <input type="number" class="form-control" id="valor_pago" name="valor_pago"
+        value="<?php echo (isset($participantes_despesas->valor_pago)) ? $participantes_despesas->valor_pago : ''; ?>" required>
     </div>
 
 

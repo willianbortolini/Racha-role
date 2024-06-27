@@ -1,19 +1,18 @@
-<h1  class="ms-3">Participantes Despesas</h1>
+<h1  class="ms-3">Pagamentos</h1>
 <div class="row col-12">
     <div class="card col-12 m-2 m-md-4 p-4 p-md-4">
         <div class="col-md-12">
-            <a href="<?php echo URL_BASE . 'Participantes_despesas/create'?>" class="btn btn-primary mb-3">Adicionar um
-                Participantes Despesas</a>
+            <a href="<?php echo URL_BASE . 'Pagamentos/create'?>" class="btn btn-primary mb-3">Adicionar um
+                Pagamentos</a>
             <hr>
             <table id="tabela" class="display" style="width:100%">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>ID da Despesa</th>
                         <th>ID do Usuário</th>
                         <th>ID do pagador</th>
                         <th>Valor</th>
-                        <th>Valor pago</th>
+                        <th>Data</th>
 
                         <th>Ações</th>
                     </tr>
@@ -55,14 +54,14 @@
             "serverSide": true,
             "responsive": true,
             "autoWidth": false,
-            "ajax": URL_BASE + "Participantes_despesas/list",
+            "ajax": URL_BASE + "Pagamentos/list",
             "language": {
                 "url": '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
             }
         });
     });
 
-    controller = 'Participantes_despesas';
+    controller = 'Pagamentos';
     var idLinha = 0;
     function deletarItem(id) {
         idLinha = id;

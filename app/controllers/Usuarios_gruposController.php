@@ -108,6 +108,11 @@ class Usuarios_gruposController extends Controller
 
         echo json_encode($resultado);
     }
+    public function usuariosDoGrupo($id)
+    {        
+        echo json_encode(Service::get($this->tabela, "grupos_id", $id,true));
+    }
+
 
     public function save()
     {

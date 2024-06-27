@@ -6,9 +6,20 @@ use app\core\Flash;
 use app\models\dao\Dao;
 use Exception;
 
-class Service { 
+abstract class Service { 
 
     protected static $tabela;
+
+    protected $sql;
+
+    public function select($columns = '*') {
+        $this->sql = "SELECT $columns FROM " . $this->getTable();
+        return $this;
+    }
+
+    // Método abstrato para ser implementado pelas classes filhas
+    abstract protected function getTable();
+
     public static function begin_tran() {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();

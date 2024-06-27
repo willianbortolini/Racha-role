@@ -4,15 +4,15 @@ namespace app\controllers;
 
 use app\core\Controller;
 use app\util\UtilService;
-use app\models\service\GruposService;
+use app\models\service\PagamentosService;
 use app\core\Flash;
 use app\models\service\Service;
 
-class GruposController extends Controller
+class PagamentosController extends Controller
 {
-    private $tabela = "grupos";
-    private $campo = "grupos_id";
-    
+    private $tabela = "pagamentos";
+    private $campo = "pagamentos_id";
+    private $view = "vw_pagamentos";
 
     public function __construct()
     {
@@ -21,26 +21,26 @@ class GruposController extends Controller
 
     public function index()
     {
-        
-        $dados["view"] = "Grupos/Show";
+        $dados["view"] = "Pagamentos/Show";
         $this->load("templateBootstrap", $dados);
     }
 
     public function edit($id)
     {
-        $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);
-
-        $dados["view"] = "Grupos/Edit";
+        $dados["pagamentos"] = Service::get($this->view, $this->campo, $id);
+        $dados["users"] = service::lista("users");
+        $dados["view"] = "Pagamentos/Edit";
         $this->load("templateBootstrap", $dados);
     }
 
     public function create()
     {
-        $dados["grupos"] = Flash::getForm();
-
-        $dados["view"] = "Grupos/Edit";
+        $dados["pagamentos"] = Flash::getForm();
+        $dados["users"] = service::lista("users");
+        $dados["view"] = "Pagamentos/Edit";
         $this->load("templateBootstrap", $dados);
-    }   
+    }
+
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
@@ -49,13 +49,9 @@ class GruposController extends Controller
                 $id = $_POST['id'];
                 
                 // Excluir a imagem, se existir               
-                $existe_imagem = service::get($this->tabela, $this->campo, $id);
-                if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
-                    UtilService::deletarImagens($existe_imagem->foto);
-                }
 
                 // Excluir
-                GruposService::excluir($id);
+                PagamentosService::excluir($id);
             }
         }
     }
@@ -66,8 +62,11 @@ class GruposController extends Controller
 
         // Lista de colunas da tabela
         $colunas = [
-         0 => 'grupos_id',
-         1 => 'nome'
+         0 => 'pagamentos_id',
+         1 => 'pagador',
+         2 => 'recebedor',
+         3 => 'valor',
+         4 => 'data'
         ];
 
         if (!empty($dados_requisicao['search']['value'])) {
@@ -75,7 +74,7 @@ class GruposController extends Controller
         } else {
             $valor_pesquisa = "";
         }
-        $row_qnt_usuarios = GruposService::quantidadeDeLinhas($valor_pesquisa);
+        $row_qnt_usuarios = PagamentosService::quantidadeDeLinhas($valor_pesquisa);
 
         $parametros = [
             'inicio' => intval($dados_requisicao['start']),
@@ -84,14 +83,17 @@ class GruposController extends Controller
             'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
             'valor_pesquisa' => $valor_pesquisa
         ];
-        $listaRetorno = GruposService::lista($parametros);
+        $listaRetorno = PagamentosService::lista($parametros);
         $dados = [];
         foreach ($listaRetorno as $coluna) {
             $registro = [];
-            $registro[] = $coluna->grupos_id;
-            $registro[] = $coluna->nome;
-            $registro[] = "<a href='" . URL_BASE . "Grupos/edit/" . $coluna->grupos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->grupos_id . ")' type='button'
+            $registro[] = $coluna->pagamentos_id;
+            $registro[] = $coluna->pagador;
+            $registro[] = $coluna->recebedor;
+            $registro[] = $coluna->valor;
+            $registro[] = $coluna->data;
+            $registro[] = "<a href='" . URL_BASE . "Pagamentos/edit/" . $coluna->pagamentos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
+            <button onclick='deletarItem(" . $coluna->pagamentos_id . ")' type='button'
                 class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
                 data-bs-target='#deleteModal'>
                 Deletar
@@ -113,30 +115,36 @@ class GruposController extends Controller
     {
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
-            $grupos = new \stdClass();
+            $pagamentos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["grupos_id"]) && is_numeric($_POST["grupos_id"]) && $_POST["grupos_id"] > 0) {                  
-                    $grupos->grupos_id = $_POST["grupos_id"];                    
+                if (isset($_POST["pagamentos_id"]) && is_numeric($_POST["pagamentos_id"]) && $_POST["pagamentos_id"] > 0) {                  
+                    $pagamentos->pagamentos_id = $_POST["pagamentos_id"];                    
                 } else {
-                    $grupos->grupos_id = 0;                         
+                    $pagamentos->pagamentos_id = 0;                         
                 }
-                if (isset($_POST["nome"]))
-                   $grupos->nome = $_POST["nome"];
+                if (isset($_POST["pagador"]))
+                   $pagamentos->pagador = $_POST["pagador"];
+                if (isset($_POST["recebedor"]))
+                   $pagamentos->recebedor = $_POST["recebedor"];
+                if (isset($_POST["valor"]))
+                   $pagamentos->valor = $_POST["valor"];
+                if (isset($_POST["data"]))
+                   $pagamentos->data = $_POST["data"];
                 
                
             }
 
 
-            Flash::setForm($grupos);
-            if (GruposService::salvar($grupos) > 1) //se é maior que um inseriu novo 
+            Flash::setForm($pagamentos);
+            if (PagamentosService::salvar($pagamentos) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "Grupos");
+                $this->redirect(URL_BASE   . "Pagamentos");
             } else {
-                if (!$grupos->grupos_id) {
-                    $this->redirect(URL_BASE   . "Grupos/create");
+                if (!$pagamentos->pagamentos_id) {
+                    $this->redirect(URL_BASE   . "Pagamentos/create");
                 } else {
-                    $this->redirect(URL_BASE   . "Grupos/edit/" . $grupos->grupos_id);
+                    $this->redirect(URL_BASE   . "Pagamentos/edit/" . $pagamentos->pagamentos_id);
                 }
             }
         }
