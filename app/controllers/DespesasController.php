@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\util\UtilService;
 use app\models\service\DespesasService;
 use app\models\service\Participantes_despesasService;
+use app\models\service\GruposService;
 use app\core\Flash;
 use app\models\service\Service;
 
@@ -30,7 +31,7 @@ class DespesasController extends Controller
     {
         $dados["despesas"] = Service::get($this->view, $this->campo, $id);
         $dados["users"] = service::lista("users");
-        $dados["grupos"] = service::lista("grupos");
+        $dados["grupos"] = GruposService::gruposDoUsuario($_SESSION['id']);
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -39,7 +40,7 @@ class DespesasController extends Controller
     {
         $dados["despesas"] = Flash::getForm();
         $dados["users"] = service::lista("users");
-        $dados["grupos"] = service::lista("grupos");
+        $dados["grupos"] = GruposService::gruposDoUsuario($_SESSION['id']);
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
     }

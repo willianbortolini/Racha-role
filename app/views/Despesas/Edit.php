@@ -14,14 +14,21 @@
 
 <form action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
 
-    <div class="container mt-4">
+    <div class="container mt-4">   
+    
         <div class="form-group mb-2">
             <label for="grupos_id">Grupos</label>
-            <select class="form-select" aria-label="Default select example" name="grupos_id" id="grupos_id">
-                <?php foreach ($grupos as $item) {
-                    echo "<option value='$item->grupos_id'" . ($item->grupos_id == $despesas->grupos_id ? "selected" : "") . ">$item->nome</option>";
-                } ?>
-            </select>
+            <div id="grupos_id">
+                <?php foreach ($grupos as $item) : ?>
+                    <div class="form-check">
+                        <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id[]" value="<?php echo $item->grupos_id; ?>" 
+                               id="grupo-<?php echo $item->grupos_id; ?>" <?php echo ((!isset($item->grupos_id))&&($item->grupos_id == $despesas->grupos_id)) ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="grupo-<?php echo $item->grupos_id; ?>">
+                            <?php echo $item->nome; ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <div class="form-group mb-2">
@@ -95,6 +102,53 @@
             var year = today.getFullYear();
             dateInput.value = year + '-' + month + '-' + day;
         }
+
+        document.querySelectorAll('.grupo-checkbox').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                var groupId = this.value;
+                if (this.checked) {
+                     // Uncheck all other checkboxes
+                     document.querySelectorAll('.grupo-checkbox').forEach(function (otherCheckbox) {
+                        if (otherCheckbox !== checkbox) {
+                            otherCheckbox.checked = false;
+                        }
+                    });
+
+                    // Clear all user checkboxes
+                    var userCheckboxes = document.querySelectorAll('#participantes .form-check-input');
+                    userCheckboxes.forEach(function (userCheckbox) {
+                        userCheckbox.checked = false;
+                    });
+                    
+                    var url = '<?php echo URL_BASE ?>usuarios_grupos/usuariosDoGrupo/' + groupId;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            var usersIds = data.map(user => user.users_id);
+                            var checkboxes = document.querySelectorAll('#participantes .form-check-input');
+                            checkboxes.forEach(checkbox => {
+                                if (usersIds.includes(parseInt(checkbox.value))) {
+                                    checkbox.checked = true;
+                                }
+                            });
+                        })
+                        .catch(error => console.error('Error fetching data:', error));
+                } else {
+                    var checkboxes = document.querySelectorAll('#participantes .form-check-input');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                }
+            });
+        });
+
+        // Trigger change event for initially selected groups
+        document.querySelectorAll('.grupo-checkbox:checked').forEach(function (checkbox) {
+            checkbox.dispatchEvent(new Event('change'));
+        });
+
+        /*
         document.getElementById('grupos_id').addEventListener('change', function () {
             var groupId = this.value;
             var url = '<?php echo URL_BASE ?>usuarios_grupos/usuariosDoGrupo/' + groupId;
@@ -110,6 +164,6 @@
                     });
                 })
                 .catch(error => console.error('Error fetching data:', error));
-        });
+        });*/
     });
 </script>

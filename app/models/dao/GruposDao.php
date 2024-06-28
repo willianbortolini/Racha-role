@@ -46,5 +46,25 @@ class GruposDao extends Model
             throw new \Exception($e->getMessage());
         }
     }  
+
+    public function gruposDoUsuario($usuario_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "SELECT grupos.grupos_id, grupos.nome, grupos.foto
+                    FROM usuarios_grupos
+                    INNER JOIN grupos ON
+                    grupos.grupos_id = usuarios_grupos.grupos_id
+                    WHERE usuarios_grupos.users_id = :usuario_id";
+
+            $parametro = array(
+                'usuario_id' => $usuario_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
    
 }

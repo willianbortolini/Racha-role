@@ -58,4 +58,10 @@ class GruposService
         $dao = new GruposDao();
         return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
+
+    public static function gruposDoUsuario($usuario_id)
+    {
+        $dao = new GruposDao();
+        return $dao->gruposDoUsuario($usuario_id);
+    }
 }

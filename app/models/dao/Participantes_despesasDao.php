@@ -1,4 +1,5 @@
 <?php
+
 namespace app\models\dao;
 
 use app\core\Model;
@@ -60,14 +61,39 @@ class Participantes_despesasDao extends Model
     {
         $conn = $this->db;
         try {
-            $sql = "SELECT participantes_despesas.devendo_para, SUM(participantes_despesas.valor-participantes_despesas.valor_pago) valor,
-             users.username devendo_para_nome 
-             FROM participantes_despesas 
-             inner join users ON 
-             users.users_id = participantes_despesas.devendo_para 
-             WHERE participantes_despesas.users_id = :users_id 
-             AND (valor-valor_pago) > 0 
-             GROUP BY devendo_para;";
+            $sql = "WITH saldos AS (
+                        SELECT 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END AS usuario,
+                            SUM(CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                ELSE -(p1.valor - p1.valor_pago) 
+                            END) AS saldo
+                        FROM 
+                            participantes_despesas p1
+                        WHERE 
+                            (p1.valor - p1.valor_pago) > 0
+                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                            AND p1.devendo_para != p1.users_id
+                        GROUP BY 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END
+                    )
+                    SELECT 
+                        s.usuario AS devendo_para,
+                        u.username AS devendo_para_nome,
+                        s.saldo AS valor_devendo
+                    FROM 
+                        saldos s
+                    INNER JOIN 
+                        users u ON u.users_id = s.usuario
+                    WHERE 
+                        s.saldo > 0
+                        AND s.usuario != :users_id";
 
             $parametro = array(
                 'users_id' => $users_id
@@ -83,14 +109,87 @@ class Participantes_despesasDao extends Model
     {
         $conn = $this->db;
         try {
-            $sql = "SELECT participantes_despesas.users_id, SUM(participantes_despesas.valor-participantes_despesas.valor_pago) valor,
-             users.username a_receber_nome 
-             FROM participantes_despesas 
-             inner join users ON 
-             users.users_id = participantes_despesas.users_id 
-             WHERE participantes_despesas.devendo_para = :users_id
-             AND (valor-valor_pago) > 0 
-            GROUP BY participantes_despesas.users_id";
+            $sql = "WITH saldos AS (
+                        SELECT 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END AS usuario,
+                            SUM(CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                ELSE -(p1.valor - p1.valor_pago) 
+                            END) AS saldo
+                        FROM 
+                            participantes_despesas p1
+                        WHERE 
+                            (p1.valor - p1.valor_pago) > 0
+                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                            AND p1.devendo_para != p1.users_id
+                        GROUP BY 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END
+                    )
+                    SELECT 
+                        s.usuario AS a_receber_de,
+                        u.username AS a_receber_nome,
+                        -s.saldo AS valor_receber
+                    FROM 
+                        saldos s
+                    INNER JOIN 
+                        users u ON u.users_id = s.usuario
+                    WHERE 
+                        s.saldo < 0
+                        AND s.usuario != :users_id";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function resumoValores($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "WITH saldos AS (
+                        SELECT 
+                            CASE 
+                                WHEN p1.devendo_para = 1 THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END AS usuario,
+                            SUM(CASE 
+                                WHEN p1.devendo_para = 1 THEN p1.valor - p1.valor_pago
+                                ELSE -(p1.valor - p1.valor_pago) 
+                            END) AS saldo
+                        FROM 
+                            participantes_despesas p1
+                        WHERE 
+                            (p1.valor - p1.valor_pago) > 0
+                        GROUP BY 
+                            CASE 
+                                WHEN p1.devendo_para = 1 THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END
+                    )
+                    SELECT 
+                        s.usuario,
+                        u.username,
+                        SUM(CASE WHEN s.saldo > 0 THEN s.saldo ELSE 0 END) AS valor_devendo,
+                        SUM(CASE WHEN s.saldo < 0 THEN -s.saldo ELSE 0 END) AS valor_receber
+                    FROM 
+                        saldos s
+                    INNER JOIN 
+                        users u ON u.users_id = s.usuario
+                    WHERE 
+                        s.usuario != 1
+                    GROUP BY 
+                        s.usuario, u.username;";
 
             $parametro = array(
                 'users_id' => $users_id
@@ -122,7 +221,71 @@ class Participantes_despesasDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
-    
 
+    public function negociacoesEntreDoisUsuarios($eu, $outro, $inicio = null, $fim = null)
+    {
+        $conn = $this->db;
 
+        // Definir a data de fim como hoje se não for fornecida
+        if ($fim === null) {
+            $fim = date('Y-m-d');
+        }
+
+        // Definir a data de início como um mês atrás se não for fornecida
+        if ($inicio === null) {
+            $inicio = date('Y-m-d', strtotime('-1 month'));
+        }
+
+        try {
+            $sql = "
+            SELECT 
+                'despesa' AS tipo,
+                despesas.descricao AS descricao,
+                CASE 
+                    WHEN participantes_despesas.users_id = :eu THEN -(participantes_despesas.valor - participantes_despesas.valor_pago)
+                    WHEN participantes_despesas.users_id = :outro THEN participantes_despesas.valor - participantes_despesas.valor_pago
+                END AS valor,
+                participantes_despesas.created_at
+            FROM 
+                participantes_despesas
+            INNER JOIN despesas ON
+                despesas.despesas_id = participantes_despesas.despesas_id
+            WHERE 
+                ((participantes_despesas.users_id = :eu AND participantes_despesas.devendo_para = :outro) OR
+                 (participantes_despesas.users_id = :outro AND participantes_despesas.devendo_para = :eu))
+                AND participantes_despesas.created_at BETWEEN :inicio AND :fim
+
+            UNION ALL
+
+            SELECT 
+                'pagamento' AS tipo,
+                'pagamento' AS descricao,
+                CASE 
+                    WHEN pagamentos.pagador = :eu THEN -pagamentos.valor
+                    WHEN pagamentos.pagador = :outro THEN pagamentos.valor
+                END AS valor,
+                pagamentos.created_at
+            FROM 
+                pagamentos
+            WHERE
+                ((pagamentos.pagador = :eu AND pagamentos.recebedor = :outro) OR
+                 (pagamentos.pagador = :outro AND pagamentos.recebedor = :eu))
+                AND pagamentos.created_at BETWEEN :inicio AND :fim
+
+            ORDER BY 
+                created_at;
+        ";
+
+            $parametro = array(
+                'eu' => $eu,
+                'outro' => $outro,
+                'inicio' => $inicio,
+                'fim' => $fim
+            );
+
+            return self::consultar($conn, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
 }

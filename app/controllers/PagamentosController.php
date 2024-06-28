@@ -193,7 +193,6 @@ class PagamentosController extends Controller
                 }
             } catch (\Exception $e) {
                 Flash::setMsg($e->getMessage());
-                i("we");
                 $this->redirect(URL_BASE . "Pagamentos");
                 Service::rollback();
             }
