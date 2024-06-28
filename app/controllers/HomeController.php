@@ -20,6 +20,7 @@ class HomeController extends Controller {
 
     public function index() {  
         $dados["minhasDespesas"] = Participantes_despesasService::meusDebitosEmAberto($_SESSION['id']);
+        $dados["meusValoresAReceber"] = Participantes_despesasService::meusValoresAReceber($_SESSION['id']);
         $dados["view"] = "Home/Home";
         $this->load("templateBootstrap", $dados);          
     }

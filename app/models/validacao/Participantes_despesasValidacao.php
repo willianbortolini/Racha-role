@@ -9,7 +9,6 @@ class Participantes_despesasValidacao {
         $validacao->setData("users_id", $participantes_despesas->users_id, "ID do Usuário");
         $validacao->setData("devendo_para", $participantes_despesas->devendo_para, "ID do pagador");
         $validacao->setData("valor", $participantes_despesas->valor, "Valor");
-        $validacao->setData("valor_pago", $participantes_despesas->valor_pago, "Valor pago");
     
         // Fazendo a validação
         $validacao->getData("despesas_id")->isVazio();

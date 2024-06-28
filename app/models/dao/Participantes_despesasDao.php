@@ -79,6 +79,29 @@ class Participantes_despesasDao extends Model
         }
     }
 
+    public function meusValoresAReceber($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "SELECT participantes_despesas.users_id, SUM(participantes_despesas.valor-participantes_despesas.valor_pago) valor,
+             users.username a_receber_nome 
+             FROM participantes_despesas 
+             inner join users ON 
+             users.users_id = participantes_despesas.users_id 
+             WHERE participantes_despesas.devendo_para = :users_id
+             AND (valor-valor_pago) > 0 
+            GROUP BY participantes_despesas.users_id";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
     public function dividasEntreUsuarios($devedor, $credor)
     {
         $conn = $this->db;

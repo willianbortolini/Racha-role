@@ -32,7 +32,7 @@ class DespesasService
                 $participantes_despesas->users_id = $participantes_id;
                 $participantes_despesas->devendo_para = $despesas->users_id;
                 $participantes_despesas->valor = $parteDeCada;
-
+                
                 Participantes_despesasService::salvar($participantes_despesas);
 
             }

@@ -23,7 +23,7 @@ HOME
     <a href="<?php echo URL_BASE . "Despesas"?>" class="btn btn-primary">minas despesas</a>
 </div>
 
-<h2 class="mb-4">Lista de débitos</h2>
+<h2 class="mb-4">Valores devidos</h2>
     <table class="table table-bordered">
         <thead class="thead-dark">
         <tr>
@@ -36,6 +36,24 @@ HOME
             <tr>
                 <td><?= $despesa->devendo_para_nome  ?></td>
                 <td><?= number_format($despesa->valor, 2, ',', '.') ?></td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+
+<h2 class="mb-4">Valores a receber</h2>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>PARA</th>
+            <th>VALOR</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($meusValoresAReceber as $receber){ ?>
+            <tr>
+                <td><?= $receber->a_receber_nome  ?></td>
+                <td><?= number_format($receber->valor, 2, ',', '.') ?></td>
             </tr>
         <?php } ?>
         </tbody>

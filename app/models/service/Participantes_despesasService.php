@@ -45,6 +45,12 @@ class Participantes_despesasService
         return $dao->meusDebitosEmAberto($users_id);
     }
 
+    public static function meusValoresAReceber($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->meusValoresAReceber($users_id);
+    }
+
     public static function dividaEntreUsuarios($devedor, $credor)
     {
         $dao = new Participantes_despesasDao();

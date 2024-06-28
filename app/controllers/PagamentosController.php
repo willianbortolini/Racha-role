@@ -146,19 +146,21 @@ class PagamentosController extends Controller
                     $valorRestante = $pagamentos->valor;
                     $valoresPendentes = Participantes_despesasService::dividaEntreUsuarios($pagamentos->pagador, $pagamentos->recebedor);
                     foreach ($valoresPendentes as $valor) {
-                        $participantes_despesas = new \stdClass();
-                        $participantes_despesas->participantes_despesas_id = $valor->participantes_despesas_id;
-
-                        if ($valor->valor - $valor->valor_pago <= $valorRestante) {
-                            $participantes_despesas->valor_pago = $valor->valor;
-                            $valorRestante -= ($valor->valor - $valor->valor_pago);
-                        } else {
-                            $participantes_despesas->valor_pago = $valor->valor_pago + $valorRestante;
-                            $valorRestante = 0;
-                        }
-
-                        if(Participantes_despesasService::editar($participantes_despesas) < 1){
-                            throw new \Exception();  
+                        if($valorRestante > 0){
+                            $participantes_despesas = new \stdClass();
+                            $participantes_despesas->participantes_despesas_id = $valor->participantes_despesas_id;
+                            
+                            if ($valor->valor - $valor->valor_pago <= $valorRestante) {
+                                $participantes_despesas->valor_pago = $valor->valor;
+                                $valorRestante -= ($valor->valor - $valor->valor_pago);
+                            } else {
+                                $participantes_despesas->valor_pago = $valor->valor_pago + $valorRestante;
+                                $valorRestante = 0;
+                            }
+                            $Participantes_despesa = Participantes_despesasService::editar($participantes_despesas);
+                            if($Participantes_despesa <> 1){
+                                throw new \Exception();  
+                            }
                         }
                     }
 
@@ -171,8 +173,10 @@ class PagamentosController extends Controller
                         $despesas->data = date('Y-m-d H:i:s');
                         $despesas->users_id = $pagamentos->pagador;
                         $participantes = [$pagamentos->recebedor];
-
-                        if(DespesasService::salvar($despesas, $participantes) <> 1){
+                        
+                        $despesa = DespesasService::salvar($despesas, $participantes);
+                        
+                        if ($despesa < 1){
                             throw new \Exception();
                         }
                     }
@@ -188,6 +192,9 @@ class PagamentosController extends Controller
                     }
                 }
             } catch (\Exception $e) {
+                Flash::setMsg($e->getMessage());
+                i("we");
+                $this->redirect(URL_BASE . "Pagamentos");
                 Service::rollback();
             }
         }
