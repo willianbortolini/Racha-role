@@ -138,34 +138,14 @@ class DespesasController extends Controller
                     $despesas->users_id = $_POST["users_id"];
                 if (isset($_POST["grupos_id"]))
                     $despesas->grupos_id = $_POST["grupos_id"];
-
-                $participantes = $_POST['participantes']; // Array de IDs de participantes
                 
             }
-
-
+            $participantes = $_POST['participantes']; // Array de IDs de participantes
+            
             Flash::setForm($despesas);
-            $despesa = DespesasService::salvar($despesas);
+            $despesa = DespesasService::salvar($despesas, $participantes);
             if ($despesa > 1) //se é maior que um inseriu novo 
-            {
-                //criou
-                // Calcular a parte de cada participante
-                $parteDeCada = $despesas->valor / count($participantes);
-                
-                // Inserir participações na tabela de participations
-                foreach ($participantes as $participantes_id) {
-
-                    $participantes_despesas = new \stdClass();
-
-                    $participantes_despesas->participantes_despesas_id = 0;
-                    $participantes_despesas->despesas_id = $despesa;
-                    $participantes_despesas->users_id = $participantes_id;
-                    $participantes_despesas->devendo_para = $despesas->users_id;
-                    $participantes_despesas->valor = $parteDeCada;
-
-                    Participantes_despesasService::salvar($participantes_despesas);
-                
-                }
+            {               
                 $this->redirect(URL_BASE . "Despesas");
             } else {
                 if (!$despesas->despesas_id) {

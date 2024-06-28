@@ -16,7 +16,6 @@ class Participantes_despesasValidacao {
         $validacao->getData("users_id")->isVazio();
         $validacao->getData("devendo_para")->isVazio();
         $validacao->getData("valor")->isVazio();
-        $validacao->getData("valor_pago")->isVazio();
    
         return $validacao;
     }

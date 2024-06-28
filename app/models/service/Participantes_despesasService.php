@@ -14,8 +14,13 @@ class Participantes_despesasService
     public static function salvar($Participantes_despesas)
     {
         $validacao = Participantes_despesasValidacao::salvar($Participantes_despesas);
-        
         return Service::salvar($Participantes_despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
+    }
+    
+    public static function editar($Participantes_despesas)
+    {
+        $validacao = [];
+        return Service::salvar($Participantes_despesas, self::CAMPO, $validacao, self::TABELA);
     }  
 
     public static function excluir($id)
@@ -33,4 +38,18 @@ class Participantes_despesasService
         $dao = new Participantes_despesasDao();
         return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
+
+    public static function meusDebitosEmAberto($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->meusDebitosEmAberto($users_id);
+    }
+
+    public static function dividaEntreUsuarios($devedor, $credor)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->dividasEntreUsuarios($devedor, $credor);
+    }
+
+
 }

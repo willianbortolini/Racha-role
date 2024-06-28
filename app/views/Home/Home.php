@@ -18,3 +18,25 @@ HOME
 <div class="col-auto mt-2">
     <a href="<?php echo URL_BASE . "Despesas"?>" class="btn btn-primary">ver despesas</a>
 </div>
+
+<div class="col-auto mt-2">
+    <a href="<?php echo URL_BASE . "Despesas"?>" class="btn btn-primary">minas despesas</a>
+</div>
+
+<h2 class="mb-4">Lista de débitos</h2>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>PARA</th>
+            <th>VALOR</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($minhasDespesas as $despesa){ ?>
+            <tr>
+                <td><?= $despesa->devendo_para_nome  ?></td>
+                <td><?= number_format($despesa->valor, 2, ',', '.') ?></td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>

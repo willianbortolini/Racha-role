@@ -1,9 +1,10 @@
 <?php
 namespace app\models\dao;
+
 use app\core\Model;
 
 class Participantes_despesasDao extends Model
-{ 
+{
     public function lista($parametros)
     {
         $conn = $this->db;
@@ -53,6 +54,52 @@ class Participantes_despesasDao extends Model
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
-    }  
-   
+    }
+
+    public function meusDebitosEmAberto($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "SELECT participantes_despesas.devendo_para, SUM(participantes_despesas.valor-participantes_despesas.valor_pago) valor,
+             users.username devendo_para_nome 
+             FROM participantes_despesas 
+             inner join users ON 
+             users.users_id = participantes_despesas.devendo_para 
+             WHERE participantes_despesas.users_id = :users_id 
+             AND (valor-valor_pago) > 0 
+             GROUP BY devendo_para;";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function dividasEntreUsuarios($devedor, $credor)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "SELECT participantes_despesas_id, valor, valor_pago
+                    FROM participantes_despesas 
+                    WHERE participantes_despesas.users_id = :devedor
+                    AND participantes_despesas.devendo_para = :credor
+                    AND (valor-valor_pago) > 0 ";
+
+            $parametro = array(
+                'devedor' => $devedor,
+                'credor' => $credor
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+    
+
+
 }

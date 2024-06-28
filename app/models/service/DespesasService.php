@@ -8,15 +8,38 @@ use app\util\UtilService;
 
 class DespesasService
 {
-    const TABELA = "despesas"; 
-    const CAMPO = "despesas_id";     
+    const TABELA = "despesas";
+    const CAMPO = "despesas_id";
 
-    public static function salvar($Despesas)
+    public static function salvar($despesas, $participantes)
     {
-        $validacao = DespesasValidacao::salvar($Despesas);
-        
-        return Service::salvar($Despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
-    }  
+        $validacao = DespesasValidacao::salvar($despesas);
+
+        $despesa = Service::salvar($despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
+        if ($despesa > 1) //se é maior que um inseriu novo 
+        {
+            
+            // Calcular a parte de cada participante
+            $parteDeCada = $despesas->valor / count($participantes);
+
+            // Inserir participações na tabela de participations
+            foreach ($participantes as $participantes_id) {
+
+                $participantes_despesas = new \stdClass();
+
+                $participantes_despesas->participantes_despesas_id = 0;
+                $participantes_despesas->despesas_id = $despesa;
+                $participantes_despesas->users_id = $participantes_id;
+                $participantes_despesas->devendo_para = $despesas->users_id;
+                $participantes_despesas->valor = $parteDeCada;
+
+                Participantes_despesasService::salvar($participantes_despesas);
+
+            }
+        }
+
+        return $despesa;
+    }
 
     public static function excluir($id)
     {

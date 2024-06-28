@@ -6,7 +6,7 @@
 <form action="<?php echo URL_BASE   . "Pagamentos/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div class="form-group mb-2">
-        <label for="pagador">ID do Usuário</label>
+        <label for="pagador">ID do pagador</label>
         <select class="form-select" aria-label="Default select example" name="pagador">
             <?php foreach ($users as $item) {
                 echo "<option value='$item->users_id'". ($item->users_id == $pagamentos->pagador ? "selected" : "") . ">$item->username</option>";
@@ -15,7 +15,7 @@
     </div>
 
     <div class="form-group mb-2">
-        <label for="recebedor">ID do pagador</label>
+        <label for="recebedor">ID do recebedor</label>
         <select class="form-select" aria-label="Default select example" name="recebedor">
             <?php foreach ($users as $item) {
                 echo "<option value='$item->users_id'". ($item->users_id == $pagamentos->recebedor ? "selected" : "") . ">$item->username</option>";
