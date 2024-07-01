@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\core\Controller;
 use app\util\UtilService;
 use app\models\service\PagamentosService;
+use app\models\service\AmigosService;
 use app\models\service\Participantes_despesasService;
 use app\models\service\DespesasService;
 
@@ -32,6 +33,20 @@ class PagamentosController extends Controller
     {
         $dados["pagamentos"] = Service::get($this->view, $this->campo, $id);
         $dados["users"] = service::lista("users");
+        $dados["view"] = "Pagamentos/Edit";
+        $this->load("templateBootstrap", $dados);
+    }
+
+    public function quitar($valor, $pagador, $recebedor)
+    {
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);     
+
+        $pagamentos = new \stdClass();
+        $pagamentos->pagador = $pagador;
+        $pagamentos->recebedor = $recebedor;
+        $pagamentos->valor = $valor;
+
+        $dados["pagamentos"] = $pagamentos;
         $dados["view"] = "Pagamentos/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -143,43 +158,6 @@ class PagamentosController extends Controller
                 $pagamentos_id = PagamentosService::salvar($pagamentos); //se é maior que um inseriu novo 
                 if ($pagamentos_id > 1) //se é maior que um inseriu novo 
                 {
-                    $valorRestante = $pagamentos->valor;
-                    $valoresPendentes = Participantes_despesasService::dividaEntreUsuarios($pagamentos->pagador, $pagamentos->recebedor);
-                    foreach ($valoresPendentes as $valor) {
-                        if($valorRestante > 0){
-                            $participantes_despesas = new \stdClass();
-                            $participantes_despesas->participantes_despesas_id = $valor->participantes_despesas_id;
-                            
-                            if ($valor->valor - $valor->valor_pago <= $valorRestante) {
-                                $participantes_despesas->valor_pago = $valor->valor;
-                                $valorRestante -= ($valor->valor - $valor->valor_pago);
-                            } else {
-                                $participantes_despesas->valor_pago = $valor->valor_pago + $valorRestante;
-                                $valorRestante = 0;
-                            }
-                            $Participantes_despesa = Participantes_despesasService::editar($participantes_despesas);
-                            if($Participantes_despesa <> 1){
-                                throw new \Exception();  
-                            }
-                        }
-                    }
-
-                    //se sobrou saldo faz uma nova despesa com a quantidade restante
-                    if ($valorRestante > 0) {
-                        $despesas = new \stdClass();
-                        $despesas->despesas_id = 0;
-                        $despesas->descricao = "Sobra do pagamento";
-                        $despesas->valor = $valorRestante;
-                        $despesas->data = date('Y-m-d H:i:s');
-                        $despesas->users_id = $pagamentos->pagador;
-                        $participantes = [$pagamentos->recebedor];
-                        
-                        $despesa = DespesasService::salvar($despesas, $participantes);
-                        
-                        if ($despesa < 1){
-                            throw new \Exception();
-                        }
-                    }
 
                     Service::commit();
                     $this->redirect(URL_BASE . "Pagamentos");

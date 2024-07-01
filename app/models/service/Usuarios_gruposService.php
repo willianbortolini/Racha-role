@@ -33,4 +33,10 @@ class Usuarios_gruposService
         $dao = new Usuarios_gruposDao();
         return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
+
+    public static function membrosDoGrupo($grupos_id)
+    {
+        $dao = new Usuarios_gruposDao();
+        return $dao->membrosDoGrupo($grupos_id);
+    }
 }

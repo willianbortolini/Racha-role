@@ -5,8 +5,10 @@ namespace app\controllers;
 use app\core\Controller;
 use app\util\UtilService;
 use app\models\service\GruposService;
+use app\models\service\Usuarios_gruposService;
 use app\core\Flash;
 use app\models\service\Service;
+use app\models\service\AmigosService;
 
 class GruposController extends Controller
 {
@@ -29,7 +31,8 @@ class GruposController extends Controller
     public function edit($id)
     {
         $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);
-
+        $dados["membroGrupo"] = Usuarios_gruposService::membrosDoGrupo($id);
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);   
         $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
     }

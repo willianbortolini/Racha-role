@@ -7,6 +7,7 @@ use app\util\UtilService;
 use app\models\service\DespesasService;
 use app\models\service\Participantes_despesasService;
 use app\models\service\GruposService;
+use app\models\service\AmigosService;
 use app\core\Flash;
 use app\models\service\Service;
 
@@ -30,7 +31,7 @@ class DespesasController extends Controller
     public function edit($id)
     {
         $dados["despesas"] = Service::get($this->view, $this->campo, $id);
-        $dados["users"] = service::lista("users");
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);        
         $dados["grupos"] = GruposService::gruposDoUsuario($_SESSION['id']);
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
@@ -39,11 +40,11 @@ class DespesasController extends Controller
     public function create()
     {
         $dados["despesas"] = Flash::getForm();
-        $dados["users"] = service::lista("users");
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);
         $dados["grupos"] = GruposService::gruposDoUsuario($_SESSION['id']);
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
-    }
+    }    
 
     public function delete()
     {
@@ -147,7 +148,7 @@ class DespesasController extends Controller
             $despesa = DespesasService::salvar($despesas, $participantes);
             if ($despesa > 1) //se é maior que um inseriu novo 
             {               
-                $this->redirect(URL_BASE . "Despesas");
+                $this->redirect(URL_BASE);
             } else {
                 if (!$despesas->despesas_id) {
                     $this->redirect(URL_BASE . "Despesas/create");

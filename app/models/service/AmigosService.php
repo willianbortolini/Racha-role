@@ -33,4 +33,11 @@ class AmigosService
         $dao = new AmigosDao();
         return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
+
+    public static function meusAmigos($users_id)
+    {
+        $dao = new AmigosDao();
+        return $dao->meusAmigos($users_id);
+    }
+
 }
