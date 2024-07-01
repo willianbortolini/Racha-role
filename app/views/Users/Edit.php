@@ -72,6 +72,8 @@
             <a href="<?php echo URL_BASE . "users/ativar" ?>" class="btn btn-primary">reativar perfil</a>
         </div>
     <?php } ?>
+
+    <a class="nav-link text-wrapper-4" href="<?php echo URL_BASE . 'login/logoff' ?>">SAIR</a>
     <div class="row">
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Salvar</button>

@@ -67,15 +67,19 @@
     }
 
     .list-group-item .pix {
-        font-weight: 500;
+        font-weight: 500;        
+        font-size: medium; 
     }
 </style>
-
+<div class="mt-2">
+<a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-info"> <i class="fa fa-plus"></i> Adicionar amigo</a>
+</div>
+<hr>
 <ul class="list-group">
     <?php foreach ($minhasDespesas as $despesa) { ?>
         <li class="list-group-item" onclick="location.href='<?php echo URL_BASE . 'pagamentos/detalhes/' . $despesa->devendo_para ?>'">
             <div class="name"><?= $despesa->devendo_para_nome ?></br>
-                <span class="pix">PIX:</span>
+                <span class="pix">PIX:079.920.529-00</span>
             </div>
             <div class="valor mr-4 ">
                 <span class="description deveAvoce">deve a você</span>

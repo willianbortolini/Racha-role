@@ -24,6 +24,7 @@ class UsersController extends Controller
     {
         UtilService::usuarioAutorizado($id);
         $dados["users"] = Service::get($this->tabela, $this->campo, $id);
+        $dados["btnAtivo"] = "perfil";
         $dados["view"] = "Users/Edit";
         $this->load("templateBootstrap", $dados);
     }

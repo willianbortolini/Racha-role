@@ -7,8 +7,7 @@
 </style>
 <nav class="header navbar navbar-expand-lg  container">
 <a class="nav-link text-wrapper-4" href="<?php echo URL_BASE ?>">Home</a>
-<a href="<?php echo URL_BASE . "pagamentos/create" ?>" class="btn btn-primary">Pagar</a>
-<a href="<?php echo URL_BASE . "users/edit/" . $_SESSION['id'] ?>" class="btn btn-primary">Perfil</a>
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
     aria-expanded="false" aria-label="Toggle navigation">
     <img src="<?PHP echo URL_BASE . 'logoApp.png' ?>" width="30px" alt="">

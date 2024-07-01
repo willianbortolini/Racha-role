@@ -22,36 +22,103 @@
           console.log('Falha ao registrar o Service Worker:', error);
         });
     }
-    const URL_BASE = "<?php echo URL_BASE?>";
+    const URL_BASE = "<?php echo URL_BASE ?>";
     const csrfToken = <?php echo json_encode($_SESSION['csrf_token']); ?>;
     var controller;
     var caminhoRetornoDelete;
   </script>
 
-    <script src="<?php echo URL_BASE  . "assets/js/jquery-3.7.0.js" ?>"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE  . "assets/css2/jquery.dataTables.min.css" ?>">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script type="text/javascript" src="<?php echo URL_BASE  . "assets/js/jquery.dataTables.min.js" ?>"></script>
-    
+  <script src="<?php echo URL_BASE  . "assets/js/jquery-3.7.0.js" ?>"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE  . "assets/css2/jquery.dataTables.min.css" ?>">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script type="text/javascript" src="<?php echo URL_BASE  . "assets/js/jquery.dataTables.min.js" ?>"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+  <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 
 </head>
+
+<style>
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 0;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .footer-bar .btn {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 60px;
+    font-size: 14px;
+
+  }
+
+  .footer-bar .btn.active {
+    background-color: #007bff;
+    /* Active color */
+  }
+
+  .footer-bar .btn i {
+    margin-bottom: 5px;
+    font-size: 20px;
+  }
+
+  .fixed-bottom-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .footer-bar .btn {
+      width: auto;
+      height: auto;
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 10px 20px;
+    }
+
+    .footer-bar .btn i {
+      margin-bottom: 0;
+    }
+
+    .fixed-bottom-btn {
+      width: auto;
+      height: auto;
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 10px 20px;
+    }
+  }
+</style>
 
 <body>
 
   <div class="d-flex flex-column min-vh-100 ">
 
 
-    <?php include "header.php" ?>
-   
+    <?php //include "header.php" 
+    ?>
+
     <div class="container">
-    <div class="rectangle-6"></div>
+      <div class="rectangle-6"></div>
       <?php $this->load($view, $viewData) ?>
     </div>
 
@@ -59,16 +126,11 @@
   </div>
 
   </div>
-  <?php if (DOCKER_CONTAINER == TRUE) { ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <?php } else { ?>
-    <script src="<?php echo URL_BASE  . "assets/js/bootstrap.bundle.min.js" ?>" ></script>
-    <script src="<?php echo URL_BASE  . "assets/js/popper.min.js" ?>"></script>
-    <script src="<?php echo URL_BASE  . "assets/js/bootstrap.min.js" ?>"></script>
-  <?php } ?> 
-  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
   <script src="<?php echo URL_BASE  . "assets/js/jsBase.js" ?>"></script>
 </body>
 

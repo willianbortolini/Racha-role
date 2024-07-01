@@ -8,6 +8,7 @@ use app\models\service\AmigosService;
 use app\core\Flash;
 use app\models\service\Service;
 use app\models\service\ConvitesService;
+use app\models\service\Participantes_despesasService;
 
 class AmigosController extends Controller
 {
@@ -24,6 +25,14 @@ class AmigosController extends Controller
     {
         $dados["view"] = "Amigos/Show";
         $this->load("templateBootstrap", $dados);
+    }
+
+    public function home() {  
+        $dados["minhasDespesas"] = Participantes_despesasService::meusDebitosEmAberto($_SESSION['id']);
+        $dados["meusValoresAReceber"] = Participantes_despesasService::meusValoresAReceber($_SESSION['id']);
+        $dados["btnAtivo"] = "amigos";
+        $dados["view"] = "Amigos/Home";
+        $this->load("templateBootstrap", $dados);          
     }
 
     public function edit($id)
