@@ -92,36 +92,8 @@
     <?php } ?>
 </ul>
 
-<ul class="list-group">
-    <?php foreach ($meusValoresAReceber as $receber) { ?>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="name"><?= $receber->a_receber_nome ?></br>
-                <span class="pix">PIX:</span>
-            </div>
-            <div class="valor mr-4 ">
-                <span class="description voceDeve">você deve</span>
-                <span class="amount voceDeve">R$ <?= number_format($receber->valor_receber, 2, ',', '.') ?></span>
-            </div>
-            <div class="btn-container">
-                <a href="<?php echo URL_BASE . "pagamentos/quitar/" . $receber->valor_receber . "/" . $receber->a_receber_de . "/" . $_SESSION['id'] ?>" class="btn btn-primary btn-quitar">QUITAR <br> DIVIDA</a>
-            </div>
-        </li>
-    <?php } ?>
-</ul>
-
-
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-
-<script>
-   /* document.querySelectorAll('.list-group-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            if (!e.target.closest('.btn')) {
-                window.location.href = this.getAttribute('onclick').replace('location.href=', '').replace(/'/g, '');
-            }
-        });
-    });*/
-</script>

@@ -28,6 +28,13 @@ class GruposController extends Controller
         $this->load("templateBootstrap", $dados);
     }
 
+    public function home()
+    {
+        
+        $dados["view"] = "Grupos/home";
+        $this->load("templateBootstrap", $dados);
+    }
+
     public function edit($id)
     {
         $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);

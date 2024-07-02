@@ -30,7 +30,7 @@
             <div id="grupos_id">
                 <?php foreach ($grupos as $item): ?>
                     <div class="form-check">
-                        <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id[]"
+                        <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id"
                             value="<?php echo $item->grupos_id; ?>" id="grupo-<?php echo $item->grupos_id; ?>" <?php echo ((!isset($item->grupos_id)) && ($item->grupos_id == $despesas->grupos_id)) ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="grupo-<?php echo $item->grupos_id; ?>">
                             <?php echo $item->nome; ?>

@@ -3,7 +3,7 @@
         <i class="fa fa-user-friends"></i>
         <span>Amigos</span>
     </a>
-    <a href="<?php echo URL_BASE . 'Grupos' ?>" class="btn <?php echo ($btnAtivo == "grupos")? 'btn-secondary': 'btn-outline-secondary' ?>">
+    <a href="<?php echo URL_BASE . 'Grupos/home' ?>" class="btn <?php echo ($btnAtivo == "grupos")? 'btn-secondary': 'btn-outline-secondary' ?>">
         <i class="fa fa-users"></i>
         <span>Grupos</span>
     </a>

@@ -141,6 +141,7 @@ class DespesasController extends Controller
                 if (isset($_POST["grupos_id"]))
                     $despesas->grupos_id = $_POST["grupos_id"];
                 
+
             }
             $participantes = $_POST['participantes']; // Array de IDs de participantes
             
