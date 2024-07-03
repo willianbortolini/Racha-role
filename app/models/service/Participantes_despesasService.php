@@ -51,11 +51,28 @@ class Participantes_despesasService
         return $dao->meusValoresAReceber($users_id);
     }
 
+    public static function meusValoresPorGrupo($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->meusValoresPorGrupo($users_id);
+    }
     public static function dividaEntreUsuarios($devedor, $credor)
     {
         $dao = new Participantes_despesasDao();
         return $dao->dividasEntreUsuarios($devedor, $credor);
     }
 
+    public static function resumoValoresAmigos($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->resumoValoresAmigos($users_id);
+    }
 
+    public static function saldoUsuario($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->saldoUsuario($users_id);
+    }
+    
+    
 }

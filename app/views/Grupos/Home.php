@@ -1,95 +1,77 @@
 <style>
-    .list-group-item {
-        cursor: pointer;
-        padding: 15px;
-        border: none;
-        transition: background-color 0.3s;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .list-group-item:hover {
-        background-color: #f1f1f1;
-    }
-
-    .list-group-item .name {
-        font-weight: bold;
-        font-size: 1.5rem;
-        flex-grow: 1;
-        text-align: left;
-    }
-
-    .list-group-item .amount {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: right;
-    }
-
-    .list-group-item .description {
-        font-size: 0.9rem;
-        color: #6c757d;
-        text-align: right;
-    }
-
-    .list-group-item .valor {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Center the items horizontally */
-        justify-content: center;
-        /* Center the items vertically */
-        margin-right: 10px;
-    }
-
-    .list-group-item .valor .deveAvoce {
+    .deveAvoce {
         color: #00a5a5;
     }
 
-    .list-group-item .valor .voceDeve {
+    .voceDeve {
         color: #f79b0c;
     }
 
-    .list-group-item .btn-quitar {
-        font-weight: 600 !important; 
-    }
-    
-
-    .btn-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+    ul li{
+        list-style-type: none;
+        padding-left: 0;
     }
 
-    .btn-container .btn {
-        margin-top: 5px;
-        white-space: nowrap;
+    .grupo {
+        margin-top: 10px;
+        background-color: #f1f1f1;
+        padding: 8px;
     }
-
-    .list-group-item .pix {
-        font-weight: 500;        
-        font-size: medium; 
+    .lista{
+        padding: 0px;
     }
 </style>
 <div class="mt-2">
-<a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-info"> <i class="fa fa-plus"></i> Adicionar amigo</a>
+    <a href="<?php echo URL_BASE . 'grupos/create' ?>" class="btn btn-outline-info"> <i class="fa fa-plus"></i>
+        Adicionar grupo</a>
 </div>
 <hr>
-<ul class="list-group">
-    <?php foreach ($minhasDespesas as $despesa) { ?>
-        <li class="list-group-item" onclick="location.href='<?php echo URL_BASE . 'pagamentos/detalhes/' . $despesa->devendo_para ?>'">
-            <div class="name"><?= $despesa->devendo_para_nome ?></br>
-                <span class="pix">PIX:079.920.529-00</span>
-            </div>
-            <div class="valor mr-4 ">
-                <span class="description deveAvoce">deve a você</span>
-                <span class="amount deveAvoce">R$ <?= number_format($despesa->valor_devendo, 2, ',', '.') ?></span>
-            </div>
-            <div class="btn-container">
-                <a href="<?php echo URL_BASE . "pagamentos/quitar/" . $despesa->valor_devendo . "/" . $_SESSION['id'] . "/" . $despesa->devendo_para ?>" class="btn btn-primary btn-quitar">QUITAR <br> DIVIDA</a>
-            </div>
-        </li>
+<h5>No total, 
+    <?php if ($saldo > 0) { ?>
+        devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
+    <?php } else { ?>
+        você deve <span class="deveAvoce">R$ <?= number_format($saldo*-1, 2, ',', '.') ?></span>
     <?php } ?>
+</h5>
+<ul class="lista">
+    <?php $current_group = null;
+    foreach ($minhasDespesas as $item) { ?>
+        <?php
+        // Definir o nome do grupo, substituindo nulos por 'Sem Grupo'
+        $group_name = $item->nome_grupo ?? 'Despesa sem grupo';
+        $group_id = $item->grupos_id ?? -1;
+        ?>
+        <?php if ($group_id !== $current_group) { ?>
+            <?php if ($current_group !== null) { ?>
+            </ul>
+            </li>
+        <?php } ?>
+        <li class="grupo">
+            <strong><?php echo htmlspecialchars($group_name); ?></strong>
+            <ul>
+                <?php $current_group = $group_id; ?>
+            <?php } ?>
+            <li>
+                <?php if ($item->valor > 0) { ?>
+                    Você deve
+                    <span class="voceDeve"> R$
+                        <?php echo moedaBr($item->valor) ?>
+                    </span>
+                    a
+                    <?php echo substr(htmlspecialchars($item->username), 0, 10); ?>
+                    </span>
+                <?php } else { ?>
+                    <?php echo substr(htmlspecialchars($item->username), 0, 10); ?>
+                    deve
+                    <span class="deveAvoce"> R$
+                        <?php echo moedaBr($item->valor * -1) ?>
+                    </span>
+                    a você
+                <?php } ?>
+            </li>
+        <?php } ?>
+    </ul>
+</li>
 </ul>
 
 

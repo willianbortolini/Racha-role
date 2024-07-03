@@ -28,8 +28,8 @@ class AmigosController extends Controller
     }
 
     public function home() {  
-        $dados["minhasDespesas"] = Participantes_despesasService::meusDebitosEmAberto($_SESSION['id']);
-        $dados["meusValoresAReceber"] = Participantes_despesasService::meusValoresAReceber($_SESSION['id']);
+        $dados["minhasDespesas"] = Participantes_despesasService::resumoValoresAmigos($_SESSION['id']);
+        $dados["saldo"] = Participantes_despesasService::saldoUsuario($_SESSION['id']);
         $dados["btnAtivo"] = "amigos";
         $dados["view"] = "Amigos/Home";
         $this->load("templateBootstrap", $dados);          

@@ -153,49 +153,192 @@ class Participantes_despesasDao extends Model
         }
     }
 
-    public function resumoValores($users_id)
+    public function meusValores($users_id)
     {
         $conn = $this->db;
         try {
             $sql = "WITH saldos AS (
                         SELECT 
                             CASE 
-                                WHEN p1.devendo_para = 1 THEN p1.users_id
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
                                 ELSE p1.devendo_para 
                             END AS usuario,
                             SUM(CASE 
-                                WHEN p1.devendo_para = 1 THEN p1.valor - p1.valor_pago
+                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
                                 ELSE -(p1.valor - p1.valor_pago) 
                             END) AS saldo
                         FROM 
                             participantes_despesas p1
                         WHERE 
                             (p1.valor - p1.valor_pago) > 0
+                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                            AND p1.devendo_para != p1.users_id
                         GROUP BY 
                             CASE 
-                                WHEN p1.devendo_para = 1 THEN p1.users_id
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
                                 ELSE p1.devendo_para 
                             END
                     )
                     SELECT 
-                        s.usuario,
-                        u.username,
-                        SUM(CASE WHEN s.saldo > 0 THEN s.saldo ELSE 0 END) AS valor_devendo,
-                        SUM(CASE WHEN s.saldo < 0 THEN -s.saldo ELSE 0 END) AS valor_receber
+                        s.usuario AS a_receber_de,
+                        u.username AS a_receber_nome,
+                        -s.saldo AS valor_receber
                     FROM 
                         saldos s
                     INNER JOIN 
                         users u ON u.users_id = s.usuario
                     WHERE 
-                        s.usuario != 1
-                    GROUP BY 
-                        s.usuario, u.username;";
+                        AND s.usuario != :users_id";
 
             $parametro = array(
                 'users_id' => $users_id
             );
 
             return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function meusValoresPorGrupo($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "WITH saldos AS (
+                        SELECT 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END AS usuario,
+                            SUM(CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                ELSE -(p1.valor - p1.valor_pago) 
+                            END) AS saldo,
+    						despesas.grupos_id
+                        FROM 
+                            participantes_despesas p1
+    					INNER JOIN despesas ON
+    					despesas.despesas_id = P1.despesas_id 
+                        WHERE 
+                            (p1.valor - p1.valor_pago) > 0
+                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                            AND p1.devendo_para != p1.users_id
+                        GROUP BY 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END
+    						, despesas.grupos_id
+                    )
+                    SELECT 
+                        s.usuario AS users_id,
+                        u.username AS username,
+                        -s.saldo AS valor,
+                        s.grupos_id, grupos.nome nome_grupo
+                    FROM 
+                        saldos s
+                    INNER JOIN 
+                        users u ON u.users_id = s.usuario
+                    LEFT JOIN grupos ON
+                    grupos.grupos_id = s.grupos_id
+                    WHERE
+                         s.usuario != :users_id
+                    ORDER BY s.grupos_id";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function resumoValoresAmigos($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "WITH saldos AS (
+                        SELECT 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END AS usuario,
+                            SUM(CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                ELSE -(p1.valor - p1.valor_pago) 
+                            END) AS saldo
+                        FROM 
+                            participantes_despesas p1
+                        WHERE 
+                            (p1.valor - p1.valor_pago) > 0
+                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                            AND p1.devendo_para != p1.users_id
+                        GROUP BY 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END
+                    )
+                    SELECT 
+                        s.usuario AS users_id,
+                        u.username AS username,
+                        s.saldo AS valor,
+                        u.foto_perfil
+                    FROM 
+                        saldos s
+                    INNER JOIN 
+                        users u ON u.users_id = s.usuario
+                    WHERE  s.usuario != :users_id";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function saldoUsuario($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "WITH saldos AS (
+                        SELECT 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END AS usuario,
+                            SUM(CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                ELSE -(p1.valor - p1.valor_pago) 
+                            END) AS saldo
+                        FROM 
+                            participantes_despesas p1
+                        WHERE 
+                            (p1.valor - p1.valor_pago) > 0
+                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                            AND p1.devendo_para != p1.users_id
+                        GROUP BY 
+                            CASE 
+                                WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                ELSE p1.devendo_para 
+                            END
+                    )
+                    SELECT 
+                        sum(s.saldo ) as valor
+                    FROM 
+                        saldos s
+                    WHERE  s.usuario != :users_id";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro, false)->valor;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

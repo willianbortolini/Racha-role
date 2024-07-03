@@ -9,6 +9,7 @@ use app\models\service\Usuarios_gruposService;
 use app\core\Flash;
 use app\models\service\Service;
 use app\models\service\AmigosService;
+use app\models\service\Participantes_despesasService;
 
 class GruposController extends Controller
 {
@@ -30,7 +31,9 @@ class GruposController extends Controller
 
     public function home()
     {
-        
+        $dados["minhasDespesas"] = Participantes_despesasService::meusValoresPorGrupo($_SESSION['id']);
+        $dados["saldo"] = Participantes_despesasService::saldoUsuario($_SESSION['id']);
+        $dados["btnAtivo"] = "grupos";
         $dados["view"] = "Grupos/home";
         $this->load("templateBootstrap", $dados);
     }
