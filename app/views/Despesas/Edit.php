@@ -55,18 +55,70 @@
         display: flex;
         align-items: center;
     }
+
+    .input-container {
+        position: relative;
+        margin: 20px;
+    }
+
+    .input-field {
+        border: none;
+        border-bottom: 2px solid gray;
+        outline: none;
+        font-size: 16px;
+        padding: 5px 0;
+        width: 100%;
+    }
+
+    .input-field:focus {
+        border-bottom: 2px solid blue;
+    }
+
+    .input-field::placeholder {
+        color: gray;
+    }
+
+    .input-field:focus::placeholder {
+        color: transparent;
+    }
+
+    .date-picker-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .calendar-icon {
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    input[type="date"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
 </style>
 
 
 <form action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div id="step1" class="container mt-4">
+        <div class=" d-flex justify-content-between">
+
+            <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-primary">x</a>
+            <button type="button" class="btn btn-primary mb-2" id="step1-complete">></button>
+        </div>
+
         <h5 class="mt-4">
             Selecione o grupo ou os usuários com quem você quer dividir a conta
         </h5>
-        <div class=" d-flex justify-content-end">
-            <button type="button" class="btn btn-primary mb-2" id="step1-complete">Feito</button>
-        </div>
+
+
+
         <input type="text" class="form-control filter-input" placeholder="Filtrar grupos ou amigos" id="filter-input">
 
         <div class="form-group mb-2">
@@ -104,26 +156,24 @@
     </div>
 
     <div id="step2" class="hidden">
-        <h5 class="mt-4">
-            Com você e todos<span id="dividido"></span>
-        </h5>
-        <div class="form-group mb-2">
-            <label for="descricao">Descrição</label>
-            <input type="text" class="form-control" id="descricao" name="descricao"
+        <div class="row">
+            <div class="col-12 d-flex justify-content-between">
+                <button type="button" class="btn btn-primary mb-2" id="step1-return">
+                    + participantes </button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" name="descricao" class="input-field" placeholder="Adicione uma descrição"
                 value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
         </div>
 
-        <div class="form-group mb-2">
-            <label for="valor">Valor</label>
-            <input type="number" class="form-control" id="valor" name="valor"
+        <div class="input-container mt-4">
+            <input type="number" name="valor" class="input-field" placeholder="0,00"
                 value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required>
         </div>
 
-        <div class="form-group mb-2">
-            <label for="data">Data</label>
-            <input type="date" class="form-control" id="data" name="data"
-                value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
-        </div>
 
         <div class="form-group mb-2">
             <label for="users_id">Pago por</label>
@@ -136,18 +186,19 @@
                     }
                 } ?>
             </select>
+             e dividido 
         </div>
-
+        <div class="date-picker-wrapper">
+            <span class="calendar-icon">&#128197;</span>
+            <input type="date" id="data" name="data"
+                value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
+        </div>
         <input type="hidden" name="despesas_id"
             value="<?php echo (isset($despesas->despesas_id)) ? $despesas->despesas_id : NULL; ?>">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
-        <div class="row">
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-        </div>
-        <button type="button" class="btn btn-primary" id="step1-return">Voltar</button>
+
+
     </div>
 </form>
 
@@ -288,5 +339,8 @@
             return resultString;
         }
 
+
+
     });
+
 </script>
