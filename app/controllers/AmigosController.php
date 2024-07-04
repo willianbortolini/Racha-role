@@ -127,32 +127,22 @@ class AmigosController extends Controller
         if ($csrfToken === $_SESSION['csrf_token']) {
             $amigos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-                if (isset($_POST["amigos_id"]) && is_numeric($_POST["amigos_id"]) && $_POST["amigos_id"] > 0) {
-                    $amigos->amigos_id = $_POST["amigos_id"];
-                } else {
-                    $amigos->amigos_id = 0;
-                }
-                if (isset($_POST["usuario_id"]))
-                    $amigos->usuario_id = $_POST["usuario_id"];
-                if (isset($_POST["amigo_id"]))
-                    $amigos->amigo_id = $_POST["amigo_id"];
-                if (isset($_POST["status"]))
-                    $amigos->status = $_POST["status"];
-
-
+                $amigos->amigos_id = 0; 
+                $amigos->usuario_id = $_SESSION['id'];
+                if (isset($_POST["amigo"]))
+                    $amigos->amigo = $_POST["amigo"];                  
             }
 
 
             Flash::setForm($amigos);
             if (AmigosService::salvar($amigos) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE . "Amigos");
+                $this->redirect(URL_BASE . "Amigos/home");
             } else {
-                if (!$amigos->amigos_id) {
-                    $this->redirect(URL_BASE . "Amigos/create");
-                } else {
+                if ($amigos->amigos_id > 0) {
                     $this->redirect(URL_BASE . "Amigos/edit/" . $amigos->amigos_id);
+                } else {
+                    $this->redirect(URL_BASE . "Amigos/create");                    
                 }
             }
         }

@@ -129,16 +129,13 @@ class Usuarios_gruposController extends Controller
                 if (isset($_POST["users_id"]))
                    $usuarios_grupos->users_id = $_POST["users_id"];
                 if (isset($_POST["grupos_id"]))
-                   $usuarios_grupos->grupos_id = $_POST["grupos_id"];
-                
+                   $usuarios_grupos->grupos_id = $_POST["grupos_id"];              
                
             }
-
-
             Flash::setForm($usuarios_grupos);
             if (Usuarios_gruposService::salvar($usuarios_grupos) > 1) //se é maior que um inseriu novo 
             {
-                $this->redirect(URL_BASE   . "Usuarios_grupos");
+                $this->redirect(URL_BASE   . "grupos/edit/".$usuarios_grupos->grupos_id);
             } else {
                 if (!$usuarios_grupos->usuarios_grupos_id) {
                     $this->redirect(URL_BASE   . "Usuarios_grupos/create");

@@ -66,5 +66,60 @@ class GruposDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
+
+    public function gruposQuitados($users_id)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "WITH saldos AS (
+                            SELECT 
+                                despesas.grupos_id,
+                                CASE 
+                                    WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                    ELSE p1.devendo_para 
+                                END AS usuario,
+                                SUM(CASE 
+                                    WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                    ELSE -(p1.valor - p1.valor_pago) 
+                                END) AS saldo
+                            FROM 
+                                participantes_despesas p1
+                            INNER JOIN despesas ON
+                                despesas.despesas_id = p1.despesas_id 
+                            WHERE 
+                                (p1.valor - p1.valor_pago) > 0
+                                AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                                AND p1.devendo_para != p1.users_id
+                            GROUP BY 
+                                despesas.grupos_id,
+                                CASE 
+                                    WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                    ELSE p1.devendo_para 
+                                END
+                        )
+                        SELECT 
+                            g.grupos_id,
+                            g.nome AS nome_grupo
+                        FROM 
+                            grupos g
+                        LEFT JOIN saldos s ON
+                            g.grupos_id = s.grupos_id
+                        GROUP BY 
+                            g.grupos_id, g.nome
+                        HAVING 
+                            SUM(s.saldo) IS NULL OR SUM(s.saldo) = 0
+                        ORDER BY 
+                            g.nome;
+                        ";
+
+            $parametro = array(
+                'users_id' => $users_id
+            );
+
+            return self::consultar($this->db, $sql, $parametro);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
    
 }

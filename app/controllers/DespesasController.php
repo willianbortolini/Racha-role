@@ -144,9 +144,10 @@ class DespesasController extends Controller
 
             }
             $participantes = $_POST['participantes']; // Array de IDs de participantes
-            
+            $valorPorParticipante = $_POST['valorporparticipante']; // Array de IDs de participantes
+
             Flash::setForm($despesas);
-            $despesa = DespesasService::salvar($despesas, $participantes);
+            $despesa = DespesasService::salvar($despesas, $participantes, $valorPorParticipante);
             if ($despesa > 1) //se é maior que um inseriu novo 
             {               
                 $this->redirect(URL_BASE);

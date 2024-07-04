@@ -33,6 +33,7 @@ class GruposController extends Controller
     {
         $dados["minhasDespesas"] = Participantes_despesasService::meusValoresPorGrupo($_SESSION['id']);
         $dados["saldo"] = Participantes_despesasService::saldoUsuario($_SESSION['id']);
+        $dados["gruposQuitados"] = GruposService::gruposQuitados($_SESSION['id']);
         $dados["btnAtivo"] = "grupos";
         $dados["view"] = "Grupos/home";
         $this->load("templateBootstrap", $dados);
@@ -135,23 +136,33 @@ class GruposController extends Controller
                     $grupos->grupos_id = 0;                         
                 }
                 if (isset($_POST["nome"]))
-                   $grupos->nome = $_POST["nome"];
-                
+                   $grupos->nome = $_POST["nome"];               
                
             }
 
-
             Flash::setForm($grupos);
-            if (GruposService::salvar($grupos) > 1) //se é maior que um inseriu novo 
-            {
-                $this->redirect(URL_BASE   . "Grupos");
-            } else {
-                if (!$grupos->grupos_id) {
-                    $this->redirect(URL_BASE   . "Grupos/create");
+            Service::begin_tran();
+            try {
+
+                $grupos_id = GruposService::salvar($grupos); //se é maior que um inseriu novo 
+                if ($grupos_id > 1) //se é maior que um inseriu novo 
+                {
+
+                    Service::commit();
+                    $this->redirect(URL_BASE . "Grupos/home");
+
                 } else {
-                    $this->redirect(URL_BASE   . "Grupos/edit/" . $grupos->grupos_id);
+                    if (!$grupos_id->grupos_id) {
+                        $this->redirect(URL_BASE . "Grupos/create");
+                    } else {
+                        $this->redirect(URL_BASE . "Grupos/edit/" . $grupos_id->grupos_id);
+                    }
                 }
-            }
+            } catch (\Exception $e) {
+                Flash::setMsg($e->getMessage());
+                $this->redirect(URL_BASE . "Pagamentos");
+                Service::rollback();
+            }            
         }
     }
 

@@ -68,5 +68,30 @@ class Usuarios_gruposDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
+
+    public function estaNoGrupo($users_id, $grupos_id)
+    {
+        try {
+            $sql = "SELECT * 
+                    FROM usuarios_grupos 
+                    WHERE users_id = :users_id
+                    and grupos_id = :grupos_id";
+
+            $parametro = array(
+                'users_id' => $users_id,
+                'grupos_id' => $grupos_id,
+            );
+
+            $resultado = self::consultar($this->db, $sql, $parametro);
+
+            if ($resultado && count($resultado) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
    
 }

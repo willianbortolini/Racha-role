@@ -11,30 +11,26 @@ class DespesasService
     const TABELA = "despesas";
     const CAMPO = "despesas_id";
 
-    public static function salvar($despesas, $participantes)
+    public static function salvar($despesas, $participantes, $valoresPorParticipante)
     {
         $validacao = DespesasValidacao::salvar($despesas);
 
         $despesa = Service::salvar($despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
         if ($despesa > 1) //se é maior que um inseriu novo 
         {
-            
-            // Calcular a parte de cada participante
-            $parteDeCada = $despesas->valor / count($participantes);
-
             // Inserir participações na tabela de participations
-            foreach ($participantes as $participantes_id) {
-
+            for ($i = 0; $i < count($participantes); $i++) {
+                $participantes_id = $participantes[$i];
+                $valorPorParticipante = $valoresPorParticipante[$i];
+            
                 $participantes_despesas = new \stdClass();
-
                 $participantes_despesas->participantes_despesas_id = 0;
                 $participantes_despesas->despesas_id = $despesa;
                 $participantes_despesas->users_id = $participantes_id;
                 $participantes_despesas->devendo_para = $despesas->users_id;
-                $participantes_despesas->valor = $parteDeCada;
-                
+                $participantes_despesas->valor = $valorPorParticipante;
+            
                 Participantes_despesasService::salvar($participantes_despesas);
-
             }
         }
 

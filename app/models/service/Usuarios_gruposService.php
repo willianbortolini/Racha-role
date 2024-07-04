@@ -8,15 +8,18 @@ use app\util\UtilService;
 
 class Usuarios_gruposService
 {
-    const TABELA = "usuarios_grupos"; 
-    const CAMPO = "usuarios_grupos_id";     
+    const TABELA = "usuarios_grupos";
+    const CAMPO = "usuarios_grupos_id";
 
     public static function salvar($Usuarios_grupos)
     {
         $validacao = Usuarios_gruposValidacao::salvar($Usuarios_grupos);
-        
-        return Service::salvar($Usuarios_grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);
-    }  
+        if (self::estaNoGrupo($Usuarios_grupos->users_id, $Usuarios_grupos->grupos_id)) {
+            return 2;
+        } else {
+            return Service::salvar($Usuarios_grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);
+        }
+    }
 
     public static function excluir($id)
     {
@@ -38,5 +41,11 @@ class Usuarios_gruposService
     {
         $dao = new Usuarios_gruposDao();
         return $dao->membrosDoGrupo($grupos_id);
+    }
+
+    public static function estaNoGrupo($users_id, $grupos_id)
+    {
+        $dao = new Usuarios_gruposDao();
+        return $dao->estaNoGrupo($users_id, $grupos_id);
     }
 }

@@ -86,5 +86,30 @@ class AmigosDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
+
+    public function jaEamigo($users_id, $amigo)
+    {
+        try {
+            $sql = "SELECT * 
+                    FROM amigos
+                    WHERE (usuario_id = :users_id and amigo_id = :amigo) OR
+                    (usuario_id = :amigo and amigo_id = :users_id)";
+
+            $parametro = array(
+                'users_id' => $users_id,
+                'amigo' => $amigo,
+            );
+
+            $resultado = self::consultar($this->db, $sql, $parametro);
+
+            if ($resultado && count($resultado) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
    
 }

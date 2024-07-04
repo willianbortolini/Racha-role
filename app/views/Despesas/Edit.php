@@ -194,23 +194,21 @@
     }
 
     .input-valor {
-        width: 80px;
-        /* Ajuste o tamanho conforme necessário */
+        padding: 5px;
+        width: 50px;
         margin-left: 10px;
     }
 </style>
 
 
-<form action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
+<form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div id="step1" class="container mt-4">
         <div class=" d-flex justify-content-between">
-
             <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-primary">x</a>
-
         </div>
         <div class="input-container">
-            <input type="text" name="descricao" class="input-field" placeholder="Adicione uma descrição" value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
+            <input type="text" id="descricao" name="descricao" class="input-field" placeholder="Adicione uma descrição" value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
         </div>
 
         <div class="input-container mt-4">
@@ -236,8 +234,8 @@
 
 
         <div class="form-group mb-2 w-100">
-            <label for="users_id" class="form-label">Pago por</label>
-            <select class="form-select col-12" aria-label=".form-select-lg example" name="users_id" id="users_id">
+            <label for="users_id" class="form-label mt-4">Pago por</label>
+            <select class="form-select col-12 input-field" aria-label=".form-select-lg example" name="users_id" id="users_id">
                 <?php foreach ($users as $item) {
                     if (isset($despesas->users_id)) {
                         echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_id ? "selected" : "") . ">$item->username</option>";
@@ -250,7 +248,7 @@
 
         como dividir <br>
         <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
-        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>        
+        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>
 
         <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos" id="filter-input">
 
@@ -305,9 +303,11 @@
 
         const participantesDiv = document.getElementById('participantes');
         const valorTotalInput = document.getElementById('valor-total');
+        const descricaolInput = document.getElementById('descricao');        
         const habilitarInputsButton = document.getElementById('habilitar-inputs');
         const totalDisplay = document.getElementById('total-display');
         const dividirIgualmenteButton = document.getElementById('dividir-igualmente');
+        const form = document.getElementById('despesas-form');
         let inputsHabilitados = false;
 
         participantesDiv.addEventListener('change', function(event) {
@@ -334,7 +334,7 @@
             if (!existingInput) {
                 const valorInput = document.createElement('input');
                 valorInput.type = 'number';
-                valorInput.name = 'valor-por-participante[]';
+                valorInput.name = 'valorporparticipante[]';
                 valorInput.className = 'input-valor';
                 valorInput.placeholder = '0,00';
                 valorInput.value = '';
@@ -386,6 +386,13 @@
             updateTotalDisplay();
         }
 
+        form.addEventListener('submit', function(event) {
+            const inputs = document.querySelectorAll('.input-valor');
+            inputs.forEach(input => {
+                input.disabled = false; // Habilitar todos os inputs antes de submeter
+            });
+        });
+
         habilitarInputsButton.addEventListener('click', function() {
             const inputs = document.querySelectorAll('.input-valor');
             inputs.forEach(input => {
@@ -423,8 +430,8 @@
                 const valorDividido = parseFloat((valorTotal / selectedCheckboxes.length).toFixed(2));
                 const valorInput = document.createElement('input');
                 valorInput.type = 'number';
-                valorInput.name = 'valor-por-participante[]';
-                valorInput.className = 'input-valor';
+                valorInput.name = 'valorporparticipante[]';
+                valorInput.className = 'input-valor input-field';
                 valorInput.placeholder = '0,00'
                 valorInput.value = valorDividido.toFixed(2); // Formatar valor com duas casas decimais
                 valorInput.disabled = true; // Inicialmente desabilitado
@@ -488,6 +495,7 @@
                     checkboxes.forEach(checkbox => {
                         checkbox.checked = false;
                     });
+                    moveSelectedToTop()
                 }
             });
         });
@@ -499,12 +507,14 @@
 
         // Step 1 complete button
         document.getElementById('step1-complete').addEventListener('click', function() {
-            /*var selectedUsers = document.querySelectorAll('#participantes .form-check-input:checked');
-            if (selectedUsers.length < 1) {
-                alert('Por favor, selecione pelo menos uma pessoa para dividir a conta.');
-                return;
-            }*/
-            vaiParaDadosDaDespesa()
+          
+            if (descricaolInput.value.trim() === '') { 
+                alert('Adicione uma descrição');
+            } else if (valorTotalInput.value.trim() === '') { 
+                alert('Adicione um valor');
+            } else{  
+                vaiParaDadosDaDespesa()
+            }
         });
 
         // Step 1 complete button
@@ -592,6 +602,10 @@
             totalDisplay.innerHTML = `R$ ${totalAdicionado.toFixed(2)} de R$ ${valorTotal} <br> falta R$ ${falta} `;
         }
 
+        // Trigger change event for initially selected groups
+        document.querySelectorAll('.grupo-checkbox:checked').forEach(function(checkbox) {
+            checkbox.dispatchEvent(new Event('change'));
+        });
 
     });
 </script>

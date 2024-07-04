@@ -49,6 +49,12 @@
   <div class="d-flex flex-column min-vh-100 ">
 
 
+    <div class="ml-1 mr-2">
+      <?php
+      $this->verMsg();
+      $this->verErro();
+      ?>
+    </div>
     <?php //include "header.php" 
     ?>
 
