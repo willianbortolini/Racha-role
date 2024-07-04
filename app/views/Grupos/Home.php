@@ -20,6 +20,70 @@
     .lista{
         padding: 0px;
     }
+
+    .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 0;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .footer-bar .btn {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 60px;
+    font-size: 14px;
+
+  }
+
+  .footer-bar .btn.active {
+    background-color: #007bff;
+    /* Active color */
+  }
+
+  .footer-bar .btn i {
+    margin-bottom: 5px;
+    font-size: 20px;
+  }
+
+  .fixed-bottom-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .footer-bar .btn {
+      width: auto;
+      height: auto;
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 10px 20px;
+    }
+
+    .footer-bar .btn i {
+      margin-bottom: 0;
+    }
+
+    .fixed-bottom-btn {
+      width: auto;
+      height: auto;
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 10px 20px;
+    }
+  }
 </style>
 <div class="mt-2">
     <a href="<?php echo URL_BASE . 'grupos/create' ?>" class="btn btn-outline-info"> <i class="fa fa-plus"></i>
@@ -97,8 +161,3 @@
         <span>Perfil</span>
     </a>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">

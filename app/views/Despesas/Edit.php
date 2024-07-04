@@ -88,7 +88,8 @@
     }
 
     .calendar-icon {
-        font-size: 24px;
+        font-size: 50px;
+        margin: 5px;
         cursor: pointer;
     }
 
@@ -101,6 +102,102 @@
         opacity: 0;
         cursor: pointer;
     }
+
+    .footer-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 10px 0;
+        box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+        flex-direction: column;
+    }
+
+    .footer-bar2 {
+        display: flex;
+        width: 100%;
+    }
+
+    .footer-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 10px 0;
+        box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .footer-bar .btn {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: 60px;
+        font-size: 14px;
+
+    }
+
+    .footer-bar .btn.active {
+        background-color: #007bff;
+        /* Active color */
+    }
+
+    .footer-bar .btn i {
+        margin-bottom: 5px;
+        font-size: 20px;
+    }
+
+    .fixed-bottom-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 20px;
+    }
+
+    @media (min-width: 768px) {
+        .footer-bar .btn {
+            width: auto;
+            height: auto;
+            font-size: 16px;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+
+        .footer-bar .btn i {
+            margin-bottom: 0;
+        }
+
+        .fixed-bottom-btn {
+            width: auto;
+            height: auto;
+            font-size: 16px;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .input-valor {
+        width: 80px;
+        /* Ajuste o tamanho conforme necessário */
+        margin-left: 10px;
+    }
 </style>
 
 
@@ -110,25 +207,60 @@
         <div class=" d-flex justify-content-between">
 
             <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-primary">x</a>
-            <button type="button" class="btn btn-primary mb-2" id="step1-complete">></button>
+
+        </div>
+        <div class="input-container">
+            <input type="text" name="descricao" class="input-field" placeholder="Adicione uma descrição" value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
         </div>
 
-        <h5 class="mt-4">
-            Selecione o grupo ou os usuários com quem você quer dividir a conta
-        </h5>
+        <div class="input-container mt-4">
+            <input type="number" id="valor-total" name="valor" class="input-field" placeholder="0,00" value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required>
+        </div>
+
+        <input type="hidden" name="despesas_id" value="<?php echo (isset($despesas->despesas_id)) ? $despesas->despesas_id : NULL; ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+        <div class="footer-bar">
+            <div class="footer-bar2">
+                <div class="date-picker-wrapper">
+                    <span class="calendar-icon">&#128197;</span>
+                    <input type="date" id="data" name="data" value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
+                </div>
+                <button type="button" class="btn btn-primary mb-2" id="step1-complete">Selecionar participantes</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="step2" class="hidden">
 
 
+        <div class="form-group mb-2 w-100">
+            <label for="users_id" class="form-label">Pago por</label>
+            <select class="form-select col-12" aria-label=".form-select-lg example" name="users_id" id="users_id">
+                <?php foreach ($users as $item) {
+                    if (isset($despesas->users_id)) {
+                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_id ? "selected" : "") . ">$item->username</option>";
+                    } else {
+                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">$item->username</option>";
+                    }
+                } ?>
+            </select>
+        </div>
 
-        <input type="text" class="form-control filter-input" placeholder="Filtrar grupos ou amigos" id="filter-input">
+        como dividir <br>
+        <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
+        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>        
+
+        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos" id="filter-input">
 
         <div class="form-group mb-2">
             <label for="grupos_id">Grupos</label>
             <div id="grupos_id">
-                <?php foreach ($grupos as $item): ?>
+                <?php foreach ($grupos as $item) : ?>
                     <div class="form-check">
                         <label class="form-check-label" for="grupo-<?php echo $item->grupos_id; ?>">
-                            <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id"
-                                value="<?php echo $item->grupos_id; ?>" id="grupo-<?php echo $item->grupos_id; ?>" <?php echo ((!isset($item->grupos_id)) && ($item->grupos_id == $despesas->grupos_id)) ? 'checked' : ''; ?>>
+                            <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id" value="<?php echo $item->grupos_id; ?>" id="grupo-<?php echo $item->grupos_id; ?>" <?php echo ((!isset($item->grupos_id)) && ($item->grupos_id == $despesas->grupos_id)) ? 'checked' : ''; ?>>
                             <span class="custom-checkbox"></span>
                             <?php echo $item->nome; ?>
                         </label>
@@ -140,11 +272,10 @@
         <div class="form-group mb-2">
             <label for="participantes">Amigos</label>
             <div id="participantes">
-                <?php foreach ($users as $item): ?>
+                <?php foreach ($users as $item) : ?>
                     <div class="form-check">
                         <label class="form-check-label" for="user-<?php echo $item->users_id; ?>">
-                            <input class="form-check-input" type="checkbox" name="participantes[]"
-                                value="<?php echo $item->users_id; ?>" id="user-<?php echo $item->users_id; ?>">
+                            <input class="form-check-input" type="checkbox" name="participantes[]" value="<?php echo $item->users_id; ?>" id="user-<?php echo $item->users_id; ?>">
                             <span class="custom-checkbox"></span>
                             <?php echo $item->username; ?>
                         </label>
@@ -153,57 +284,163 @@
             </div>
         </div>
 
-    </div>
 
-    <div id="step2" class="hidden">
-        <div class="row">
-            <div class="col-12 d-flex justify-content-between">
+        <div class="footer-bar">
+            <div id="total-display" class="total-display mb-4" id="total-display" style="display: none;">
+                Valor Total: R$ 0.00 | Adicionado: R$ 0.00
+            </div>
+            <div class="footer-bar2">
                 <button type="button" class="btn btn-primary mb-2" id="step1-return">
-                    + participantes </button>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    Voltar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
         </div>
-
-        <div class="input-container">
-            <input type="text" name="descricao" class="input-field" placeholder="Adicione uma descrição"
-                value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
-        </div>
-
-        <div class="input-container mt-4">
-            <input type="number" name="valor" class="input-field" placeholder="0,00"
-                value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required>
-        </div>
-
-
-        <div class="form-group mb-2">
-            <label for="users_id">Pago por</label>
-            <select class="form-select" aria-label="Default select example" name="users_id">
-                <?php foreach ($users as $item) {
-                    if (isset($despesas->users_id)) {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_id ? "selected" : "") . ">$item->username</option>";
-                    } else {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">$item->username</option>";
-                    }
-                } ?>
-            </select>
-             e dividido 
-        </div>
-        <div class="date-picker-wrapper">
-            <span class="calendar-icon">&#128197;</span>
-            <input type="date" id="data" name="data"
-                value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
-        </div>
-        <input type="hidden" name="despesas_id"
-            value="<?php echo (isset($despesas->despesas_id)) ? $despesas->despesas_id : NULL; ?>">
-        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-
-
-
     </div>
 </form>
 
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const participantesDiv = document.getElementById('participantes');
+        const valorTotalInput = document.getElementById('valor-total');
+        const habilitarInputsButton = document.getElementById('habilitar-inputs');
+        const totalDisplay = document.getElementById('total-display');
+        const dividirIgualmenteButton = document.getElementById('dividir-igualmente');
+        let inputsHabilitados = false;
+
+        participantesDiv.addEventListener('change', function(event) {
+            if (event.target.classList.contains('form-check-input')) {
+                if (inputsHabilitados) {
+                    if (event.target.checked) {
+                        adicionarInputSemValorEMoverParaCima(event.target);
+                    } else {
+                        removerInputEMoverParaBaixo(event.target);
+                    }
+                } else {
+                    moveSelectedToTop();
+                }
+            }
+        });
+
+        dividirIgualmenteButton.addEventListener('click', function() {
+            divideEqually();
+        });
+
+        function adicionarInputSemValorEMoverParaCima(checkbox) {
+            const formCheckDiv = checkbox.closest('.form-check');
+            const existingInput = formCheckDiv.querySelector('.input-valor');
+            if (!existingInput) {
+                const valorInput = document.createElement('input');
+                valorInput.type = 'number';
+                valorInput.name = 'valor-por-participante[]';
+                valorInput.className = 'input-valor';
+                valorInput.placeholder = '0,00';
+                valorInput.value = '';
+                valorInput.addEventListener('input', updateTotalDisplay);
+                formCheckDiv.appendChild(valorInput);
+            }
+
+            participantesDiv.removeChild(formCheckDiv);
+            participantesDiv.insertBefore(formCheckDiv, participantesDiv.firstChild);
+
+        }
+
+        function removerInputEMoverParaBaixo(checkbox) {
+            const formCheckDiv = checkbox.closest('.form-check');
+            const valorInput = formCheckDiv.querySelector('.input-valor');
+            if (valorInput) {
+                formCheckDiv.removeChild(valorInput);
+            }
+
+            participantesDiv.removeChild(formCheckDiv);
+            participantesDiv.appendChild(formCheckDiv);
+            updateTotalDisplay()
+        }
+
+        function divideEqually() {
+            const checkboxes = Array.from(participantesDiv.getElementsByClassName('form-check-input'));
+            const selectedCheckboxes = checkboxes.filter(checkbox => checkbox.checked);
+
+            const valorTotal = parseFloat(valorTotalInput.value);
+            if (isNaN(valorTotal)) {
+                alert('Por favor, insira um valor total válido.');
+                return;
+            }
+
+            const valorDividido = parseFloat((valorTotal / selectedCheckboxes.length).toFixed(2));
+
+            selectedCheckboxes.forEach(checkbox => {
+                const formCheckDiv = checkbox.closest('.form-check');
+                const valorInput = formCheckDiv.querySelector('.input-valor');
+                valorInput.value = valorDividido.toFixed(2);
+                valorInput.disabled = true; // Desabilita os inputs
+            });
+            totalDisplay.style.display = 'none';
+            habilitarInputsButton.classList.remove('btn-primary')
+            dividirIgualmenteButton.classList.remove('btn-secondary')
+            habilitarInputsButton.classList.add('btn-secondary')
+            dividirIgualmenteButton.classList.add('btn-primary')
+            inputsHabilitados = false;
+            updateTotalDisplay();
+        }
+
+        habilitarInputsButton.addEventListener('click', function() {
+            const inputs = document.querySelectorAll('.input-valor');
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.value = '';
+            });
+            inputsHabilitados = true;
+            totalDisplay.style.display = 'flex';
+            habilitarInputsButton.classList.remove('btn-secondary')
+            dividirIgualmenteButton.classList.remove('btn-primary')
+            habilitarInputsButton.classList.add('btn-primary')
+            dividirIgualmenteButton.classList.add('btn-secondary')
+            updateTotalDisplay();
+        });
+
+        function moveSelectedToTop() {
+            const checkboxes = Array.from(participantesDiv.getElementsByClassName('form-check-input'));
+            const selectedCheckboxes = checkboxes.filter(checkbox => checkbox.checked);
+            const unselectedCheckboxes = checkboxes.filter(checkbox => !checkbox.checked);
+
+            // Limpar a lista
+            participantesDiv.innerHTML = '';
+
+            // Verificar se valor total é um número válido
+            const valorTotal = parseFloat(valorTotalInput.value);
+            if (isNaN(valorTotal)) {
+                alert('Por favor, insira um valor total válido.');
+                return;
+            }
+
+            // Adicionar os itens selecionados ao topo
+            selectedCheckboxes.forEach(checkbox => {
+                const formCheckDiv = checkbox.closest('.form-check');
+                formCheckDiv.querySelector('.input-valor')?.remove(); // Remove existing input
+                const valorDividido = parseFloat((valorTotal / selectedCheckboxes.length).toFixed(2));
+                const valorInput = document.createElement('input');
+                valorInput.type = 'number';
+                valorInput.name = 'valor-por-participante[]';
+                valorInput.className = 'input-valor';
+                valorInput.placeholder = '0,00'
+                valorInput.value = valorDividido.toFixed(2); // Formatar valor com duas casas decimais
+                valorInput.disabled = true; // Inicialmente desabilitado
+                valorInput.addEventListener('input', updateTotalDisplay);
+                formCheckDiv.appendChild(valorInput);
+                participantesDiv.appendChild(formCheckDiv);
+            });
+
+            // Adicionar os itens não selecionados
+            unselectedCheckboxes.forEach(checkbox => {
+                const formCheckDiv = checkbox.closest('.form-check');
+                formCheckDiv.querySelector('.input-valor')?.remove(); // Remove existing input
+                participantesDiv.appendChild(formCheckDiv);
+            });
+        }
+
         // Set default date to today if not already set
         var dateInput = document.getElementById('data');
         if (!dateInput.value) {
@@ -214,12 +451,12 @@
             dateInput.value = year + '-' + month + '-' + day;
         }
 
-        document.querySelectorAll('.grupo-checkbox').forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
+        document.querySelectorAll('.grupo-checkbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
                 var groupId = this.value;
                 if (this.checked) {
                     // Uncheck all other checkboxes
-                    document.querySelectorAll('.grupo-checkbox').forEach(function (otherCheckbox) {
+                    document.querySelectorAll('.grupo-checkbox').forEach(function(otherCheckbox) {
                         if (otherCheckbox !== checkbox) {
                             otherCheckbox.checked = false;
                         }
@@ -227,7 +464,7 @@
 
                     // Clear all user checkboxes
                     var userCheckboxes = document.querySelectorAll('#participantes .form-check-input');
-                    userCheckboxes.forEach(function (userCheckbox) {
+                    userCheckboxes.forEach(function(userCheckbox) {
                         userCheckbox.checked = false;
                     });
 
@@ -243,8 +480,7 @@
                                     checkbox.checked = true;
                                 }
                             });
-                            vaiParaDadosDaDespesa()
-                            document.getElementById('dividido').textContent = ' do grupo ' + getSelectedItems();
+                            moveSelectedToTop()
                         })
                         .catch(error => console.error('Error fetching data:', error));
                 } else {
@@ -257,22 +493,22 @@
         });
 
         // Trigger change event for initially selected groups
-        document.querySelectorAll('.grupo-checkbox:checked').forEach(function (checkbox) {
+        document.querySelectorAll('.grupo-checkbox:checked').forEach(function(checkbox) {
             checkbox.dispatchEvent(new Event('change'));
         });
 
         // Step 1 complete button
-        document.getElementById('step1-complete').addEventListener('click', function () {
-            var selectedUsers = document.querySelectorAll('#participantes .form-check-input:checked');
+        document.getElementById('step1-complete').addEventListener('click', function() {
+            /*var selectedUsers = document.querySelectorAll('#participantes .form-check-input:checked');
             if (selectedUsers.length < 1) {
                 alert('Por favor, selecione pelo menos uma pessoa para dividir a conta.');
                 return;
-            }
+            }*/
             vaiParaDadosDaDespesa()
         });
 
         // Step 1 complete button
-        document.getElementById('step1-return').addEventListener('click', function () {
+        document.getElementById('step1-return').addEventListener('click', function() {
             vaiParaSelecaoDeUsuarios()
         });
 
@@ -287,17 +523,17 @@
         }
 
         // Filter functionality
-        document.getElementById('filter-input').addEventListener('input', function () {
+        document.getElementById('filter-input').addEventListener('input', function() {
             var filterValue = this.value.toLowerCase();
             var groups = document.querySelectorAll('#grupos_id .form-check');
             var friends = document.querySelectorAll('#participantes .form-check');
 
-            groups.forEach(function (group) {
+            groups.forEach(function(group) {
                 var label = group.querySelector('label').innerText.toLowerCase();
                 group.style.display = label.includes(filterValue) ? '' : 'none';
             });
 
-            friends.forEach(function (friend) {
+            friends.forEach(function(friend) {
                 var label = friend.querySelector('label').innerText.toLowerCase();
                 friend.style.display = label.includes(filterValue) ? '' : 'none';
             });
@@ -339,8 +575,23 @@
             return resultString;
         }
 
+        function updateTotalDisplay() {
+            const inputs = document.querySelectorAll('.input-valor');
+            let totalAdicionado = 0;
+
+            inputs.forEach(input => {
+                let value = parseFloat(input.value);
+                if (isNaN(value)) {
+                    value = 0;
+                }
+                totalAdicionado += value;
+            });
+
+            const valorTotal = parseFloat(valorTotalInput.value).toFixed(2);
+            falta = parseFloat(valorTotal - totalAdicionado).toFixed(2);
+            totalDisplay.innerHTML = `R$ ${totalAdicionado.toFixed(2)} de R$ ${valorTotal} <br> falta R$ ${falta} `;
+        }
 
 
     });
-
 </script>
