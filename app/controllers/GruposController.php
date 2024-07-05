@@ -15,7 +15,7 @@ class GruposController extends Controller
 {
     private $tabela = "grupos";
     private $campo = "grupos_id";
-    
+
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class GruposController extends Controller
 
     public function index()
     {
-        
+
         $dados["view"] = "Grupos/Show";
         $this->load("templateBootstrap", $dados);
     }
@@ -43,7 +43,7 @@ class GruposController extends Controller
     {
         $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);
         $dados["membroGrupo"] = Usuarios_gruposService::membrosDoGrupo($id);
-        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);   
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);
         $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -54,14 +54,14 @@ class GruposController extends Controller
 
         $dados["view"] = "Grupos/Edit";
         $this->load("templateBootstrap", $dados);
-    }   
+    }
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-                
+
                 // Excluir a imagem, se existir               
                 $existe_imagem = service::get($this->tabela, $this->campo, $id);
                 if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
@@ -80,8 +80,8 @@ class GruposController extends Controller
 
         // Lista de colunas da tabela
         $colunas = [
-         0 => 'grupos_id',
-         1 => 'nome'
+            0 => 'grupos_id',
+            1 => 'nome'
         ];
 
         if (!empty($dados_requisicao['search']['value'])) {
@@ -130,14 +130,14 @@ class GruposController extends Controller
             $grupos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-                if (isset($_POST["grupos_id"]) && is_numeric($_POST["grupos_id"]) && $_POST["grupos_id"] > 0) {                  
-                    $grupos->grupos_id = $_POST["grupos_id"];                    
+                if (isset($_POST["grupos_id"]) && is_numeric($_POST["grupos_id"]) && $_POST["grupos_id"] > 0) {
+                    $grupos->grupos_id = $_POST["grupos_id"];
                 } else {
-                    $grupos->grupos_id = 0;                         
+                    $grupos->grupos_id = 0;
                 }
                 if (isset($_POST["nome"]))
-                   $grupos->nome = $_POST["nome"];               
-               
+                    $grupos->nome = $_POST["nome"];
+
             }
 
             Flash::setForm($grupos);
@@ -147,22 +147,22 @@ class GruposController extends Controller
                 $grupos_id = GruposService::salvar($grupos); //se é maior que um inseriu novo 
                 if ($grupos_id > 1) //se é maior que um inseriu novo 
                 {
-
                     Service::commit();
                     $this->redirect(URL_BASE . "Grupos/home");
-
                 } else {
-                    if (!$grupos_id->grupos_id) {
+                    if (!$grupos->grupos_id) {
                         $this->redirect(URL_BASE . "Grupos/create");
                     } else {
-                        $this->redirect(URL_BASE . "Grupos/edit/" . $grupos_id->grupos_id);
+                        Service::commit();
+                        $this->redirect(URL_BASE . "Grupos/edit/" . $grupos->grupos_id);
+                        
                     }
                 }
             } catch (\Exception $e) {
                 Flash::setMsg($e->getMessage());
                 $this->redirect(URL_BASE . "Pagamentos");
                 Service::rollback();
-            }            
+            }
         }
     }
 
