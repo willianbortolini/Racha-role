@@ -41,7 +41,6 @@ class GruposService
                 }
             }
         }        
-        
         $grupos_id = Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);        
         if ($grupos_id == 1){
             return 1;                      

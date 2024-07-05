@@ -154,20 +154,20 @@ function upload($arq, $config_upload)
 
 function uploadImagem2($arq, $config_upload)
 {
+   
     set_time_limit(0);
     $nome_arquivo = $_FILES[$arq]["name"];
+    
     $tamanho_arquivo = $_FILES[$arq]["size"];
     $arquivo_temporario = $_FILES[$arq]["tmp_name"];
     $erro = 0;
     $msg = "";
     $retorno = array();
-
     if (!empty($nome_arquivo)) {
         $ext = strrchr($nome_arquivo, ".");
         $nome_final = ($config_upload["renomeia"]) ? uniqid() . $ext : $nome_arquivo;
         $caminho = $config_upload["caminho_absoluto"] . $nome_final;
-
-        if (($config_upload["verifica_extensao"]) && !in_array(strtolower($ext), $config_upload["extensoes_imagem"])) {
+        if (($config_upload["verifica_extensao"]) && (in_array(strtolower($ext), $config_upload["extensoes_imagem"]))) {
             $msg = "O arquivo não é permitido para upload";
             $erro = -1;
         } else {
@@ -175,10 +175,10 @@ function uploadImagem2($arq, $config_upload)
                 $msg = "Arquivo enviado com sucesso";
                 $erro = 0;
 
+
                 // Verifica se o arquivo é uma imagem
-                $tipos_permitidos = $config_upload["extensoes_imagem"];
-                $tipo_imagem = exif_imagetype($caminho);
-                if ($tipo_imagem !== false) {
+                          
+
                     // Cria uma nova imagem a partir do arquivo
                     $imagem = imagecreatefromstring(file_get_contents($caminho));
                     imagealphablending($imagem, true);
@@ -216,7 +216,6 @@ function uploadImagem2($arq, $config_upload)
                     $largura_maxima_miniatura_500 = 500;
                     $altura_maxima_miniatura_500 = 500;
 
-                    $imagem = imagecreatefromstring(file_get_contents($caminho)); // Recarregar a imagem original
                     if ($largura_original > $largura_maxima_miniatura_500 || $altura_original > $altura_maxima_miniatura_500) {
                         if ($largura_original > $altura_original) {
                             $nova_largura_miniatura_500 = $largura_maxima_miniatura_500;
@@ -240,7 +239,6 @@ function uploadImagem2($arq, $config_upload)
                     $largura_maxima_miniatura_150 = 150;
                     $altura_maxima_miniatura_150 = 150;
 
-                    $imagem = imagecreatefromstring(file_get_contents($caminho)); // Recarregar a imagem original
                     if ($largura_original > $largura_maxima_miniatura_150 || $altura_original > $altura_maxima_miniatura_150) {
                         if ($largura_original > $altura_original) {
                             $nova_largura_miniatura_150 = $largura_maxima_miniatura_150;
@@ -257,10 +255,7 @@ function uploadImagem2($arq, $config_upload)
 
                         $caminho_miniatura_150 = $config_upload["caminho_absoluto"] . "mini_150_" . $nome_final;
                         imagepng($imagem_miniatura_150, $caminho_miniatura_150);
-                        imagedestroy($imagem_miniatura_150);
-                    }
-
-                    imagedestroy($imagem);
+                        imagedestroy($imagem_miniatura_150);                    
                 }
             } else {
                 $msg = "Erro ao fazer o upload ";
@@ -271,11 +266,9 @@ function uploadImagem2($arq, $config_upload)
         $msg = "Arquivo vazio";
         $erro = -1;
     }
-
     $retorno = (object) array("erro" => $erro, "msg" => $msg, "nome" => $nome_final);
     return $retorno;
 }
-
 
 function uploadImagemGrande($arq, $config_upload)
 {

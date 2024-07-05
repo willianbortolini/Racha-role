@@ -108,35 +108,36 @@
         ?>
         <?php if ($group_id !== $current_group) { ?>
             <?php if ($current_group !== null) { ?>
-</ul>
-</li>
-<?php } ?>
-<li class="grupo">
-    <strong><?php echo htmlspecialchars($group_name); ?></strong>
-    <ul>
-        <?php $current_group = $group_id; ?>
-    <?php } ?>
-    <li>
-        <?php if ($item->valor != 0) { ?>
-            <?php if ($item->valor > 0) { ?>
-                Você deve
-                <span class="voceDeve"> R$
-                    <?php echo moedaBr($item->valor) ?>
-                </span>
-                a
-                <?php echo substr(htmlspecialchars($item->username), 0, 20); ?>
-                </span>
-            <?php } else { ?>
-                <?php echo substr(htmlspecialchars($item->username), 0, 20); ?>
-                deve
-                <span class="deveAvoce"> R$
-                    <?php echo moedaBr($item->valor * -1) ?>
-                </span>
-                a você
-            <?php } ?>
+            </ul>
+            </li>
         <?php } ?>
-    </li>
-<?php } ?>
+        <li class="grupo <?php echo ($group_id != -1) ? "grupoClicavel" : ""; ?>" <?php if ($group_id != -1) { ?>
+                onclick="location.href='<?php echo URL_BASE . 'grupos/edit/' . $group_id ?>'" <?php } ?>>
+            <strong><?php echo htmlspecialchars($group_name); ?></strong>
+            <ul>
+                <?php $current_group = $group_id; ?>
+            <?php } ?>
+            <li>
+                <?php if ($item->valor != 0) { ?>
+                    <?php if ($item->valor > 0) { ?>
+                        Você deve
+                        <span class="voceDeve"> R$
+                            <?php echo moedaBr($item->valor) ?>
+                        </span>
+                        a
+                        <?php echo substr(htmlspecialchars($item->username), 0, 20); ?>
+                        </span>
+                    <?php } else { ?>
+                        <?php echo substr(htmlspecialchars($item->username), 0, 20); ?>
+                        deve
+                        <span class="deveAvoce"> R$
+                            <?php echo moedaBr($item->valor * -1) ?>
+                        </span>
+                        a você
+                    <?php } ?>
+                <?php } ?>
+            </li>
+        <?php } ?>
     </ul>
 </li>
 </ul>
@@ -151,28 +152,31 @@
         ?>
         <?php if ($group_id !== $current_group) { ?>
             <?php if ($current_group !== null) { ?>
-</ul>
-</li>
-<?php } ?>
-<li class="grupo">
-    <strong><?php echo htmlspecialchars($group_name); ?></strong>
-    <ul>
-        <?php $current_group = $group_id; ?>
-    <?php } ?>
-    <li>
-        Quitado ou sem despesas
-    </li>
-<?php } ?>
+            </ul>
+            </li>
+        <?php } ?>
+        <li class="grupo" <?php if ($group_id != -1) { ?>
+            onclick="location.href='<?php echo URL_BASE . 'grupos/edit/' . $group_id ?>'" <?php } ?>>
+            <strong><?php echo htmlspecialchars($group_name); ?></strong>
+            <ul>
+                <?php $current_group = $group_id; ?>
+            <?php } ?>
+            <li>
+                Quitado ou sem despesas
+            </li>
+        <?php } ?>
     </ul>
 </li>
 </ul>
 
 <div class="footer-bar">
-    <a href="<?php echo URL_BASE . 'amigos/home' ?>" class="btn <?php echo ($btnAtivo == "amigos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+    <a href="<?php echo URL_BASE . 'amigos/home' ?>"
+        class="btn <?php echo ($btnAtivo == "amigos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
         <i class="fa fa-user-friends"></i>
         <span>Amigos</span>
     </a>
-    <a href="<?php echo URL_BASE . 'Grupos/home' ?>" class="btn <?php echo ($btnAtivo == "grupos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+    <a href="<?php echo URL_BASE . 'Grupos/home' ?>"
+        class="btn <?php echo ($btnAtivo == "grupos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
         <i class="fa fa-users"></i>
         <span>Grupos</span>
     </a>
@@ -181,11 +185,13 @@
         <i class="fa fa-plus"></i>
         <span>Adicionar</span>
     </a>
-    <a href="<?php echo URL_BASE . 'pagamentos/create' ?>" class="btn <?php echo ($btnAtivo == "pagamentos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+    <a href="<?php echo URL_BASE . 'pagamentos/create' ?>"
+        class="btn <?php echo ($btnAtivo == "pagamentos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
         <i class="fa fa-money-bill"></i>
         <span>Pagar</span>
     </a>
-    <a href="<?php echo URL_BASE . 'users/edit/' . $_SESSION['id'] ?>" class="btn <?php echo ($btnAtivo == "perfil") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+    <a href="<?php echo URL_BASE . 'users/edit/' . $_SESSION['id'] ?>"
+        class="btn <?php echo ($btnAtivo == "perfil") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
         <i class="fa fa-user"></i>
         <span>Perfil</span>
     </a>
