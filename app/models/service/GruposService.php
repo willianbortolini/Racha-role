@@ -40,16 +40,18 @@ class GruposService
                     }
                 }
             }
-        }        
-        $grupos_id = Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);        
+        }     
+        $grupos_id = Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);    
+ 
         if ($grupos_id == 1){
             return 1;                      
         } else if($grupos_id > 1){
             $usuarios_grupos = new \stdClass();
-            $usuarios_grupos->usuarios_grupos_id = 0;                         
-            $usuarios_grupos->users_id = $_SESSION['id'];
+            $usuarios_grupos->usuarios_grupos_id = 0;     
             $usuarios_grupos->grupos_id = $grupos_id;  
-            return Usuarios_gruposService::salvar($usuarios_grupos);  
+            if(Usuarios_gruposService::salvar($usuarios_grupos, [$_SESSION['id']]) == 1){
+                return $grupos_id;
+            };  
         }else{
             return 0;
         }

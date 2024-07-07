@@ -7,7 +7,8 @@ function handleFileInputChange(event) {
     reader.onload = function (e) {
         var img = document.createElement("img");
         img.src = e.target.result;
-        img.style.width = "250px";
+        console.log("imagemCircular");
+        img.classList.add = "imagemCircular";
 
         previewContainer.innerHTML = "";
         previewContainer.appendChild(img);

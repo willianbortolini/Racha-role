@@ -29,6 +29,8 @@ class AmigosController extends Controller
 
     public function home() {  
         $dados["minhasDespesas"] = Participantes_despesasService::resumoValoresAmigos($_SESSION['id']);
+        $dados["todosAmigos"] = AmigosService::meusAmigos($_SESSION['id']);
+        i($dados);
         $dados["saldo"] = Participantes_despesasService::saldoUsuario($_SESSION['id']);
         $dados["btnAtivo"] = "amigos";
         $dados["view"] = "Amigos/Home";

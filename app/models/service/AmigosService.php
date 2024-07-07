@@ -37,7 +37,6 @@ class AmigosService
 
         unset($Amigos->amigo);        
         $Amigos->amigo_id = $usuario->users_id;
-        $Amigos->status = 'Aceito';
         return Service::salvar($Amigos, self::CAMPO, $validacao->listaErros(), self::TABELA);
     }  
 

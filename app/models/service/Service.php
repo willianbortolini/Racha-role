@@ -26,6 +26,11 @@ abstract class Service {
         $transacao->beginTransaction();
     }
 
+    public static function inTransaction() {
+        $dao = new Dao();
+        return $dao->InTransaction();
+    }
+
     public static function rollback() {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();

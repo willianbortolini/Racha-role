@@ -37,7 +37,6 @@
             <i class="bi bi-google"></i>
             Login com Google
           </a>
-
         </form>
       </div>
     </div>

@@ -49,7 +49,7 @@ class Usuarios_gruposController extends Controller
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-                
+
                 // Excluir a imagem, se existir               
 
                 // Excluir
@@ -64,9 +64,9 @@ class Usuarios_gruposController extends Controller
 
         // Lista de colunas da tabela
         $colunas = [
-         0 => 'usuarios_grupos_id',
-         1 => 'users_id',
-         2 => 'grupos_id'
+            0 => 'usuarios_grupos_id',
+            1 => 'users_id',
+            2 => 'grupos_id'
         ];
 
         if (!empty($dados_requisicao['search']['value'])) {
@@ -109,8 +109,8 @@ class Usuarios_gruposController extends Controller
         echo json_encode($resultado);
     }
     public function usuariosDoGrupo($id)
-    {        
-        echo json_encode(Service::get($this->tabela, "grupos_id", $id,true));
+    {
+        echo json_encode(Service::get($this->tabela, "grupos_id", $id, true));
     }
 
 
@@ -120,29 +120,18 @@ class Usuarios_gruposController extends Controller
         if ($csrfToken === $_SESSION['csrf_token']) {
             $usuarios_grupos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-                if (isset($_POST["usuarios_grupos_id"]) && is_numeric($_POST["usuarios_grupos_id"]) && $_POST["usuarios_grupos_id"] > 0) {                  
-                    $usuarios_grupos->usuarios_grupos_id = $_POST["usuarios_grupos_id"];                    
-                } else {
-                    $usuarios_grupos->usuarios_grupos_id = 0;                         
-                }
-                if (isset($_POST["users_id"]))
-                   $usuarios_grupos->users_id = $_POST["users_id"];
+                $usuarios_grupos->usuarios_grupos_id = 0;
                 if (isset($_POST["grupos_id"]))
-                   $usuarios_grupos->grupos_id = $_POST["grupos_id"];              
-               
+                    $usuarios_grupos->grupos_id = $_POST["grupos_id"];
+
+                $participantes = $_POST['participantes'];
+
             }
             Flash::setForm($usuarios_grupos);
-            if (Usuarios_gruposService::salvar($usuarios_grupos) > 1) //se é maior que um inseriu novo 
-            {
-                $this->redirect(URL_BASE   . "grupos/edit/".$usuarios_grupos->grupos_id);
-            } else {
-                if (!$usuarios_grupos->usuarios_grupos_id) {
-                    $this->redirect(URL_BASE   . "Usuarios_grupos/create");
-                } else {
-                    $this->redirect(URL_BASE   . "Usuarios_grupos/edit/" . $usuarios_grupos->usuarios_grupos_id);
-                }
-            }
+            Usuarios_gruposService::salvar($usuarios_grupos, $participantes);
+
+            $this->redirect(URL_BASE . "grupos/edit/" . $usuarios_grupos->grupos_id);
+
         }
     }
 

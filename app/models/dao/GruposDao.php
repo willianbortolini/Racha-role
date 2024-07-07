@@ -104,6 +104,9 @@ class GruposDao extends Model
                             grupos g
                         LEFT JOIN saldos s ON
                             g.grupos_id = s.grupos_id
+                        INNER JOIN usuarios_grupos ON
+                            usuarios_grupos.users_id = :users_id AND
+                            usuarios_grupos.grupos_id = g.grupos_id
                         GROUP BY 
                             g.grupos_id, g.nome
                         HAVING 

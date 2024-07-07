@@ -7,6 +7,11 @@ class Dao extends Model{
     public function getDBConnection(){
         return  $this->db;
     } 
+
+    public function InTransaction(){       
+        return  $this->db->inTransaction();
+    } 
+    
     public function lista($tabela, $ordem){
         return  $this->all($this->db, $tabela, $ordem);
     }        

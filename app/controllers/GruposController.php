@@ -41,6 +41,7 @@ class GruposController extends Controller
 
     public function edit($id)
     {
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);        
         $dados["grupos"] = Service::get($this->tabela, $this->campo, $id);
         $dados["membroGrupo"] = Usuarios_gruposService::membrosDoGrupo($id);
         $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);
@@ -127,6 +128,7 @@ class GruposController extends Controller
     {
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
+
             $grupos = new \stdClass();
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -143,12 +145,11 @@ class GruposController extends Controller
             Flash::setForm($grupos);
             Service::begin_tran();
             try {
-
-                $grupos_id = GruposService::salvar($grupos); //se é maior que um inseriu novo 
+                $grupos_id = GruposService::salvar($grupos); //se é maior que um inseriu novo
                 if ($grupos_id > 1) //se é maior que um inseriu novo 
                 {
                     Service::commit();
-                    $this->redirect(URL_BASE . "Grupos/home");
+                    $this->redirect(URL_BASE . "Grupos/edit/" . $grupos_id);
                 } else {
                     if (!$grupos->grupos_id) {
                         $this->redirect(URL_BASE . "Grupos/create");
