@@ -29,8 +29,17 @@ class AmigosController extends Controller
 
     public function home() {  
         $dados["minhasDespesas"] = Participantes_despesasService::resumoValoresAmigos($_SESSION['id']);
-        $dados["todosAmigos"] = AmigosService::meusAmigos($_SESSION['id']);
-        i($dados);
+        $todosAmigos = AmigosService::meusAmigos($_SESSION['id']);
+
+        $despesas_ids = array_map(function($despesa) {
+            return $despesa->users_id;
+        }, $dados["minhasDespesas"]);
+        
+        // Filtrar o array todosAmigos
+        $dados["todosAmigos"] = array_filter($todosAmigos, function($amigo) use ($despesas_ids) {
+            return !in_array($amigo->users_id, $despesas_ids);
+        });
+
         $dados["saldo"] = Participantes_despesasService::saldoUsuario($_SESSION['id']);
         $dados["btnAtivo"] = "amigos";
         $dados["view"] = "Amigos/Home";

@@ -285,7 +285,8 @@ class Participantes_despesasDao extends Model
                         s.usuario AS users_id,
                         u.username AS username,
                         s.saldo AS valor,
-                        u.foto_perfil
+                        u.foto_perfil,
+                        u.pix
                     FROM 
                         saldos s
                     INNER JOIN 
@@ -364,6 +365,49 @@ class Participantes_despesasDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
+    
+    public function totalDividasEntreUsuarios($devedor, $credor)
+    {
+        $conn = $this->db;
+        try {
+            $sql = "WITH saldos AS (
+                SELECT 
+                    CASE 
+                        WHEN p1.devendo_para = :devedor THEN p1.users_id
+                        ELSE p1.devendo_para 
+                    END AS usuario,
+                    SUM(CASE 
+                        WHEN p1.devendo_para = :devedor THEN p1.valor - p1.valor_pago
+                        ELSE -(p1.valor - p1.valor_pago) 
+                    END) AS saldo
+                FROM 
+                    participantes_despesas p1
+                WHERE 
+                    (p1.valor - p1.valor_pago) > 0
+                    AND (p1.devendo_para = :devedor OR p1.users_id = :devedor)
+                    AND (p1.devendo_para = :credor OR p1.users_id = :credor)
+                    AND p1.devendo_para != p1.users_id
+                GROUP BY 
+                    CASE 
+                        WHEN p1.devendo_para = :devedor THEN p1.users_id
+                        ELSE p1.devendo_para 
+                    END
+            )
+            SELECT 
+                sum(s.saldo ) as valor
+            FROM 
+                saldos s
+            WHERE  s.usuario != :devedor";
+            $parametro = array(
+                'devedor' => $devedor,
+                'credor' => $credor
+            );
+
+            return self::consultar($this->db, $sql, $parametro,FALSE)->valor;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
 
     public function negociacoesEntreDoisUsuarios($eu, $outro, $inicio = null, $fim = null)
     {
@@ -371,12 +415,12 @@ class Participantes_despesasDao extends Model
 
         // Definir a data de fim como hoje se não for fornecida
         if ($fim === null) {
-            $fim = date('Y-m-d');
+            $fim = date('Y-m-d', strtotime('+1 day'));
         }
 
         // Definir a data de início como um mês atrás se não for fornecida
         if ($inicio === null) {
-            $inicio = date('Y-m-d', strtotime('-1 month'));
+            $inicio = date('Y-m-d', strtotime('-3 month'));
         }
 
         try {
@@ -388,15 +432,18 @@ class Participantes_despesasDao extends Model
                     WHEN participantes_despesas.users_id = :eu THEN -(participantes_despesas.valor - participantes_despesas.valor_pago)
                     WHEN participantes_despesas.users_id = :outro THEN participantes_despesas.valor - participantes_despesas.valor_pago
                 END AS valor,
-                participantes_despesas.created_at
+                despesas.data data,
+                grupos.nome grupos_nome
             FROM 
                 participantes_despesas
             INNER JOIN despesas ON
                 despesas.despesas_id = participantes_despesas.despesas_id
+            LEFT JOIN grupos ON
+                grupos.grupos_id = despesas.grupos_id
             WHERE 
                 ((participantes_despesas.users_id = :eu AND participantes_despesas.devendo_para = :outro) OR
                  (participantes_despesas.users_id = :outro AND participantes_despesas.devendo_para = :eu))
-                AND participantes_despesas.created_at BETWEEN :inicio AND :fim
+                AND despesas.data BETWEEN :inicio AND :fim
 
             UNION ALL
 
@@ -407,7 +454,8 @@ class Participantes_despesasDao extends Model
                     WHEN pagamentos.pagador = :eu THEN -pagamentos.valor
                     WHEN pagamentos.pagador = :outro THEN pagamentos.valor
                 END AS valor,
-                pagamentos.created_at
+                pagamentos.created_at data,
+                '' grupos_nome
             FROM 
                 pagamentos
             WHERE
@@ -416,7 +464,7 @@ class Participantes_despesasDao extends Model
                 AND pagamentos.created_at BETWEEN :inicio AND :fim
 
             ORDER BY 
-                created_at;
+                data DESC;
         ";
 
             $parametro = array(

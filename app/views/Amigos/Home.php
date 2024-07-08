@@ -145,13 +145,13 @@
     <?php if ($saldo > 0) { ?>
         devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
     <?php } else { ?>
-        você deve <span class="deveAvoce">R$ <?= number_format($saldo*-1, 2, ',', '.') ?></span>
+        você deve <span class="deveAvoce">R$ <?= number_format($saldo*-1, 2, ',', '.') ?></span> 
     <?php } ?>
 </h5>
 <ul class="list-group">
     <?php foreach ($minhasDespesas as $despesa) { ?>
         <li class="list-group-item"
-            onclick="location.href='<?php echo URL_BASE . 'pagamentos/detalhes/' . $despesa->users_id ?>'">
+            onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_id ?>'">
             <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                 <?php if (!empty($despesa->foto_perfil)) { ?>
                     <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image" style="width: 50px; height: 50px; border-radius: 50%;">
@@ -161,7 +161,7 @@
             </div>
             <div class="name" style="display: inline-block; vertical-align: middle;">
                 <?= $despesa->username ?></br>
-                <span class="pix">PIX:079.920.529-00</span>
+                <?php echo  (isset($despesa->pix))? "<span class='pix'>pix: ".$despesa->pix." </span> " : "" ?>
             </div>
             <?php if ($despesa->valor > 0) { ?>
                 <div class="valor">
@@ -175,6 +175,26 @@
                     <span class="amount voceDeve">R$ <?= number_format($despesa->valor * -1, 2, ',', '.') ?></span>
                 </div>
             <?php } ?>
+
+        </li>
+    <?php } ?>
+</ul>
+
+<ul class="list-group">
+    <?php foreach ($todosAmigos as $amigo) { ?>
+        <li class="list-group-item"
+            onclick="location.href='<?php echo URL_BASE . 'pagamentos/detalhes/' . $amigo->users_id ?>'">
+            <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                <?php if (!empty($amigo->foto_perfil)) { ?>
+                    <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                <?php } else { ?>
+                    <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
+                <?php } ?>
+            </div>
+            <div class="name" style="display: inline-block; vertical-align: middle;">
+                <?= $amigo->username ?></br>
+                <?php echo  (isset($despesa->pix))? "<span class='pix'>pix: ".$despesa->pix." </span> " : "" ?>
+            </div>       
 
         </li>
     <?php } ?>

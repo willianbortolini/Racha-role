@@ -43,12 +43,11 @@ class PagamentosService
                 $despesas = new \stdClass();
                 $despesas->despesas_id = 0;
                 $despesas->descricao = "Sobra do pagamento";
-                $despesas->valor = $valorRestante;
                 $despesas->data = date('Y-m-d H:i:s');
                 $despesas->users_id = $pagamentos->pagador;
                 $participantes = [$pagamentos->recebedor];
 
-                $despesa = DespesasService::salvar($despesas, $participantes);
+                $despesa = DespesasService::salvar($despesas, $participantes, [$valorRestante]);
 
                 if ($despesa < 1) {
                     throw new \Exception();

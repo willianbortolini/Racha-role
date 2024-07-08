@@ -62,6 +62,12 @@ class Participantes_despesasService
         return $dao->dividasEntreUsuarios($devedor, $credor);
     }
 
+    public static function totalDividasEntreUsuarios($devedor, $credor)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->totalDividasEntreUsuarios($devedor, $credor);
+    }
+
     public static function resumoValoresAmigos($users_id)
     {
         $dao = new Participantes_despesasDao();
@@ -73,6 +79,12 @@ class Participantes_despesasService
         $dao = new Participantes_despesasDao();
         return $dao->saldoUsuario($users_id);
     }
+
+    public static function negociacoesEntreDoisUsuarios($eu, $outro, $inicio = null, $fim = null)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->negociacoesEntreDoisUsuarios($eu, $outro, $inicio = null, $fim = null);
+    } 
     
     
 }
