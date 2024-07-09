@@ -429,10 +429,10 @@ class Participantes_despesasDao extends Model
                 'despesa' AS tipo,
                 despesas.descricao AS descricao,
                 CASE 
-                    WHEN participantes_despesas.users_id = :eu THEN -(participantes_despesas.valor - participantes_despesas.valor_pago)
-                    WHEN participantes_despesas.users_id = :outro THEN participantes_despesas.valor - participantes_despesas.valor_pago
+                    WHEN participantes_despesas.users_id = :eu THEN -participantes_despesas.valor
+                    WHEN participantes_despesas.users_id = :outro THEN participantes_despesas.valor
                 END AS valor,
-                despesas.data data,
+                DATE_ADD(despesas.created_at, INTERVAL 1 SECOND) AS data,
                 grupos.nome grupos_nome
             FROM 
                 participantes_despesas
@@ -443,7 +443,7 @@ class Participantes_despesasDao extends Model
             WHERE 
                 ((participantes_despesas.users_id = :eu AND participantes_despesas.devendo_para = :outro) OR
                  (participantes_despesas.users_id = :outro AND participantes_despesas.devendo_para = :eu))
-                AND despesas.data BETWEEN :inicio AND :fim
+                AND despesas.created_at BETWEEN :inicio AND :fim
 
             UNION ALL
 

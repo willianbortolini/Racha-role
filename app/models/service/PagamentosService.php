@@ -16,9 +16,11 @@ class PagamentosService
         $validacao = PagamentosValidacao::salvar($pagamentos);
 
         $resposta = Service::salvar($pagamentos, self::CAMPO, $validacao->listaErros(), self::TABELA);
+        
         if ($resposta > 1) {
             $valorRestante = $pagamentos->valor;
             $valoresPendentes = Participantes_despesasService::dividaEntreUsuarios($pagamentos->pagador, $pagamentos->recebedor);
+            
             foreach ($valoresPendentes as $valor) {
                 if ($valorRestante > 0) {
                     $participantes_despesas = new \stdClass();
@@ -37,18 +39,19 @@ class PagamentosService
                     }
                 }
             }
-
+            
             //se sobrou saldo faz uma nova despesa com a quantidade restante
             if ($valorRestante > 0) {
                 $despesas = new \stdClass();
                 $despesas->despesas_id = 0;
                 $despesas->descricao = "Sobra do pagamento";
                 $despesas->data = date('Y-m-d H:i:s');
+                $despesas->valor = $valorRestante;
                 $despesas->users_id = $pagamentos->pagador;
                 $participantes = [$pagamentos->recebedor];
-
-                $despesa = DespesasService::salvar($despesas, $participantes, [$valorRestante]);
-
+                $valores = [$valorRestante];
+                $despesa = DespesasService::salvar($despesas, $participantes, $valores);
+                
                 if ($despesa < 1) {
                     throw new \Exception();
                 }

@@ -183,7 +183,7 @@
 <ul class="list-group">
     <?php foreach ($todosAmigos as $amigo) { ?>
         <li class="list-group-item"
-            onclick="location.href='<?php echo URL_BASE . 'pagamentos/detalhes/' . $amigo->users_id ?>'">
+            onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $amigo->users_id ?>'">
             <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                 <?php if (!empty($amigo->foto_perfil)) { ?>
                     <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image" style="width: 50px; height: 50px; border-radius: 50%;">

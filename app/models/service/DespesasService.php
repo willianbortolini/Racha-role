@@ -16,9 +16,9 @@ class DespesasService
         $validacao = DespesasValidacao::salvar($despesas);
 
         $despesa = Service::salvar($despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
-        if ($despesa > 1) //se é maior que um inseriu novo 
+
+        if ($despesa > 1) 
         {
-            // Inserir participações na tabela de participations
             for ($i = 0; $i < count($participantes); $i++) {
                 $participantes_id = $participantes[$i];
                 $valorPorParticipante = $valoresPorParticipante[$i];

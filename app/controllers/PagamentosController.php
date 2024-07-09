@@ -44,7 +44,7 @@ class PagamentosController extends Controller
         $pagamentos = new \stdClass();
         $pagamentos->pagador = $pagador;
         $pagamentos->recebedor = $recebedor;
-        $pagamentos->valor = $valor;
+        $pagamentos->valor = abs($valor);
 
         $dados["pagamentos"] = $pagamentos;
         $dados["view"] = "Pagamentos/Edit";
@@ -150,7 +150,7 @@ class PagamentosController extends Controller
                 if (isset($_POST["data"]))
                     $pagamentos->data = $_POST["data"];
             }
-
+            
             Flash::setForm($pagamentos);
             Service::begin_tran();
             try {
@@ -160,7 +160,7 @@ class PagamentosController extends Controller
                 {
 
                     Service::commit();
-                    $this->redirect(URL_BASE . "Pagamentos");
+                    $this->redirect(URL_BASE);
 
                 } else {
                     if (!$pagamentos->pagamentos_id) {

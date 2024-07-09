@@ -31,7 +31,6 @@ class DespesasController extends Controller
     public function detalhe($user_id)
     {
         $dados["detalhe"] = Participantes_despesasService::negociacoesEntreDoisUsuarios($_SESSION['id'], $user_id);
-
         $dados["saldo"] = Participantes_despesasService::totalDividasEntreUsuarios($_SESSION['id'], $user_id);
         $dados["amigo"] = Service::get("users", "users_id",$user_id );
        

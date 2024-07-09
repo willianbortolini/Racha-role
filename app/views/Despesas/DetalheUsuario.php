@@ -120,20 +120,20 @@
         <li>
             <?php if ($item->tipo == 'pagamento') { ?>
                 <?php if ($item->valor > 0) { ?>
-                    Você pagou
-                    <span class="voceDeve"> R$
-                        <?php echo moedaBr($item->valor) ?>
-                    </span>
-                    para
-                    <?= $amigo->username ?>
-                    </span>
-                <?php } else { ?>
                     <?= $amigo->username ?>
                     pagou
                     <span class="deveAvoce"> R$
-                        <?php echo moedaBr($item->valor * -1) ?>
+                        <?php echo moedaBr($item->valor) ?>
                     </span>
-                    a você
+                    a você, <?= $item->descricao ?>                    
+                <?php } else { ?>
+                    Você pagou
+                    <span class="voceDeve"> R$
+                        <?php echo moedaBr(abs($item->valor)) ?>
+                    </span>
+                    para
+                    <?= $amigo->username ?>, <?= $item->descricao ?>  
+                    </span>
                 <?php } ?>
             <?php } else { ?>
                 <?php if ($item->valor > 0) { ?>
@@ -142,7 +142,7 @@
                         <?php echo moedaBr($item->valor) ?>
                     </span>
                     para
-                    <?= $amigo->username ?>
+                    <?= $amigo->username ?>, <?= $item->descricao ?>  
                     </span>
                 <?php } else { ?>
                     <?= $amigo->username ?>
@@ -150,7 +150,7 @@
                     <span class="deveAvoce"> R$
                         <?php echo moedaBr($item->valor * -1) ?>
                     </span>
-                    de você
+                    de você, <?= $item->descricao ?>  
                 <?php } ?>
             <?php } ?>
         </li>
