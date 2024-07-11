@@ -48,6 +48,7 @@ class LoginService
     }
 
     public static function loginPorEmail($email,$nome = ' '){
+
         $resultado = service::get("users","email",$email);        
         if ($resultado) {
             //se tem loga

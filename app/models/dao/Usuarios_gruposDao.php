@@ -4,49 +4,50 @@ use app\core\Model;
 
 class Usuarios_gruposDao extends Model
 { 
-    public function lista($parametros)
+
+    public function membrosDoGrupo($grupos_id)
     {
         $conn = $this->db;
         try {
-            $sql = "SELECT * 
+            $sql = "SELECT *
                     FROM usuarios_grupos
-                    WHERE usuarios_grupos_id > 0 ";
+                    INNER JOIN users ON
+                    users.users_id = usuarios_grupos.users_id
+                    WHERE usuarios_grupos.grupos_id = :grupos_id ";
 
-            $valor_pesquisa = $parametros['valor_pesquisa'];
+            $parametro = array(
+                'grupos_id' => $grupos_id
+            );
 
-            if ($valor_pesquisa != '') {
-                $sql .= " AND ( usuarios_grupos_id LIKE '" . $valor_pesquisa . "' 
-                      OR users_id LIKE '" . $valor_pesquisa . "' 
-                      OR grupos_id LIKE '" . $valor_pesquisa . "' 
-                ) ";
-            }
-
-            $sql .= " ORDER BY " . $parametros['colunaOrder'] . " " . $parametros['direcaoOrdenacao'] . " LIMIT " . $parametros['inicio'] . " , " . $parametros['quantidade'] . " ";
-
-            return self::select($this->db, $sql, true);
+            return self::consultar($this->db, $sql, $parametro);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
     }
 
-    public function quantidadeDeLinhas($valor_pesquisa)
+    public function estaNoGrupo($users_id, $grupos_id)
     {
-        $conn = $this->db;
         try {
-            $sql = "SELECT count(usuarios_grupos_id) total
-                    FROM usuarios_grupos
-                    WHERE usuarios_grupos_id > 0 ";
+            $sql = "SELECT * 
+                    FROM usuarios_grupos 
+                    WHERE users_id = :users_id
+                    and grupos_id = :grupos_id";
 
-            if ($valor_pesquisa != '') {
-                $sql .= " AND ( usuarios_grupos_id LIKE '" . $valor_pesquisa . "' 
-                      OR users_id LIKE '" . $valor_pesquisa . "' 
-                      OR grupos_id LIKE '" . $valor_pesquisa . "' 
-                ) ";
+            $parametro = array(
+                'users_id' => $users_id,
+                'grupos_id' => $grupos_id,
+            );
+
+            $resultado = self::consultar($this->db, $sql, $parametro);
+
+            if ($resultado && count($resultado) > 0) {
+                return true;
+            } else {
+                return false;
             }
-            return self::select($this->db, $sql, false);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
-    }  
+    }
    
 }

@@ -24,6 +24,7 @@ class UsersController extends Controller
     {
         UtilService::usuarioAutorizado($id);
         $dados["users"] = Service::get($this->tabela, $this->campo, $id);
+        $dados["btnAtivo"] = "perfil";
         $dados["view"] = "Users/Edit";
         $this->load("templateBootstrap", $dados);
     }
@@ -53,60 +54,7 @@ class UsersController extends Controller
             }
         }
     }
-    /*
-        public function list()
-        {
-            $dados_requisicao = $_REQUEST;
-
-            // Lista de colunas da tabela
-            $colunas = [
-             0 => 'users_id',
-             1 => 'username',
-             2 => 'email',
-             3 => 'telefone'
-            ];
-
-            if (!empty($dados_requisicao['search']['value'])) {
-                $valor_pesquisa = "%" . $dados_requisicao['search']['value'] . "%";
-            } else {
-                $valor_pesquisa = "";
-            }
-            $row_qnt_usuarios = UsersService::quantidadeDeLinhas($valor_pesquisa);
-
-            $parametros = [
-                'inicio' => intval($dados_requisicao['start']),
-                'quantidade' => intval($dados_requisicao['length']),
-                'colunaOrder' => $colunas[$dados_requisicao['order'][0]['column']],
-                'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
-                'valor_pesquisa' => $valor_pesquisa
-            ];
-            $listaRetorno = UsersService::lista($parametros);
-            $dados = [];
-            foreach ($listaRetorno as $coluna) {
-                $registro = [];
-                $registro[] = $coluna->users_id;
-                $registro[] = $coluna->username;
-                $registro[] = $coluna->email;
-                $registro[] = $coluna->telefone;
-                $registro[] = "<a href='" . URL_BASE . "Users/edit/" . $coluna->users_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-                <button onclick='deletarItem(" . $coluna->users_id . ")' type='button'
-                    class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
-                    data-bs-target='#deleteModal'>
-                    Deletar
-                </button>";
-                $dados[] = $registro;
-            }
-
-            $resultado = [
-                "draw" => intval($dados_requisicao['draw']),
-                "recordsTotal" => $row_qnt_usuarios->total,
-                "recordsFiltered" => $row_qnt_usuarios->total,
-                "data" => $dados
-            ];
-
-            echo json_encode($resultado);
-        }
-    */
+    
     public function save()
     {
         $csrfToken = $_POST['csrf_token'];
@@ -126,6 +74,8 @@ class UsersController extends Controller
                     $users->email = $_POST["email"];
                 if (isset($_POST["telefone"]))
                     $users->telefone = $_POST["telefone"];
+                if (isset($_POST["pix"]))
+                    $users->pix = $_POST["pix"];
                 if (isset($_POST['politica']))
                     $users->politica = ($_POST['politica'] == 'on') ? 1 : 0;
                 if (isset($_POST['cookies']))
@@ -156,9 +106,8 @@ class UsersController extends Controller
                 $users->users_id = $id;
                 $users->ativo = 0;
             }
-            if (UsersService::ativo($users) > 0) 
-            {
-                Flash::setMsg("Perfil desativado", 1);      
+            if (UsersService::ativo($users) > 0) {
+                Flash::setMsg("Perfil desativado", 1);
             }
             $this->redirect(URL_BASE . "Users/edit/" . $users->users_id);
 
@@ -177,9 +126,8 @@ class UsersController extends Controller
                 $users->users_id = $id;
                 $users->ativo = 1;
             }
-            if (UsersService::ativo($users) > 0)
-            {
-                Flash::setMsg("Perfil reativado", 1);      
+            if (UsersService::ativo($users) > 0) {
+                Flash::setMsg("Perfil reativado", 1);
             }
             $this->redirect(URL_BASE . "Users/edit/" . $users->users_id);
 
@@ -197,6 +145,7 @@ class UsersController extends Controller
             $User->users_id = 0;
             if (isset($_POST["email"]))
                 $User->email = $_POST["email"];
+
             if (isset($_POST["password"]))
                 $User->password = $_POST['password'];
             if (isset($_POST["confirmacao"]))

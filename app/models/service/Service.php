@@ -6,30 +6,29 @@ use app\core\Flash;
 use app\models\dao\Dao;
 use Exception;
 
-class Service { 
+abstract class Service { 
 
-    protected static $table;
+    protected static $tabela;
 
-    protected static function createDao()
-    {
-        return new Dao();
+    protected $sql;
+
+    public function select($columns = '*') {
+        $this->sql = "SELECT $columns FROM " . $this->getTable();
+        return $this;
     }
-    
-    public static function retrieve()
-    {
-        $dao = static::createDao();        
-        return $dao->retrieve();
-    }
-    public static function lista1()
-    {
-        $dao = static::createDao();        
-        return $dao->lista2(static::$table, 'desc');
-    }
+
+    // Método abstrato para ser implementado pelas classes filhas
+    abstract protected function getTable();
 
     public static function begin_tran() {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();
         $transacao->beginTransaction();
+    }
+
+    public static function inTransaction() {
+        $dao = new Dao();
+        return $dao->InTransaction();
     }
 
     public static function rollback() {
@@ -55,7 +54,7 @@ class Service {
     }
 
     public static function lista($tabela = null, $ordem = 'desc') {
-        $tabela = $tabela ?: static::$table;
+        $tabela = $tabela ?: static::$tabela;
         
         $dao = new Dao();
         return $dao->lista($tabela, $ordem);
@@ -69,6 +68,11 @@ class Service {
     public static function getJoin($tabela, $campo, $valor, $joins = array(), $eh_lista = false) {
         $dao = new Dao();
         return $dao->getJoin($tabela, $campo, $valor,$joins, $eh_lista);
+    }
+
+    public static function getSemEmpresa($tabela, $campo, $valor, $eh_lista = false) {
+        $dao = new Dao();
+        return $dao->getSemEmpresa($tabela, $campo, $valor, $eh_lista);
     }
 
     public static function getEntre($tabela, $campo, $valor1, $valor2) {
@@ -152,69 +156,28 @@ class Service {
         return $dao->editar($dados, $campo, $tabela);
     }
 
-    public static function excluir($valor, $tabela = null, $campo = null) {
+    public static function excluir($tabela, $campo, $valor) {
         try {
-            
-            // Verificação se o valor foi passado
-            if (is_null($valor)) {
-                throw new Exception("Valor para exclusão não pode ser nulo.");
-            }
-    
-            // Tentativa de exclusão
-            $dao = static::createDao();  
+            // Tente realizar a exclusão
+            $dao = new Dao();
             $excluir = $dao->excluir($tabela, $campo, $valor);
-            
             if ($excluir) {
-                Flash::setMsg("Registro Excluído com Sucesso !");
+                Flash::setMsg("Registro Exluído com Sucesso !");
             } else {
                 Flash::setMsg("Não foi possível excluir o registro", -1);
             }
             return $excluir;
-            
         } catch (Exception $e) {
-            // Tratamento de erros
             if (strpos($e->getMessage(), 'FOREIGN KEY') !== false) {
                 Flash::setMsg("O item já foi utilizado em um ou mais apontamentos.", -1);
-            } else {
-                Flash::setMsg("Não foi possível excluir o registro: " . $e->getMessage(), -1);
-            }
-            
-            return -1;
-        } 
-    }
-    
-    public static function excluirId($valor) {
-        try {
-            // Verificação e atribuição de valores padrão
-            $tabela = static::$table;
-            $campo = static::$table . '_id';
-            
-            // Verificação se o valor foi passado
-            if (is_null($valor)) {
-                throw new Exception("Valor para exclusão não pode ser nulo.");
-            }
-    
-            // Tentativa de exclusão
-            $dao = static::createDao();  
-            $excluir = $dao->del($tabela, $campo, $valor);
-            
-            if ($excluir) {
-                Flash::setMsg("Registro Excluído com Sucesso !");
-            } else {
+            }else{
                 Flash::setMsg("Não foi possível excluir o registro", -1);
             }
-            return $excluir;
-            
-        } catch (Exception $e) {
-            // Tratamento de erros
-            if (strpos($e->getMessage(), 'FOREIGN KEY') !== false) {
-                Flash::setMsg("O item já foi utilizado em um ou mais apontamentos.", -1);
-            } else {
-                Flash::setMsg("Não foi possível excluir o registro: " . $e->getMessage(), -1);
-            }
             
             return -1;
-        } 
+        }       
+        
+        
     }
 
     public static function email($to, $cabecalho, $mensagem, $de, $resposta) {

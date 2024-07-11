@@ -36,10 +36,31 @@
             "generateInput": "select"
         },
         {
+            "name": "devendo_para",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do pagador",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
             "name": "valor",
             "type": "DECIMAL(10, 2)",
             "attributes": "NOT NULL",
             "label": "Valor",
+            "ShowInTable": true,
+            "generateInput": "number"
+        },
+        {
+            "name": "valor_pago",
+            "type": "DECIMAL(10, 2)",
+            "attributes": "",
+            "label": "Valor pago",
             "ShowInTable": true,
             "generateInput": "number"
         },

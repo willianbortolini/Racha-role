@@ -4,20 +4,17 @@ namespace app\models\service;
 
 use app\models\validacao\GruposValidacao;
 use app\models\dao\GruposDao;
+use app\models\service\Usuarios_gruposService;
 use app\util\UtilService;
 
-class GruposService extends Service
-{   
 
-    protected static $table = "grupos";
+class GruposService
+{
+    
+    const TABELA = "grupos"; 
+    const CAMPO = "grupos_id";     
 
-    protected static function createDao()
-    {
-        return new GruposDao();
-    }
-    
-    
-    /*public static function salvar($Grupos)
+    public static function salvar($Grupos)
     {
         $validacao = GruposValidacao::salvar($Grupos);
         global $config_upload;
@@ -40,27 +37,43 @@ class GruposService extends Service
                     }
                 }
             }
+        }     
+        $grupos_id = Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);    
+ 
+        if ($grupos_id == 1){
+            return 1;                      
+        } else if($grupos_id > 1){
+            $usuarios_grupos = new \stdClass();
+            $usuarios_grupos->usuarios_grupos_id = 0;     
+            $usuarios_grupos->grupos_id = $grupos_id;  
+            if(Usuarios_gruposService::salvar($usuarios_grupos, [$_SESSION['id']]) == 1){
+                return $grupos_id;
+            };  
+        }else{
+            return 0;
         }
-
-        return Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);
     }  
 
-    public static function gruposDoUsuario()
+    public static function excluir($id)
     {
-        $dao = new GruposDao();
-        return $dao->gruposDoUsuario($_SESSION['id']);
-    }*/    
+        Service::excluir(self::TABELA, self::CAMPO, $id);
+    }
 
-    /*public static function excluir($tabela, $campo, $id)
-    {
-        $dao = static::createDao();
-        return $dao->excluir($tabela, $campo, $id);
-    }*/
-    /*public static function lista($parametros)
+    public static function gruposDoUsuario($usuario_id)
     {
         $dao = new GruposDao();
-        return $dao->lista($parametros);
-    }*/
+        return $dao->gruposDoUsuario($usuario_id);
+    }
+
+    public static function gruposQuitados($users_id)
+    {
+        $dao = new GruposDao();
+        return $dao->gruposQuitados($users_id);
+    }
+    
+
+
+
 
 
 }

@@ -5,6 +5,7 @@ namespace app\models\service;
 use app\models\validacao\AmigosValidacao;
 use app\models\dao\AmigosDao;
 use app\util\UtilService;
+use app\core\Flash;
 
 class AmigosService
 {
@@ -15,22 +16,34 @@ class AmigosService
     {
         $validacao = AmigosValidacao::salvar($Amigos);
         
+        $usuario = Service::get("users", "email", $Amigos->amigo);
+     
+        if($usuario->users_id == $Amigos->usuario_id){
+            return 2;    
+        }
+        if (!isset($usuario->users_id)){          
+            $usuario = Service::get("users", "telefone", $Amigos->amigo);
+        } 
+        
+        if (!isset($usuario->users_id)){             
+            Flash::setMsg('Usuário não encontrado',1);           
+            return 0;
+        }
+        
+        $dao = new AmigosDao();
+        if ($dao->jaEamigo($usuario->users_id, $Amigos->usuario_id)){
+            return 2;
+        }
+
+        unset($Amigos->amigo);        
+        $Amigos->amigo_id = $usuario->users_id;
         return Service::salvar($Amigos, self::CAMPO, $validacao->listaErros(), self::TABELA);
     }  
 
-    public static function excluir($id)
-    {
-        Service::excluir(self::TABELA, self::CAMPO, $id);
-    }
-    public static function lista($parametros)
+    public static function meusAmigos($users_id)
     {
         $dao = new AmigosDao();
-        return $dao->lista($parametros);
+        return $dao->meusAmigos($users_id);
     }
 
-    public static function quantidadeDeLinhas($valor_pesquisa)
-    {
-        $dao = new AmigosDao();
-        return $dao->quantidadeDeLinhas($valor_pesquisa);
-    }
 }

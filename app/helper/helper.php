@@ -177,8 +177,7 @@ function uploadImagem2($arq, $config_upload)
 
 
                 // Verifica se o arquivo é uma imagem
-                $tipos_permitidos = $config_upload["extensoes_imagem"];
-                $tipo_imagem = exif_imagetype($caminho);               
+                          
 
                     // Cria uma nova imagem a partir do arquivo
                     $imagem = imagecreatefromstring(file_get_contents($caminho));

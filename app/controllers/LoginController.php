@@ -11,19 +11,22 @@ use app\models\service\UsersService;
 class LoginController extends Controller
 {
 
-    public function index()
+    public function index($grupo = 0)
     {
         $dados["authUrl"] = LoginService::urlGoogle();
+        if($grupo >0){
+            $_SESSION['group_id'] = $grupo;
+        }        
         $dados["view"] = "login";
         $this->load("template", $dados);
     }
 
-    public function login($curso = 0)
+    /*public function login($grupo = 0)
     {
-        $dados["curso"] = $curso;
+        $dados["grupo"] = $grupo;
         $dados["view"] = "login";
         $this->load("template", $dados);
-    }
+    }*/
 
     public function google()
     {        

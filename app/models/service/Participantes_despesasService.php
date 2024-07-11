@@ -14,23 +14,66 @@ class Participantes_despesasService
     public static function salvar($Participantes_despesas)
     {
         $validacao = Participantes_despesasValidacao::salvar($Participantes_despesas);
-        
         return Service::salvar($Participantes_despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
+    }
+    
+    public static function editar($Participantes_despesas)
+    {
+        $validacao = [];
+        return Service::salvar($Participantes_despesas, self::CAMPO, $validacao, self::TABELA);
     }  
 
     public static function excluir($id)
     {
         Service::excluir(self::TABELA, self::CAMPO, $id);
     }
-    public static function lista($parametros)
+
+    public static function meusDebitosEmAberto($users_id)
     {
         $dao = new Participantes_despesasDao();
-        return $dao->lista($parametros);
+        return $dao->meusDebitosEmAberto($users_id);
     }
 
-    public static function quantidadeDeLinhas($valor_pesquisa)
+    public static function meusValoresAReceber($users_id)
     {
         $dao = new Participantes_despesasDao();
-        return $dao->quantidadeDeLinhas($valor_pesquisa);
+        return $dao->meusValoresAReceber($users_id);
     }
+
+    public static function meusValoresPorGrupo($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->meusValoresPorGrupo($users_id);
+    }
+    public static function dividaEntreUsuarios($devedor, $credor)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->dividasEntreUsuarios($devedor, $credor);
+    }
+
+    public static function totalDividasEntreUsuarios($devedor, $credor)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->totalDividasEntreUsuarios($devedor, $credor);
+    }
+
+    public static function resumoValoresAmigos($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->resumoValoresAmigos($users_id);
+    }
+
+    public static function saldoUsuario($users_id)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->saldoUsuario($users_id);
+    }
+
+    public static function negociacoesEntreDoisUsuarios($eu, $outro, $inicio = null, $fim = null)
+    {
+        $dao = new Participantes_despesasDao();
+        return $dao->negociacoesEntreDoisUsuarios($eu, $outro, $inicio = null, $fim = null);
+    } 
+    
+    
 }

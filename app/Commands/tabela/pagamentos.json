@@ -1,0 +1,62 @@
+{
+    "name": "Pagamentos",
+    "tableName": "pagamentos",
+    "fields": [
+        {
+            "name": "pagamentos_id",
+            "type": "INT",
+            "attributes": "AUTO_INCREMENT PRIMARY KEY",
+            "label": "ID",
+            "ShowInTable": true
+        },
+        {
+            "name": "pagador",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do Usuário",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "recebedor",
+            "type": "INT",
+            "attributes": "NOT NULL",
+            "label": "ID do pagador",
+            "foreign": {
+                "table": "users",
+                "field": "users_id",
+                "nome": "username"
+            },
+            "ShowInTable": true,
+            "generateInput": "select"
+        },
+        {
+            "name": "valor",
+            "type": "DECIMAL(10, 2)",
+            "attributes": "NOT NULL",
+            "label": "Valor",
+            "ShowInTable": true,
+            "generateInput": "number"
+        },
+        {
+            "name": "data",
+            "type": "DATE",
+            "attributes": "NOT NULL",
+            "label": "Data",
+            "ShowInTable": true,
+            "generateInput": "date"
+        },
+        {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "attributes": "DEFAULT CURRENT_TIMESTAMP",
+            "label": "Criado em",
+            "ShowInTable": false
+        }
+    ]
+}
