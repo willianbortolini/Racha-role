@@ -22,13 +22,6 @@ class GruposController extends Controller
         UtilService::validaUsuario();
     }
 
-    public function index()
-    {
-
-        $dados["view"] = "Grupos/Show";
-        $this->load("templateBootstrap", $dados);
-    }
-
     public function home()
     {
         $dados["minhasDespesas"] = Participantes_despesasService::meusValoresPorGrupo($_SESSION['id']);
@@ -73,55 +66,6 @@ class GruposController extends Controller
                 GruposService::excluir($id);
             }
         }
-    }
-
-    public function list()
-    {
-        $dados_requisicao = $_REQUEST;
-
-        // Lista de colunas da tabela
-        $colunas = [
-            0 => 'grupos_id',
-            1 => 'nome'
-        ];
-
-        if (!empty($dados_requisicao['search']['value'])) {
-            $valor_pesquisa = "%" . $dados_requisicao['search']['value'] . "%";
-        } else {
-            $valor_pesquisa = "";
-        }
-        $row_qnt_usuarios = GruposService::quantidadeDeLinhas($valor_pesquisa);
-
-        $parametros = [
-            'inicio' => intval($dados_requisicao['start']),
-            'quantidade' => intval($dados_requisicao['length']),
-            'colunaOrder' => $colunas[$dados_requisicao['order'][0]['column']],
-            'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
-            'valor_pesquisa' => $valor_pesquisa
-        ];
-        $listaRetorno = GruposService::lista($parametros);
-        $dados = [];
-        foreach ($listaRetorno as $coluna) {
-            $registro = [];
-            $registro[] = $coluna->grupos_id;
-            $registro[] = $coluna->nome;
-            $registro[] = "<a href='" . URL_BASE . "Grupos/edit/" . $coluna->grupos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->grupos_id . ")' type='button'
-                class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
-                data-bs-target='#deleteModal'>
-                Deletar
-            </button>";
-            $dados[] = $registro;
-        }
-
-        $resultado = [
-            "draw" => intval($dados_requisicao['draw']),
-            "recordsTotal" => $row_qnt_usuarios->total,
-            "recordsFiltered" => $row_qnt_usuarios->total,
-            "data" => $dados
-        ];
-
-        echo json_encode($resultado);
     }
 
     public function save()

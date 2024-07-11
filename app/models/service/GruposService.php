@@ -10,9 +10,6 @@ use app\util\UtilService;
 
 class GruposService
 {
-    protected function getTable() {
-        return 'grupos';
-    }
     
     const TABELA = "grupos"; 
     const CAMPO = "grupos_id";     
@@ -60,17 +57,6 @@ class GruposService
     public static function excluir($id)
     {
         Service::excluir(self::TABELA, self::CAMPO, $id);
-    }
-    public static function lista($parametros)
-    {
-        $dao = new GruposDao();
-        return $dao->lista($parametros);
-    }
-
-    public static function quantidadeDeLinhas($valor_pesquisa)
-    {
-        $dao = new GruposDao();
-        return $dao->quantidadeDeLinhas($valor_pesquisa);
     }
 
     public static function gruposDoUsuario($usuario_id)

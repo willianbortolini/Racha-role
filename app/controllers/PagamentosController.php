@@ -23,12 +23,6 @@ class PagamentosController extends Controller
         UtilService::validaUsuario();
     }
 
-    public function index()
-    {
-        $dados["view"] = "Pagamentos/Show";
-        $this->load("templateBootstrap", $dados);
-    }
-
     public function edit($id)
     {
         $dados["pagamentos"] = Service::get($this->view, $this->campo, $id);
@@ -72,61 +66,6 @@ class PagamentosController extends Controller
                 PagamentosService::excluir($id);
             }
         }
-    }
-
-    public function list()
-    {
-        $dados_requisicao = $_REQUEST;
-
-        // Lista de colunas da tabela
-        $colunas = [
-            0 => 'pagamentos_id',
-            1 => 'pagador',
-            2 => 'recebedor',
-            3 => 'valor',
-            4 => 'data'
-        ];
-
-        if (!empty($dados_requisicao['search']['value'])) {
-            $valor_pesquisa = "%" . $dados_requisicao['search']['value'] . "%";
-        } else {
-            $valor_pesquisa = "";
-        }
-        $row_qnt_usuarios = PagamentosService::quantidadeDeLinhas($valor_pesquisa);
-
-        $parametros = [
-            'inicio' => intval($dados_requisicao['start']),
-            'quantidade' => intval($dados_requisicao['length']),
-            'colunaOrder' => $colunas[$dados_requisicao['order'][0]['column']],
-            'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
-            'valor_pesquisa' => $valor_pesquisa
-        ];
-        $listaRetorno = PagamentosService::lista($parametros);
-        $dados = [];
-        foreach ($listaRetorno as $coluna) {
-            $registro = [];
-            $registro[] = $coluna->pagamentos_id;
-            $registro[] = $coluna->pagador;
-            $registro[] = $coluna->recebedor;
-            $registro[] = $coluna->valor;
-            $registro[] = $coluna->data;
-            $registro[] = "<a href='" . URL_BASE . "Pagamentos/edit/" . $coluna->pagamentos_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->pagamentos_id . ")' type='button'
-                class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
-                data-bs-target='#deleteModal'>
-                Deletar
-            </button>";
-            $dados[] = $registro;
-        }
-
-        $resultado = [
-            "draw" => intval($dados_requisicao['draw']),
-            "recordsTotal" => $row_qnt_usuarios->total,
-            "recordsFiltered" => $row_qnt_usuarios->total,
-            "data" => $dados
-        ];
-
-        echo json_encode($resultado);
     }
 
     public function save()

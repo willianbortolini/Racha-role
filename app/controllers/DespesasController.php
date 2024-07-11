@@ -22,12 +22,6 @@ class DespesasController extends Controller
         UtilService::validaUsuario();
     }
 
-    public function index()
-    {
-        $dados["view"] = "Despesas/Show";
-        $this->load("templateBootstrap", $dados);
-    }
-
     public function detalhe($user_id)
     {
         $dados["detalhe"] = Participantes_despesasService::negociacoesEntreDoisUsuarios($_SESSION['id'], $user_id);
@@ -69,63 +63,6 @@ class DespesasController extends Controller
                 DespesasService::excluir($id);
             }
         }
-    }
-
-    public function list()
-    {
-        $dados_requisicao = $_REQUEST;
-
-        // Lista de colunas da tabela
-        $colunas = [
-            0 => 'despesas_id',
-            1 => 'descricao',
-            2 => 'valor',
-            3 => 'data',
-            4 => 'users_id',
-            5 => 'grupos_id'
-        ];
-
-        if (!empty($dados_requisicao['search']['value'])) {
-            $valor_pesquisa = "%" . $dados_requisicao['search']['value'] . "%";
-        } else {
-            $valor_pesquisa = "";
-        }
-        $row_qnt_usuarios = DespesasService::quantidadeDeLinhas($valor_pesquisa);
-
-        $parametros = [
-            'inicio' => intval($dados_requisicao['start']),
-            'quantidade' => intval($dados_requisicao['length']),
-            'colunaOrder' => $colunas[$dados_requisicao['order'][0]['column']],
-            'direcaoOrdenacao' => $dados_requisicao['order'][0]['dir'],
-            'valor_pesquisa' => $valor_pesquisa
-        ];
-        $listaRetorno = DespesasService::lista($parametros);
-        $dados = [];
-        foreach ($listaRetorno as $coluna) {
-            $registro = [];
-            $registro[] = $coluna->despesas_id;
-            $registro[] = $coluna->descricao;
-            $registro[] = $coluna->valor;
-            $registro[] = $coluna->data;
-            $registro[] = $coluna->users_id;
-            $registro[] = $coluna->grupos_id;
-            $registro[] = "<a href='" . URL_BASE . "Despesas/edit/" . $coluna->despesas_id . "' class='btn btn-primary btn-sm mt-2'>Editar</a>
-            <button onclick='deletarItem(" . $coluna->despesas_id . ")' type='button'
-                class='btn btn-danger btn-sm mt-2' data-bs-toggle='modal'
-                data-bs-target='#deleteModal'>
-                Deletar
-            </button>";
-            $dados[] = $registro;
-        }
-
-        $resultado = [
-            "draw" => intval($dados_requisicao['draw']),
-            "recordsTotal" => $row_qnt_usuarios->total,
-            "recordsFiltered" => $row_qnt_usuarios->total,
-            "data" => $dados
-        ];
-
-        echo json_encode($resultado);
     }
 
     public function save()

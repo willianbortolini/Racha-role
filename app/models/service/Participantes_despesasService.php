@@ -27,17 +27,6 @@ class Participantes_despesasService
     {
         Service::excluir(self::TABELA, self::CAMPO, $id);
     }
-    public static function lista($parametros)
-    {
-        $dao = new Participantes_despesasDao();
-        return $dao->lista($parametros);
-    }
-
-    public static function quantidadeDeLinhas($valor_pesquisa)
-    {
-        $dao = new Participantes_despesasDao();
-        return $dao->quantidadeDeLinhas($valor_pesquisa);
-    }
 
     public static function meusDebitosEmAberto($users_id)
     {
