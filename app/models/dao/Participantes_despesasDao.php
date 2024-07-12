@@ -168,7 +168,7 @@ class Participantes_despesasDao extends Model
                         FROM 
                             participantes_despesas p1
     					INNER JOIN despesas ON
-    					despesas.despesas_id = P1.despesas_id 
+    					despesas.despesas_id = p1.despesas_id 
                         WHERE 
                             (p1.valor - p1.valor_pago) > 0
                             AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
