@@ -68,7 +68,7 @@ class LoginService
             $novoUsuario->politica = 1;
             $novoUsuario->users_id = 0;
             
-            $usuarioCriado = UsersService::salvar($novoUsuario, "users_id", "users");
+            $usuarioCriado = UsersService::criar($novoUsuario, "users_id", "users");
             if ($usuarioCriado) {                
                 $_SESSION['id'] = $usuarioCriado;
                 $_SESSION['nivel'] = 1;
