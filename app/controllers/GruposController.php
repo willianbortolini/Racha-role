@@ -28,7 +28,6 @@ class GruposController extends Controller
         $dados["saldo"] = Participantes_despesasService::saldoUsuario($_SESSION['id']);
         $dados["gruposQuitados"] = GruposService::gruposQuitados($_SESSION['id']);
         $dados["btnAtivo"] = "grupos";
-        i($dados);
         $dados["view"] = "Grupos/home";
         $this->load("templateBootstrap", $dados);
     }
