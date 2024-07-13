@@ -321,6 +321,7 @@
 
         setTimeout(() => {
             descricaolInput.focus();
+            descricaolInput.click();
         }, 500);
 
         participantesDiv.addEventListener('change', function (event) {
