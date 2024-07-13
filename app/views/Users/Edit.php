@@ -5,7 +5,7 @@
         left: 0;
         width: 100%;
         background-color: #ffffff;
-        padding: 10px 0;
+        padding: 10px 0 20px 0px;
         box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-around;
@@ -17,20 +17,6 @@
     .footer-bar2 {
         display: flex;
         width: 100%;
-    }
-
-    .footer-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #ffffff;
-        padding: 10px 0;
-        box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 1000;
     }
 
     .footer-bar .btn {

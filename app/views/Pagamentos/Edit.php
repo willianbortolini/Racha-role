@@ -54,7 +54,7 @@
         left: 0;
         width: 100%;
         background-color: #ffffff;
-        padding: 10px 0;
+        padding: 10px 0 20px 0px;
         box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-around;
