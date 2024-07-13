@@ -72,6 +72,7 @@ class LoginService
             if ($usuarioCriado) {                
                 $_SESSION['id'] = $usuarioCriado;
                 $_SESSION['nivel'] = 1;
+                $_SESSION['uid'] = $resultado->users_uid;
                 $csrfToken = bin2hex(random_bytes(32));
                 $_SESSION['csrf_token'] = $csrfToken;                
                 return 1;

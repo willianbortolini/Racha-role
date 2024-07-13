@@ -250,7 +250,7 @@
                         <div class="imagemCircular"></div>
                     </label>
                 <?php } ?>
-                <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil">
+                <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil" onchange="processarImagem(this)">
             </div>
 
 
@@ -346,24 +346,6 @@
         });
     });
 
-    function toggleExclusao(button) {
-        const targetId = button.dataset.target;
-        const checkbox = document.getElementById(targetId);
-        const imageLabel = button.parentElement.previousElementSibling;
-
-        if (checkbox.checked) {
-            // Se o checkbox estiver marcado, desmarque-o e remova a classe "exclusao-ativa"
-            checkbox.checked = false;
-            imageLabel.classList.remove("exclusao-ativa");
-            button.innerText = "Excluir";
-        } else {
-            // Se o checkbox estiver desmarcado, marque-o e adicione a classe "exclusao-ativa"
-            checkbox.checked = true;
-            imageLabel.classList.add("exclusao-ativa");
-            button.innerText = "Cancelar exclusão";
-        }
-    }
-
     document.addEventListener("DOMContentLoaded", function () {
         // Adicionar eventos de clique aos botões "Excluir"
         const deleteButtons = document.querySelectorAll(".btn-delete");
@@ -375,4 +357,60 @@
 
 
     });
+
+    function processarImagem(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = new Image();
+                img.src = e.target.result;
+
+                img.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    var maxW = 1024;
+                    var maxH = 1024;
+
+                    var width = img.width;
+                    var height = img.height;
+
+                    // Redimensionar a imagem
+                    if (width > height) {
+                        if (width > maxW) {
+                            height *= maxW / width;
+                            width = maxW;
+                        }
+                    } else {
+                        if (height > maxH) {
+                            width *= maxH / height;
+                            height = maxH;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Converter a imagem para JPEG
+                    canvas.toBlob(function (blob) {
+                        var novoArquivo = new File([blob], "imagem_redimensionada.jpg", { type: "image/jpeg", lastModified: Date.now() });
+                        // Substituir o arquivo original pelo redimensionado
+                        var container = new DataTransfer();
+                        container.items.add(novoArquivo);
+                        input.files = container.files;
+
+                        // Atualizar a visualização da imagem
+                        var readerPreview = new FileReader();
+                        readerPreview.onload = function (e) {
+                            document.getElementById('preview').src = e.target.result;
+                        }
+                        readerPreview.readAsDataURL(novoArquivo);
+                    }, 'image/jpeg', 0.70); // Ajuste a qualidade do JPEG aqui, se necessário
+                };
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
