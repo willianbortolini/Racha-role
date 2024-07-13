@@ -19,8 +19,7 @@ class UsersService
             
             $validacao = UsersValidacao::salvar($Users);
         }     
-        global $config_upload; 
-        i($_FILES);       
+        global $config_upload;            
         if ($validacao->qtdeErro() <= 0) {
             if (isset($_POST["remove_foto_perfil"]) && $_POST["remove_foto_perfil"] === "1") {
                 $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
@@ -28,14 +27,14 @@ class UsersService
                     UtilService::deletarImagens($existe_imagem->foto_perfil);
                 }
                 $Users->foto_perfil = '';
-            } else {
-                
+            } else {                
                 if (isset($_FILES["foto_perfil"]["name"]) && $_FILES["foto_perfil"]["error"] === UPLOAD_ERR_OK) {
                     $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
                     if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
                       UtilService::deletarImagens($existe_imagem->foto_perfil);
                     }
                     $Users->foto_perfil = UtilService::uploadImagem("foto_perfil", $config_upload);
+                    i($Users);   
                     if (!$Users->foto_perfil) {
                         return false;
                     }
