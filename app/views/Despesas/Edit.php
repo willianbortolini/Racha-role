@@ -322,7 +322,7 @@
         setTimeout(() => {
             descricaolInput.focus();
             descricaolInput.click();
-        }, 500);
+        }, 1000);
 
         participantesDiv.addEventListener('change', function (event) {
             if (event.target.classList.contains('form-check-input')) {
