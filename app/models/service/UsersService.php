@@ -19,7 +19,8 @@ class UsersService
             
             $validacao = UsersValidacao::salvar($Users);
         }     
-        global $config_upload;        
+        global $config_upload; 
+        i($_FILES);       
         if ($validacao->qtdeErro() <= 0) {
             if (isset($_POST["remove_foto_perfil"]) && $_POST["remove_foto_perfil"] === "1") {
                 $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
@@ -40,7 +41,7 @@ class UsersService
                     }
                 }
             }
-            i($Users);
+            
         }
 
         return Service::salvar($Users, self::CAMPO, $validacao->listaErros(), self::TABELA);
