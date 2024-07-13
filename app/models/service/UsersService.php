@@ -35,7 +35,6 @@ class UsersService
                       UtilService::deletarImagens($existe_imagem->foto_perfil);
                     }
                     $Users->foto_perfil = UtilService::uploadImagem("foto_perfil", $config_upload);
-                    i($Users);   
                     if (!$Users->foto_perfil) {
                         return false;
                     }
