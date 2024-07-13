@@ -167,6 +167,7 @@
         font-size: 16px;
         padding: 5px 0;
         width: 100%;
+        border-radius: 0px;
     }
 
     .input-field:focus {
