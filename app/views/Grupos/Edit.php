@@ -249,7 +249,7 @@
                 <?php if (isset($grupos->foto) && $grupos->foto != '') { ?>
                     <label class="container-imagem" for="foto">
                         <img class="imagemCircular" id="preview"
-                            src="<?php echo (isset($grupos->foto)) ? (URL_IMAGEM . $grupos->foto) : ''; ?>">
+                            src="<?php echo (isset($grupos->foto)) ? (URL_IMAGEM_150 . $grupos->foto) : ''; ?>">
                     </label>
                 <?php } else { ?>
                     <label class="container-imagem" for="foto">

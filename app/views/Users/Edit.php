@@ -243,7 +243,7 @@
                 <?php if (isset($users->foto_perfil) && $users->foto_perfil != '') { ?>
                     <label class="container-imagem" for="foto_perfil">
                         <img class="imagemCircular" id="preview"
-                            src="<?php echo (isset($users->foto_perfil)) ? (URL_IMAGEM . $users->foto_perfil) : ''; ?>">
+                            src="<?php echo (isset($users->foto_perfil)) ? (URL_IMAGEM_150 . $users->foto_perfil) : ''; ?>">
                     </label>
                 <?php } else { ?>
                     <label class="container-imagem" for="foto_perfil">
