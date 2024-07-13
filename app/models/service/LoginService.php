@@ -53,7 +53,7 @@ class LoginService
         if ($resultado) {
             //se tem loga
             $_SESSION['id'] = $resultado->users_id;
-            $_SESSION['nivel'] = $resultado->nivel_de_acesso;
+            $_SESSION['uid'] = $resultado->users_uid;
             $csrfToken = bin2hex(random_bytes(32));
             $_SESSION['csrf_token'] = $csrfToken;           
             return 1;
@@ -96,6 +96,7 @@ class LoginService
             if ($resultado) {
                 if (password_verify($password, $resultado->password)) {
                     $_SESSION['id'] = $resultado->users_id;
+                    $_SESSION['uid'] = $resultado->users_uid;
                     $csrfToken = bin2hex(random_bytes(32));
                     $_SESSION['csrf_token'] = $csrfToken;    
                                    

@@ -81,15 +81,14 @@ class PagamentosController extends Controller
                     $pagamentos->pagamentos_id = 0;
                 }
                 if (isset($_POST["pagador"]))
-                    $pagamentos->pagador = $_POST["pagador"];
+                    $pagamentos->pagador =  Service::getUsers_idComUid($_POST["pagador"]);
                 if (isset($_POST["recebedor"]))
-                    $pagamentos->recebedor = $_POST["recebedor"];
+                    $pagamentos->recebedor = Service::getUsers_idComUid($_POST["recebedor"]);
                 if (isset($_POST["valor"]))
                     $pagamentos->valor = $_POST["valor"];
                 if (isset($_POST["data"]))
                     $pagamentos->data = $_POST["data"];
             }
-            
             Flash::setForm($pagamentos);
             Service::begin_tran();
             try {

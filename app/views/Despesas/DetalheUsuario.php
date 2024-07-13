@@ -162,9 +162,9 @@
         <a href="<?php echo URL_BASE ?>" class="btn btn-primary">Voltar</a>
 
         <?php if ($saldo > 0) { ?>
-            <a href="<?php echo URL_BASE . 'pagamentos/quitar/' . $saldo .'/'. $amigo->users_id  .'/'. $_SESSION['id']?>" class="btn btn-primary">Quitar divida</a>
+            <a href="<?php echo URL_BASE . 'pagamentos/quitar/' . $saldo .'/'. $amigo->users_uid  .'/'. $_SESSION['uid']?>" class="btn btn-primary">Quitar divida</a>
         <?php } else { ?>
-            <a href="<?php echo URL_BASE . 'pagamentos/quitar/' . $saldo .'/'. $_SESSION['id']  .'/'. $amigo->users_id?>" class="btn btn-primary">Quitar divida</a>
+            <a href="<?php echo URL_BASE . 'pagamentos/quitar/' . $saldo .'/'. $_SESSION['uid']  .'/'. $amigo->users_uid?>" class="btn btn-primary">Quitar divida</a>
         <?php } ?>
 
     </div>

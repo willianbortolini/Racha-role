@@ -22,11 +22,12 @@ class DespesasController extends Controller
         UtilService::validaUsuario();
     }
 
-    public function detalhe($user_id)
+    public function detalhe($user_uid)
     {
+        $dados["amigo"] = Service::get("users", "users_uid",$user_uid );
+        $user_id = $dados["amigo"]->users_id;
         $dados["detalhe"] = Participantes_despesasService::negociacoesEntreDoisUsuarios($_SESSION['id'], $user_id);
         $dados["saldo"] = Participantes_despesasService::totalDividasEntreUsuarios($_SESSION['id'], $user_id);
-        $dados["amigo"] = Service::get("users", "users_id",$user_id );
        
         $dados["view"] = "Despesas/DetalheUsuario";
         $this->load("templateBootstrap", $dados);
@@ -46,6 +47,7 @@ class DespesasController extends Controller
         $dados["despesas"] = Flash::getForm();
         $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);
         $dados["grupos"] = GruposService::gruposDoUsuario($_SESSION['id']);
+
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
     }    
@@ -92,7 +94,6 @@ class DespesasController extends Controller
             }
             $participantes = $_POST['participantes']; // Array de IDs de participantes
             $valorPorParticipante = $_POST['valorporparticipante']; // Array de IDs de participantes
-
             Flash::setForm($despesas);
             $despesa = DespesasService::salvar($despesas, $participantes, $valorPorParticipante);
             if ($despesa > 1) //se é maior que um inseriu novo 

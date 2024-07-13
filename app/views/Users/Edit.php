@@ -233,7 +233,7 @@
     }
 </style>
 <h1>
-    <?php echo (isset($users->users_id)) ? 'Editar Usuários' : 'Adicionar Usuários'; ?>
+    <?php echo (isset($users->users_uid)) ? 'Editar Usuários' : 'Adicionar Usuários'; ?>
 </h1>
 
 <form action="<?php echo URL_BASE . "Users/save" ?>" method="POST" enctype="multipart/form-data">
@@ -241,16 +241,16 @@
         <div class="row">
             <div class="form-group col-2">
                 <?php if (isset($users->foto_perfil) && $users->foto_perfil != '') { ?>
-                    <label class="container-imagem" for="foto">
+                    <label class="container-imagem" for="foto_perfil">
                         <img class="imagemCircular" id="preview"
                             src="<?php echo (isset($users->foto_perfil)) ? (URL_IMAGEM . $users->foto_perfil) : ''; ?>">
                     </label>
                 <?php } else { ?>
-                    <label class="container-imagem" for="foto">
+                    <label class="container-imagem" for="foto_perfil">
                         <div class="imagemCircular"></div>
                     </label>
                 <?php } ?>
-                <input type="file" class="form-control-file" id="foto" name="foto">
+                <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil">
             </div>
 
 
@@ -303,7 +303,7 @@
     <?php } ?>
 
     <a class="nav-link text-wrapper-4  mt-4 text-danger" href="<?php echo URL_BASE . 'login/logoff' ?>">SAIR</a>
-   
+
     <div class="footer-bar">
         <div class="footer-bar2">
             <a href="<?php echo URL_BASE ?>" class="btn btn-primary">Voltar</a>
@@ -311,4 +311,68 @@
         </div>
     </div>
 </form>
-<script src="<?php echo URL_BASE ?>assets/js/inputImg.js"></script>
+
+<script>
+
+    function handleFileInputChange(event) {
+
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        var previewContainer = event.target.parentNode.querySelector("[for='" + event.target.id + "']");
+        reader.onload = function (e) {
+            var img = document.createElement("img");
+            img.src = e.target.result;
+            img.classList.add("imagemCircular");
+
+            previewContainer.innerHTML = "";
+            previewContainer.appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    var fileInputs = document.querySelectorAll("input[type=file]");
+
+    fileInputs.forEach(function (fileInput) {
+        fileInput.addEventListener("change", handleFileInputChange);
+    });
+
+    // Adicione um evento de clique aos botões "Editar"
+    const editButtons = document.querySelectorAll('.btn-edit');
+    editButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const targetId = this.dataset.target;
+            document.getElementById(targetId).click();
+        });
+    });
+
+    function toggleExclusao(button) {
+        const targetId = button.dataset.target;
+        const checkbox = document.getElementById(targetId);
+        const imageLabel = button.parentElement.previousElementSibling;
+
+        if (checkbox.checked) {
+            // Se o checkbox estiver marcado, desmarque-o e remova a classe "exclusao-ativa"
+            checkbox.checked = false;
+            imageLabel.classList.remove("exclusao-ativa");
+            button.innerText = "Excluir";
+        } else {
+            // Se o checkbox estiver desmarcado, marque-o e adicione a classe "exclusao-ativa"
+            checkbox.checked = true;
+            imageLabel.classList.add("exclusao-ativa");
+            button.innerText = "Cancelar exclusão";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Adicionar eventos de clique aos botões "Excluir"
+        const deleteButtons = document.querySelectorAll(".btn-delete");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                toggleExclusao(this);
+            });
+        });
+
+
+    });
+</script>

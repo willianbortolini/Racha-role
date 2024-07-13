@@ -39,16 +39,18 @@ class GruposService
             }
         }     
         $grupos_id = Service::salvar($Grupos, self::CAMPO, $validacao->listaErros(), self::TABELA);    
- 
+        
         if ($grupos_id == 1){
             return 1;                      
         } else if($grupos_id > 1){
             $usuarios_grupos = new \stdClass();
             $usuarios_grupos->usuarios_grupos_id = 0;     
-            $usuarios_grupos->grupos_id = $grupos_id;  
+            $usuarios_grupos->grupos_id = $grupos_id;              
             if(Usuarios_gruposService::salvar($usuarios_grupos, [$_SESSION['id']]) == 1){
                 return $grupos_id;
-            };  
+            }else{
+                return 0;
+            } 
         }else{
             return 0;
         }

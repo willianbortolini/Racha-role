@@ -24,7 +24,7 @@
         <a class="nav-link text-wrapper-4" href="#">FAQ</a>
       </li>
       <li class="nav-item">
-      <a href="<?php echo URL_BASE . "users/edit/" . $_SESSION['id'] ?>" class="btn btn-primary">perfil</a>
+      <a href="<?php echo URL_BASE . "users/edit/" . $_SESSION['uid'] ?>" class="btn btn-primary">perfil</a>
       </li>-->
       <li class="nav-item">
         <a class="nav-link text-wrapper-4" href="<?php echo URL_BASE . 'login/logoff' ?>">SAIR</a>

@@ -12,7 +12,7 @@ class Usuarios_gruposService
     const CAMPO = "usuarios_grupos_id";
 
     public static function salvar($Usuarios_grupos, $participantes)
-    {
+    {        
         $transaction = false;
         if (!Service::inTransaction()) {
             Service::begin_tran();

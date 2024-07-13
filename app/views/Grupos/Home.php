@@ -125,10 +125,10 @@
                             <?php echo moedaBr($item->valor) ?>
                         </span>
                         a
-                        <?php echo substr(htmlspecialchars($item->username), 0, 20); ?>
+                        <?php echo substr(htmlspecialchars((empty($item->username)) ? $item->email : $item->username), 0, 20); ?>
                         </span>
                     <?php } else { ?>
-                        <?php echo substr(htmlspecialchars($item->username), 0, 20); ?>
+                        <?php echo substr(htmlspecialchars((empty($item->username)) ? $item->email : $item->username), 0, 20); ?>
                         deve
                         <span class="deveAvoce"> R$
                             <?php echo moedaBr($item->valor * -1) ?>

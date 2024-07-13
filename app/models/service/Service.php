@@ -12,14 +12,6 @@ abstract class Service {
 
     protected $sql;
 
-    public function select($columns = '*') {
-        $this->sql = "SELECT $columns FROM " . $this->getTable();
-        return $this;
-    }
-
-    // Método abstrato para ser implementado pelas classes filhas
-    abstract protected function getTable();
-
     public static function begin_tran() {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();
@@ -41,6 +33,11 @@ abstract class Service {
         $dao = new Dao();
         $transacao = $dao->getDBConnection();
         $transacao->commit();
+    }
+
+    public static function getUsers_idComUid($uid) {
+        $dao = new Dao();
+        return $dao->get("users", "users_uid", $uid, false, 'desc')->users_id;
     }
 
     public static function colunasDaTabela($tabela) {

@@ -275,7 +275,7 @@
             <ul class="list-group">
                 <?php foreach ($membroGrupo as $usuario) { ?>
                     <li class="list-group-item"
-                        onclick="location.href='<?php echo URL_BASE . 'pagamentos/detalhes/' . $usuario->users_id ?>'">
+                        onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $usuario->users_uid ?>'">
                         <div class="profile-image" style="display: inline-block; vertical-align: middle; ">
                             <?php if (!empty($usuario->foto_perfil)) { ?>
                                 <img src="<?= URL_IMAGEM_150 . $usuario->foto_perfil ?>" alt="Profile Image" class="imagemCircular">
@@ -284,7 +284,7 @@
                             <?php } ?>
                         </div>
                         <div class="name" style="display: inline-block; vertical-align: middle;">
-                            <?= $usuario->username ?></br>
+                            <?= (empty($usuario->username)) ? $usuario->email : $usuario->username ?></br>
                         </div>
 
                     </li>
@@ -305,9 +305,9 @@
             <div id="participantes">
                 <?php foreach ($users as $item): ?>
                     <div class="form-check">
-                        <label class="form-check-label" for="user-<?php echo $item->users_id; ?>">
+                        <label class="form-check-label" for="user-<?php echo $item->users_uid; ?>">
                             <input class="form-check-input" type="checkbox" name="participantes[]"
-                                value="<?php echo $item->users_id; ?>" id="user-<?php echo $item->users_id; ?>">
+                                value="<?php echo $item->users_uid; ?>" id="user-<?php echo $item->users_uid; ?>">
                             <span class="custom-checkbox"></span>
                             <?php if (!empty($usuario->foto_perfil)) { ?>
                                 <img src="<?= URL_IMAGEM_150 . $item->foto_perfil ?>" alt="Profile Image"

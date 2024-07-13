@@ -236,6 +236,7 @@ class Participantes_despesasDao extends Model
                         u.username AS username,
                         s.saldo AS valor,
                         u.foto_perfil,
+                        u.users_uid,
                         u.pix
                     FROM 
                         saldos s

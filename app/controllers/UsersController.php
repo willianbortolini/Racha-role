@@ -14,6 +14,7 @@ class UsersController extends Controller
     private $tabela = "users";
     private $campo = "users_id";
 
+    private $ucampo = "users_uid";
 
     /*public function __construct()
     {
@@ -57,6 +58,7 @@ class UsersController extends Controller
     
     public function save()
     {
+        
         $csrfToken = $_POST['csrf_token'];
         if ($csrfToken === $_SESSION['csrf_token']) {
             $users = new \stdClass();
@@ -80,9 +82,8 @@ class UsersController extends Controller
                     $users->politica = ($_POST['politica'] == 'on') ? 1 : 0;
                 if (isset($_POST['cookies']))
                     $users->cookies = ($_POST['cookies'] == 'on') ? 1 : 0;
-
             }
-
+            
             Flash::setForm($users);
             if (UsersService::salvar($users) > 1) //se é maior que um inseriu novo 
             {

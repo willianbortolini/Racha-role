@@ -238,9 +238,9 @@
             <select class="form-select col-12 input-field" aria-label=".form-select-lg example" name="users_id" id="users_id">
                 <?php foreach ($users as $item) {
                     if (isset($despesas->users_id)) {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_id ? "selected" : "") . ">$item->username</option>";
+                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_uid ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
                     } else {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">$item->username</option>";
+                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
                     }
                 } ?>
             </select>
@@ -275,7 +275,7 @@
                         <label class="form-check-label" for="user-<?php echo $item->users_id; ?>">
                             <input class="form-check-input" type="checkbox" name="participantes[]" value="<?php echo $item->users_id; ?>" id="user-<?php echo $item->users_id; ?>">
                             <span class="custom-checkbox"></span>
-                            <?php echo $item->username; ?>
+                            <?= (empty($item->username)) ? $item->email : $item->username ?>
                         </label>
                     </div>
                 <?php endforeach; ?>

@@ -194,7 +194,7 @@
         <label for="pagador"></label>
         <select class="form-select" aria-label="Default select example" name="pagador">
             <?php foreach ($users as $item) {
-                echo "<option value='$item->users_id'" . ($item->users_id == $pagamentos->pagador ? "selected" : "") . ">$item->username</option>";
+                echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->pagador ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
             } ?>
         </select>
     </div>
@@ -203,7 +203,7 @@
         <label for="recebedor">vai pagar a</label>
         <select class="form-select" aria-label="Default select example" name="recebedor">
             <?php foreach ($users as $item) {
-                echo "<option value='$item->users_id'" . ($item->users_id == $pagamentos->recebedor ? "selected" : "") . ">$item->username</option>";
+                echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->recebedor ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
             } ?>
         </select>
     </div>

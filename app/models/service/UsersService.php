@@ -16,9 +16,10 @@ class UsersService
         if($Users->users_id > 0){
             $validacao = UsersValidacao::editar($Users);
         }else{
+            
             $validacao = UsersValidacao::salvar($Users);
         }     
-        global $config_upload;
+        global $config_upload;        
         if ($validacao->qtdeErro() <= 0) {
             if (isset($_POST["remove_foto_perfil"]) && $_POST["remove_foto_perfil"] === "1") {
                 $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
@@ -27,6 +28,7 @@ class UsersService
                 }
                 $Users->foto_perfil = '';
             } else {
+                
                 if (isset($_FILES["foto_perfil"]["name"]) && $_FILES["foto_perfil"]["error"] === UPLOAD_ERR_OK) {
                     $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
                     if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
@@ -49,6 +51,7 @@ class UsersService
         unset($Users->confirmacao); 
         if(isset($Users->password)){
             $Users->password = password_hash($Users->password,PASSWORD_DEFAULT);
+            $Users->users_uid = UtilService::generateUUID();
         }
 
         global $config_upload;
@@ -95,43 +98,5 @@ class UsersService
          return Service::salvar($usuario, $campo, $validacao->listaErros(), $tabela);
     }
 
-    function crc16($str) {
-        $crc = 0xFFFF;
-        for ($i = 0; $i < strlen($str); $i++) {
-            $x = (($crc >> 8) ^ ord($str[$i])) & 0xFF;
-            $x ^= ($x >> 4);
-            $crc = (($crc << 8) & 0xFFFF) ^ ($x << 12) ^ ($x << 5) ^ $x;
-        }
-        return strtoupper(dechex($crc));
-    }
     
-    function gerar_codigo_pix($chave_pix, $nome_recebedor, $cidade_recebedor = "CIDADE NÃO INFORMADA", $valor = null) {
-        $nome_recebedor = strtoupper($nome_recebedor); // Pix exige nome em maiúsculas
-        $cidade_recebedor = strtoupper($cidade_recebedor); // Pix exige cidade em maiúsculas
-    
-        // Formatando os campos
-        $payload = [
-            "00" => "01", // Payload Format Indicator
-            "26" => "br.gov.bcb.pix", // Merchant Account Information Template
-            "01" => $chave_pix, // Chave Pix
-            "59" => $nome_recebedor, // Nome do recebedor
-            "60" => $cidade_recebedor, // Cidade do recebedor
-        ];
-    
-        if ($valor !== null) {
-            $payload["54"] = number_format($valor, 2, '.', ''); // Valor da transação
-        }
-    
-        // Construindo a string do payload
-        $payload_str = "000201"; // Payload Format Indicator + Point of Initiation Method
-        foreach ($payload as $id => $value) {
-            $payload_str .= $id . str_pad(strlen($value), 2, '0', STR_PAD_LEFT) . $value;
-        }
-    
-        // Adicionando campo de verificação (CRC-16)
-        $payload_str .= "6304"; // Campo CRC-16
-        $payload_str .= Self::crc16($payload_str); // Valor CRC-16
-    
-        return $payload_str;
-    }
 }
