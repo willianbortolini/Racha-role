@@ -319,11 +319,6 @@
         const form = document.getElementById('despesas-form');
         let inputsHabilitados = false;
 
-        setTimeout(() => {
-            descricaolInput.focus();
-            descricaolInput.click();
-        }, 1000);
-
         participantesDiv.addEventListener('change', function (event) {
             if (event.target.classList.contains('form-check-input')) {
                 if (inputsHabilitados) {
