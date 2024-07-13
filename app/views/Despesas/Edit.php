@@ -308,8 +308,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        const descricaoInput = document.getElementById('descricao');
-        descricaoInput.focus();
+        
 
         const participantesDiv = document.getElementById('participantes');
         const valorTotalInput = document.getElementById('valor-total');
@@ -319,6 +318,10 @@
         const dividirIgualmenteButton = document.getElementById('dividir-igualmente');
         const form = document.getElementById('despesas-form');
         let inputsHabilitados = false;
+
+        setTimeout(() => {
+            descricaolInput.focus();
+        }, 500);
 
         participantesDiv.addEventListener('change', function (event) {
             if (event.target.classList.contains('form-check-input')) {
