@@ -204,27 +204,30 @@
 <form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div id="step1" class="container mt-4">
-        <div class=" d-flex justify-content-between">
-            <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-primary">x</a>
-        </div>
-        <div class="input-container">
-            <input type="text" id="descricao" name="descricao" class="input-field" placeholder="Adicione uma descrição" value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
+                <div class="input-container">
+            <input type="text" id="descricao" name="descricao" class="input-field" placeholder="Adicione uma descrição"
+                value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
         </div>
 
         <div class="input-container mt-4">
-            <input type="number" id="valor-total" name="valor" class="input-field" placeholder="0,00" value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required>
+            <input type="number" id="valor-total" inputmode="decimal" name="valor" class="input-field" placeholder="0,00"
+                value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required>
         </div>
 
-        <input type="hidden" name="despesas_id" value="<?php echo (isset($despesas->despesas_id)) ? $despesas->despesas_id : NULL; ?>">
+        <input type="hidden" name="despesas_id"
+            value="<?php echo (isset($despesas->despesas_id)) ? $despesas->despesas_id : NULL; ?>">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
         <div class="footer-bar">
             <div class="footer-bar2">
+                <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-primary">voltar</a>
+
+                <button type="button" class="btn btn-primary mb-2" id="step1-complete">Selecionar participantes</button>
                 <div class="date-picker-wrapper">
                     <span class="calendar-icon">&#128197;</span>
-                    <input type="date" id="data" name="data" value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
+                    <input type="date" id="data" name="data"
+                        value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
                 </div>
-                <button type="button" class="btn btn-primary mb-2" id="step1-complete">Selecionar participantes</button>
             </div>
         </div>
 
@@ -235,12 +238,13 @@
 
         <div class="form-group mb-2 w-100">
             <label for="users_id" class="form-label mt-4">Pago por</label>
-            <select class="form-select col-12 input-field" aria-label=".form-select-lg example" name="users_id" id="users_id">
+            <select class="form-select col-12 input-field" aria-label=".form-select-lg example" name="users_id"
+                id="users_id">
                 <?php foreach ($users as $item) {
                     if (isset($despesas->users_id)) {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_uid ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
+                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_uid ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
                     } else {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
+                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
                     }
                 } ?>
             </select>
@@ -250,15 +254,17 @@
         <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
         <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>
 
-        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos" id="filter-input">
+        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
+            id="filter-input">
 
         <div class="form-group mb-2">
             <label for="grupos_id">Grupos</label>
             <div id="grupos_id">
-                <?php foreach ($grupos as $item) : ?>
+                <?php foreach ($grupos as $item): ?>
                     <div class="form-check">
                         <label class="form-check-label" for="grupo-<?php echo $item->grupos_id; ?>">
-                            <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id" value="<?php echo $item->grupos_id; ?>" id="grupo-<?php echo $item->grupos_id; ?>" <?php echo ((!isset($item->grupos_id)) && ($item->grupos_id == $despesas->grupos_id)) ? 'checked' : ''; ?>>
+                            <input class="form-check-input grupo-checkbox" type="checkbox" name="grupos_id"
+                                value="<?php echo $item->grupos_id; ?>" id="grupo-<?php echo $item->grupos_id; ?>" <?php echo ((!isset($item->grupos_id)) && ($item->grupos_id == $despesas->grupos_id)) ? 'checked' : ''; ?>>
                             <span class="custom-checkbox"></span>
                             <?php echo $item->nome; ?>
                         </label>
@@ -270,10 +276,11 @@
         <div class="form-group mb-2">
             <label for="participantes">Amigos</label>
             <div id="participantes">
-                <?php foreach ($users as $item) : ?>
+                <?php foreach ($users as $item): ?>
                     <div class="form-check">
                         <label class="form-check-label" for="user-<?php echo $item->users_id; ?>">
-                            <input class="form-check-input" type="checkbox" name="participantes[]" value="<?php echo $item->users_id; ?>" id="user-<?php echo $item->users_id; ?>">
+                            <input class="form-check-input" type="checkbox" name="participantes[]"
+                                value="<?php echo $item->users_id; ?>" id="user-<?php echo $item->users_id; ?>">
                             <span class="custom-checkbox"></span>
                             <?= (empty($item->username)) ? $item->email : $item->username ?>
                         </label>
@@ -299,18 +306,21 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const descricaoInput = document.getElementById('descricao');
+        descricaoInput.focus();
 
         const participantesDiv = document.getElementById('participantes');
         const valorTotalInput = document.getElementById('valor-total');
-        const descricaolInput = document.getElementById('descricao');        
+        const descricaolInput = document.getElementById('descricao');
         const habilitarInputsButton = document.getElementById('habilitar-inputs');
         const totalDisplay = document.getElementById('total-display');
         const dividirIgualmenteButton = document.getElementById('dividir-igualmente');
         const form = document.getElementById('despesas-form');
         let inputsHabilitados = false;
 
-        participantesDiv.addEventListener('change', function(event) {
+        participantesDiv.addEventListener('change', function (event) {
             if (event.target.classList.contains('form-check-input')) {
                 if (inputsHabilitados) {
                     if (event.target.checked) {
@@ -324,7 +334,7 @@
             }
         });
 
-        dividirIgualmenteButton.addEventListener('click', function() {
+        dividirIgualmenteButton.addEventListener('click', function () {
             divideEqually();
         });
 
@@ -386,14 +396,14 @@
             updateTotalDisplay();
         }
 
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', function (event) {
             const inputs = document.querySelectorAll('.input-valor');
             inputs.forEach(input => {
                 input.disabled = false; // Habilitar todos os inputs antes de submeter
             });
         });
 
-        habilitarInputsButton.addEventListener('click', function() {
+        habilitarInputsButton.addEventListener('click', function () {
             const inputs = document.querySelectorAll('.input-valor');
             inputs.forEach(input => {
                 input.disabled = false;
@@ -458,12 +468,12 @@
             dateInput.value = year + '-' + month + '-' + day;
         }
 
-        document.querySelectorAll('.grupo-checkbox').forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
+        document.querySelectorAll('.grupo-checkbox').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
                 var groupId = this.value;
                 if (this.checked) {
                     // Uncheck all other checkboxes
-                    document.querySelectorAll('.grupo-checkbox').forEach(function(otherCheckbox) {
+                    document.querySelectorAll('.grupo-checkbox').forEach(function (otherCheckbox) {
                         if (otherCheckbox !== checkbox) {
                             otherCheckbox.checked = false;
                         }
@@ -471,7 +481,7 @@
 
                     // Clear all user checkboxes
                     var userCheckboxes = document.querySelectorAll('#participantes .form-check-input');
-                    userCheckboxes.forEach(function(userCheckbox) {
+                    userCheckboxes.forEach(function (userCheckbox) {
                         userCheckbox.checked = false;
                     });
 
@@ -501,24 +511,24 @@
         });
 
         // Trigger change event for initially selected groups
-        document.querySelectorAll('.grupo-checkbox:checked').forEach(function(checkbox) {
+        document.querySelectorAll('.grupo-checkbox:checked').forEach(function (checkbox) {
             checkbox.dispatchEvent(new Event('change'));
         });
 
         // Step 1 complete button
-        document.getElementById('step1-complete').addEventListener('click', function() {
-          
-            if (descricaolInput.value.trim() === '') { 
+        document.getElementById('step1-complete').addEventListener('click', function () {
+
+            if (descricaolInput.value.trim() === '') {
                 alert('Adicione uma descrição');
-            } else if (valorTotalInput.value.trim() === '') { 
+            } else if (valorTotalInput.value.trim() === '') {
                 alert('Adicione um valor');
-            } else{  
+            } else {
                 vaiParaDadosDaDespesa()
             }
         });
 
         // Step 1 complete button
-        document.getElementById('step1-return').addEventListener('click', function() {
+        document.getElementById('step1-return').addEventListener('click', function () {
             vaiParaSelecaoDeUsuarios()
         });
 
@@ -533,17 +543,17 @@
         }
 
         // Filter functionality
-        document.getElementById('filter-input').addEventListener('input', function() {
+        document.getElementById('filter-input').addEventListener('input', function () {
             var filterValue = this.value.toLowerCase();
             var groups = document.querySelectorAll('#grupos_id .form-check');
             var friends = document.querySelectorAll('#participantes .form-check');
 
-            groups.forEach(function(group) {
+            groups.forEach(function (group) {
                 var label = group.querySelector('label').innerText.toLowerCase();
                 group.style.display = label.includes(filterValue) ? '' : 'none';
             });
 
-            friends.forEach(function(friend) {
+            friends.forEach(function (friend) {
                 var label = friend.querySelector('label').innerText.toLowerCase();
                 friend.style.display = label.includes(filterValue) ? '' : 'none';
             });
@@ -603,7 +613,7 @@
         }
 
         // Trigger change event for initially selected groups
-        document.querySelectorAll('.grupo-checkbox:checked').forEach(function(checkbox) {
+        document.querySelectorAll('.grupo-checkbox:checked').forEach(function (checkbox) {
             checkbox.dispatchEvent(new Event('change'));
         });
 

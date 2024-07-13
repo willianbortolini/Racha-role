@@ -231,6 +231,12 @@
     .hidden {
         display: none;
     }
+
+
+
+    #copyMessage {
+        display: none;
+    }
 </style>
 <div id="step1" class="container mt-4">
     <h1>
@@ -303,22 +309,31 @@
         <div class="form-group mb-2">
             <label for="participantes">Amigos</label>
             <div id="participantes">
-                <?php foreach ($users as $item): ?>
-                    <div class="form-check">
-                        <label class="form-check-label" for="user-<?php echo $item->users_uid; ?>">
-                            <input class="form-check-input" type="checkbox" name="participantes[]"
-                                value="<?php echo $item->users_uid; ?>" id="user-<?php echo $item->users_uid; ?>">
-                            <span class="custom-checkbox"></span>
-                            <?php if (!empty($usuario->foto_perfil)) { ?>
-                                <img src="<?= URL_IMAGEM_150 . $item->foto_perfil ?>" alt="Profile Image"
-                                    class="imagemCircular">
-                            <?php } else { ?>
-                                <div class="imagemCircular"></div>
-                            <?php } ?>
-                            <?php echo $item->username; ?>
-                        </label>
-                    </div>
-                <?php endforeach; ?>
+                <?php
+                foreach ($users as $item) {
+                    $commonFound = false;
+                    foreach ($membroGrupo as $usuario) {
+                        if ($item->users_id == $usuario->users_id) {
+                            $commonFound = true;
+                        }
+                    }
+                    if (!$commonFound) { ?>
+                        <div class="form-check">
+                            <label class="form-check-label" for="user-<?php echo $item->users_uid; ?>">
+                                <input class="form-check-input" type="checkbox" name="participantes[]"
+                                    value="<?php echo $item->users_uid; ?>" id="user-<?php echo $item->users_uid; ?>">
+                                <span class="custom-checkbox"></span>
+                                <?php if (!empty($usuario->foto_perfil)) { ?>
+                                    <img src="<?= URL_IMAGEM_150 . $item->foto_perfil ?>" alt="Profile Image"
+                                        class="imagemCircular">
+                                <?php } else { ?>
+                                    <div class="imagemCircular"></div>
+                                <?php } ?>
+                                <?php echo $item->username; ?>
+                            </label>
+                        </div>
+                    <?php }
+                } ?>
             </div>
         </div>
 
@@ -328,9 +343,15 @@
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
         <div class="footer-bar">
+            <div id="copyMessage" class="alert alert-success mt-3">Link copiado compartilhe com seus amigos para eles
+                fazerem parte desse grupo.</div>
             <div class="footer-bar2">
                 <button id="go1" type="button" class="btn btn-primary">Voltar</button>
                 <button type="submit" class="btn btn-primary">Adicionar selecionados</button>
+
+                <button type="button" id="copyButton" class="btn btn-primary">Copiar link</button>
+
+
             </div>
         </div>
 
@@ -339,7 +360,34 @@
 </div>
 
 <script>
+    document.getElementById('copyButton').addEventListener('click', function () {
+        // URL to be copied
+        var url = '<?php echo URL_BASE . 'login/index/' . $grupos->grupos_id ?>';
 
+        // Create a temporary input element
+        var tempInput = document.createElement('input');
+        tempInput.style.position = 'absolute';
+        tempInput.style.left = '-9999px';
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
+
+        // Select the text and copy it
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // For mobile devices
+        document.execCommand('copy');
+
+        // Remove the temporary input element
+        document.body.removeChild(tempInput);
+
+        // Show the message
+        var copyMessage = document.getElementById('copyMessage');
+        copyMessage.style.display = 'block';
+
+        // Hide the message after 3 seconds
+        setTimeout(function () {
+            copyMessage.style.display = 'none';
+        }, 3000);
+    });
     function handleFileInputChange(event) {
 
         var file = event.target.files[0];
@@ -411,13 +459,21 @@
     });
 
     function vaiParaStep2() {
+        document.getElementById('step1').classList.remove('visible');
         document.getElementById('step1').classList.add('hidden');
-        document.getElementById('step2').classList.remove('hidden');
+        setTimeout(function () {
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step2').classList.add('visible');
+        }, 10);
     }
 
     function vaiParaStep1() {
+        document.getElementById('step2').classList.remove('visible');
         document.getElementById('step2').classList.add('hidden');
-        document.getElementById('step1').classList.remove('hidden');
+        setTimeout(function () {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step1').classList.add('visible');
+        }, 10);
     }
 
 </script>

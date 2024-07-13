@@ -18,14 +18,13 @@ class Usuarios_gruposService
             Service::begin_tran();
             $transaction = true;
         }
-        
         try {
             foreach ($participantes as $usuario) {
                 if (!self::estaNoGrupo($usuario, $Usuarios_grupos->grupos_id)) {
                     $usuarios = new \stdClass();
                     $usuarios->usuarios_grupos_id = 0;
                     $usuarios->grupos_id = $Usuarios_grupos->grupos_id;
-                    $usuarios->users_id = $usuario;
+                    $usuarios->users_id = service::getUsers_idComUid($usuario);
                     $validacao = Usuarios_gruposValidacao::salvar($usuarios);
                     Service::salvar($usuarios, self::CAMPO, $validacao->listaErros(), self::TABELA);
                 }
@@ -35,6 +34,7 @@ class Usuarios_gruposService
             }
             return 1;
         } catch (\Exception $e) {
+            i($e);
             Flash::setMsg('Erro ao adicionar os usuários.', -1);
             service::rollback();
             return 0;
