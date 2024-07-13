@@ -40,6 +40,7 @@ class UsersService
                     }
                 }
             }
+            i($Users);
         }
 
         return Service::salvar($Users, self::CAMPO, $validacao->listaErros(), self::TABELA);
