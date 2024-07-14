@@ -22,7 +22,7 @@ class UsersController extends Controller
     }*/
 
     public function edit($id)
-    {
+    {        
         UtilService::usuarioAutorizado($id);
         $dados["users"] = Service::get($this->tabela, $this->campo, $id);
         $dados["btnAtivo"] = "perfil";

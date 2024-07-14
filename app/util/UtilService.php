@@ -88,7 +88,7 @@ class UtilService
 
     public static function usuarioAutorizado($id)
     {
-        if(!isset($_SESSION['uid']) || !(($id != $_SESSION['uid']) || ($id != $_SESSION['id']))){
+        if(((!isset($_SESSION['uid'])) || (!isset($_SESSION['id']))) && !(($id != $_SESSION['uid']) || ($id != $_SESSION['id']))){
             throw new \Exception("Não autorizado", 401);     
         }  
     }
