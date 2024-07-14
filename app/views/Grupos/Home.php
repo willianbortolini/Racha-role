@@ -126,12 +126,10 @@
 
             <?php if (!empty($item->foto)) { ?>
                 <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                    <img src="<?= URL_IMAGEM_150 . $item->foto ?>" alt="Profile Image"
-                        style="width: 50px; height: 50px; border-radius: 50%;">
-
+                    <img src="<?= URL_IMAGEM_150 . $item->foto ?>" alt="Profile Image" class="rounded-circle"
+                        style="width: 50px; height: 50px; object-fit: cover;">
                 </div>
             <?php } ?>
-
             <strong><?php echo htmlspecialchars($group_name); ?></strong>
             <ul>
                 <?php $current_group = $group_id; ?>
@@ -176,11 +174,11 @@
         <?php } ?>
         <li class="grupo" <?php if ($group_id != -1) { ?>
                 onclick="location.href='<?php echo URL_BASE . 'grupos/edit/' . $group_id ?>'" <?php } ?>>
+
             <?php if (!empty($item->foto)) { ?>
                 <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                    <img src="<?= URL_IMAGEM_150 . $item->foto ?>" alt="Profile Image"
-                        style="width: 50px; height: 50px; border-radius: 50%;">
-
+                    <img src="<?= URL_IMAGEM_150 . $item->foto ?>" alt="Profile Image" class="rounded-circle"
+                        style="width: 50px; height: 50px; object-fit: cover;">
                 </div>
             <?php } ?>
             <strong><?php echo htmlspecialchars($group_name); ?></strong>

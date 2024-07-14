@@ -283,13 +283,13 @@
                 <?php foreach ($membroGrupo as $usuario) { ?>
                     <li class="list-group-item"
                         onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $usuario->users_uid ?>'">
-                        <div class="profile-image" style="display: inline-block; vertical-align: middle; ">
-                            <?php if (!empty($usuario->foto_perfil)) { ?>
-                                <img src="<?= URL_IMAGEM_150 . $usuario->foto_perfil ?>" alt="Profile Image" class="imagemCircular">
-                            <?php } else { ?>
-                                <div class="imagemCircular"></div>
-                            <?php } ?>
-                        </div>
+
+                        <?php if (!empty($usuario->foto_perfil)) { ?>
+                            <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                                <img src="<?= URL_IMAGEM_150 . $usuario->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+                            </div>
+                        <?php } ?>
                         <div class="name" style="display: inline-block; vertical-align: middle;">
                             <?= (empty($usuario->username)) ? $usuario->email : $usuario->username ?></br>
                         </div>
