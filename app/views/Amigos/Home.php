@@ -135,8 +135,8 @@
         }
     }
 
-    .card-body{
-    background-color: #ECCBAC;
+    .card-body {
+        background-color: #ECCBAC;
     }
 </style>
 <div class="mt-2">
@@ -163,12 +163,11 @@
             <li class="list-group-item"
                 onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_uid ?>'">
                 <?php if (!empty($despesa->foto_perfil)) { ?>
-                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                        <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image"
-                            style="width: 50px; height: 50px; border-radius: 50%;">
-
-                    </div>
-                <?php } ?>
+                        <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                            <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
+                                style="width: 50px; height: 50px; object-fit: cover;">
+                        </div>
+                    <?php } ?>
                 <div class="name" style="display: inline-block; vertical-align: middle;">
                     <?= (empty($despesa->username)) ? $despesa->email : $despesa->username ?>
                     </br>
@@ -196,14 +195,12 @@
             <?php if ($amigo->users_uid != $_SESSION['uid']) { ?>
                 <li class="list-group-item"
                     onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $amigo->users_uid ?>'">
-                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                        <?php if (!empty($amigo->foto_perfil)) { ?>
-                            <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image"
-                                style="width: 50px; height: 50px; border-radius: 50%;">
-                        <?php } else { ?>
-                            <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
-                        <?php } ?>
-                    </div>
+                    <?php if (!empty($amigo->foto_perfil)) { ?>
+                        <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                            <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
+                                style="width: 50px; height: 50px; object-fit: cover;">
+                        </div>
+                    <?php } ?>
                     <div class="name" style="display: inline-block; vertical-align: middle;">
                         <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?></br>
                         <?php echo (isset($amigo->pix)) ? "<span class='pix'>pix: " . $amigo->pix . " </span> " : "" ?>
