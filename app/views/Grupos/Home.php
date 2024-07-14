@@ -16,6 +16,7 @@
         margin-top: 10px;
         background-color: #f1f1f1;
         padding: 8px;
+        border-radius: 5px;
     }
 
     .lista {
@@ -85,19 +86,28 @@
             padding: 10px 20px;
         }
     }
+
+    .card-body {
+        background-color: #ECCBAC;
+    }
 </style>
 <div class="mt-2">
-    <a href="<?php echo URL_BASE . 'grupos/create' ?>" class="btn btn-outline-info"> <i class="fa fa-plus"></i>
+    <a href="<?php echo URL_BASE . 'grupos/create' ?>" class="btn btn-outline-secondary"> <i class="fa fa-plus"></i>
         Adicionar grupo</a>
 </div>
-<hr>
-<h5>No total,
-    <?php if ($saldo > 0) { ?>
-        devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
-    <?php } else { ?>
-        você deve <span class="deveAvoce">R$ <?= number_format($saldo * -1, 2, ',', '.') ?></span>
-    <?php } ?>
-</h5>
+
+<div class="card mt-2">
+    <div class="card-body">
+        <h5 class="card-title">No total,</h5>
+        <?php if ($saldo > 0) { ?>
+            <p class="card-text">Devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
+            </p>
+        <?php } else { ?>
+            <p class="card-text">Você deve <span class="deveAvoce">R$ <?= number_format($saldo * -1, 2, ',', '.') ?></span>
+            </p>
+        <?php } ?>
+    </div>
+</div>
 <ul class="lista">
     <?php $current_group = null;
     foreach ($minhasDespesas as $item) { ?>
@@ -113,6 +123,15 @@
         <?php } ?>
         <li class="grupo <?php echo ($group_id != -1) ? "grupoClicavel" : ""; ?>" <?php if ($group_id != -1) { ?>
                 onclick="location.href='<?php echo URL_BASE . 'grupos/edit/' . $group_id ?>'" <?php } ?>>
+
+            <?php if (!empty($item->foto)) { ?>
+                <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <img src="<?= URL_IMAGEM_150 . $item->foto ?>" alt="Profile Image"
+                        style="width: 50px; height: 50px; border-radius: 50%;">
+
+                </div>
+            <?php } ?>
+
             <strong><?php echo htmlspecialchars($group_name); ?></strong>
             <ul>
                 <?php $current_group = $group_id; ?>
@@ -156,7 +175,14 @@
             </li>
         <?php } ?>
         <li class="grupo" <?php if ($group_id != -1) { ?>
-            onclick="location.href='<?php echo URL_BASE . 'grupos/edit/' . $group_id ?>'" <?php } ?>>
+                onclick="location.href='<?php echo URL_BASE . 'grupos/edit/' . $group_id ?>'" <?php } ?>>
+            <?php if (!empty($item->foto)) { ?>
+                <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <img src="<?= URL_IMAGEM_150 . $item->foto ?>" alt="Profile Image"
+                        style="width: 50px; height: 50px; border-radius: 50%;">
+
+                </div>
+            <?php } ?>
             <strong><?php echo htmlspecialchars($group_name); ?></strong>
             <ul>
                 <?php $current_group = $group_id; ?>
@@ -181,7 +207,7 @@
         <span>Grupos</span>
     </a>
 
-    <a href="<?php echo URL_BASE . 'Despesas/create' ?>" class="btn btn-outline-primary">
+    <a href="<?php echo URL_BASE . 'Despesas/create' ?>" class="btn btn-outline-secondary">
         <i class="fa fa-plus"></i>
         <span>Adicionar</span>
     </a>

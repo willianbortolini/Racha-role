@@ -1,7 +1,7 @@
 <style>
     .list-group-item {
         cursor: pointer;
-        padding: 15px;
+        padding: 15px 0px;
         border: none;
         transition: background-color 0.3s;
         display: flex;
@@ -66,8 +66,8 @@
     }
 
     .list-group-item .pix {
-        font-weight: 500;
-        font-size: 0.9rem;
+        font-weight: 400;
+        color: #6f6f6f;
         font-size: medium;
     }
 
@@ -134,78 +134,87 @@
             padding: 10px 20px;
         }
     }
+
+    .card-body{
+    background-color: #ECCBAC;
+    }
 </style>
 <div class="mt-2">
-    <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-info"> <i class="fa fa-plus"></i>
+    <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-secondary"> <i class="fa fa-plus"></i>
         Adicionar amigo</a>
 </div>
-<hr>
 
-<h5>No total,
-    <?php if ($saldo > 0) { ?>
-        devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
-    <?php } else { ?>
-        você deve <span class="deveAvoce">R$ <?= number_format($saldo * -1, 2, ',', '.') ?></span>
-    <?php } ?>
-</h5>
-<ul class="list-group">
-    <?php foreach ($minhasDespesas as $despesa) { ?>
-        <li class="list-group-item"
-            onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_uid ?>'">
-            <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                <?php if (!empty($despesa->foto_perfil)) { ?>
-                    <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image"
-                        style="width: 50px; height: 50px; border-radius: 50%;">
-                <?php } else { ?>
-                    <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
-                <?php } ?>
-            </div>
-            <div class="name" style="display: inline-block; vertical-align: middle;">
-                <?= (empty($despesa->username)) ? $despesa->email : $despesa->username ?>
-                </br>
-                <?php echo (isset($despesa->pix)) ? "<span class='pix'>pix: " . $despesa->pix . " </span> " : "" ?>
-            </div>
-            <?php if ($despesa->valor > 0) { ?>
-                <div class="valor">
-                    <span class="description deveAvoce">deve a você</span>
-                    <span class="amount deveAvoce">R$ <?= number_format($despesa->valor, 2, ',', '.') ?></span>
-                </div>
+<div class="card mt-2">
+    <div class="card-body">
+        <h5 class="card-title">No total,</h5>
+        <?php if ($saldo > 0) { ?>
+            <p class="card-text">Devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
+            </p>
+        <?php } else { ?>
+            <p class="card-text">Você deve <span class="deveAvoce">R$ <?= number_format($saldo * -1, 2, ',', '.') ?></span>
+            </p>
+        <?php } ?>
+    </div>
+</div>
 
-            <?php } else { ?>
-                <div class="valor">
-                    <span class="description voceDeve">você deve</span>
-                    <span class="amount voceDeve">R$ <?= number_format($despesa->valor * -1, 2, ',', '.') ?></span>
-                </div>
-            <?php } ?>
-
-        </li>
-    <?php } ?>
-</ul>
-
-<ul class="list-group">
-    <?php foreach ($todosAmigos as $amigo) { ?>
-        <?php if ($amigo->users_uid != $_SESSION['uid']) { ?>
+<div class="inf">
+    <ul class="list-group">
+        <?php foreach ($minhasDespesas as $despesa) { ?>
             <li class="list-group-item"
-                onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $amigo->users_uid ?>'">
-                <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                    <?php if (!empty($amigo->foto_perfil)) { ?>
-                        <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image"
+                onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_uid ?>'">
+                <?php if (!empty($despesa->foto_perfil)) { ?>
+                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                        <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image"
                             style="width: 50px; height: 50px; border-radius: 50%;">
-                    <?php } else { ?>
-                        <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
-                    <?php } ?>
-                </div>
+
+                    </div>
+                <?php } ?>
                 <div class="name" style="display: inline-block; vertical-align: middle;">
-                    <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?></br>
-                    <?php echo (isset($amigo->pix)) ? "<span class='pix'>pix: " . $amigo->pix . " </span> " : "" ?>
+                    <?= (empty($despesa->username)) ? $despesa->email : $despesa->username ?>
+                    </br>
+                    <?php echo (isset($despesa->pix)) ? "<span class='pix'>pix: " . $despesa->pix . " </span> " : "" ?>
                 </div>
+                <?php if ($despesa->valor > 0) { ?>
+                    <div class="valor">
+                        <span class="description deveAvoce">deve a você</span>
+                        <span class="amount deveAvoce">R$ <?= number_format($despesa->valor, 2, ',', '.') ?></span>
+                    </div>
+
+                <?php } else { ?>
+                    <div class="valor">
+                        <span class="description voceDeve">você deve</span>
+                        <span class="amount voceDeve">R$ <?= number_format($despesa->valor * -1, 2, ',', '.') ?></span>
+                    </div>
+                <?php } ?>
 
             </li>
         <?php } ?>
-    <?php } ?>
-</ul>
+    </ul>
 
-<div class="footer-bar">
+    <ul class="list-group">
+        <?php foreach ($todosAmigos as $amigo) { ?>
+            <?php if ($amigo->users_uid != $_SESSION['uid']) { ?>
+                <li class="list-group-item"
+                    onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $amigo->users_uid ?>'">
+                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                        <?php if (!empty($amigo->foto_perfil)) { ?>
+                            <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image"
+                                style="width: 50px; height: 50px; border-radius: 50%;">
+                        <?php } else { ?>
+                            <div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%;"></div>
+                        <?php } ?>
+                    </div>
+                    <div class="name" style="display: inline-block; vertical-align: middle;">
+                        <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?></br>
+                        <?php echo (isset($amigo->pix)) ? "<span class='pix'>pix: " . $amigo->pix . " </span> " : "" ?>
+                    </div>
+
+                </li>
+            <?php } ?>
+        <?php } ?>
+    </ul>
+
+    <div class="footer-bar">
 
         <a href="<?php echo URL_BASE . 'amigos/home' ?>"
             class="btn <?php echo ($btnAtivo == "amigos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
@@ -218,7 +227,7 @@
             <span>Grupos</span>
         </a>
 
-        <a href="<?php echo URL_BASE . 'Despesas/create' ?>" class="btn btn-outline-primary">
+        <a href="<?php echo URL_BASE . 'Despesas/create' ?>" class="btn btn-outline-secondary">
             <i class="fa fa-plus"></i>
             <span>Adicionar</span>
         </a>
@@ -233,16 +242,5 @@
             <span>Perfil</span>
         </a>
 
+    </div>
 </div>
-
-
-
-<script>
-    /* document.querySelectorAll('.list-group-item').forEach(item => {
-         item.addEventListener('click', function(e) {
-             if (!e.target.closest('.btn')) {
-                 window.location.href = this.getAttribute('onclick').replace('location.href=', '').replace(/'/g, '');
-             }
-         });
-     });*/
-</script>

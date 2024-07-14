@@ -56,7 +56,8 @@ class GruposDao extends Model
                         )
                         SELECT 
                             g.grupos_id,
-                            g.nome AS nome_grupo
+                            g.nome AS nome_grupo,
+                            g.foto
                         FROM 
                             grupos g
                         LEFT JOIN saldos s ON

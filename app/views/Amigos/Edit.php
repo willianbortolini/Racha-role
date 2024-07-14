@@ -246,8 +246,7 @@
 <form action="<?php echo URL_BASE . "Amigos/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div class="form-group mb-2">
-        <label for="amigo">E-mail ou telefone do amigo</label>
-        <input type="text" class="form-control" id="amigo" name="amigo"
+        <input type="text" class="input-field" id="amigo" name="amigo" placeholder="E-mail ou telefone do amigo"
             value="<?php echo (isset($convites->amigo)) ? $convites->amigo : ''; ?>" required>
     </div>
 
@@ -257,12 +256,11 @@
 
     <div class="footer-bar">
         <div class="footer-bar2">
-        <div class="col-auto">
-                <a href="<?php echo URL_BASE ?>" class="btn btn-primary">Voltar</a>
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Adicionar</button>
-            </div>
+                <a href="<?php echo URL_BASE ?>" class="btn btn-outline-secondary">Voltar</a>
+          
+            
+                <button type="submit" class="btn btn-outline-secondary">Adicionar</button>
+            
             
         </div>
     </div>

@@ -184,7 +184,7 @@ class Participantes_despesasDao extends Model
                         s.usuario AS users_id,
                         u.username AS username,
                         -s.saldo AS valor,
-                        s.grupos_id, grupos.nome nome_grupo
+                        s.grupos_id, grupos.nome nome_grupo, grupos.foto
                     FROM 
                         saldos s
                     INNER JOIN 
