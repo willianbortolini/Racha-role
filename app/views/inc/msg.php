@@ -5,11 +5,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700');
 .msg{
 	display: block;
-    background: #de6d6d;
     border-radius: 5px;
     padding: 10px;
-    border: solid 1px #d74e4e;
-    color: #7f2e2e;
     font-weight: 600;
 	margin:5px auto;
 	font-family: 'Roboto', sans-serif;
