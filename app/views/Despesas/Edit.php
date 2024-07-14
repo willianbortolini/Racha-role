@@ -221,9 +221,9 @@
 
         <div class="footer-bar">
             <div class="footer-bar2">
-                <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-primary">voltar</a>
+                <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-outline-secondary">voltar</a>
 
-                <button type="button" class="btn btn-primary mb-2" id="step1-complete">Selecionar participantes</button>
+                <button type="button" class="btn btn-outline-secondary mb-2" id="step1-complete">Selecionar participantes</button>
                 <div class="date-picker-wrapper">
                     <span class="calendar-icon">&#128197;</span>
                     <input type="date" id="data" name="data"
@@ -296,9 +296,9 @@
                 Valor Total: R$ 0.00 | Adicionado: R$ 0.00
             </div>
             <div class="footer-bar2">
-                <button type="button" class="btn btn-primary mb-2" id="step1-return">
+                <button type="button" class="btn btn-outline-secondary mb-2" id="step1-return">
                     Voltar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-outline-secondary">Salvar</button>
             </div>
         </div>
     </div>

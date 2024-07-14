@@ -25,6 +25,7 @@
     .input-field:focus::placeholder {
         color: transparent;
     }
+
     .deveAvoce {
         color: #00a5a5;
     }
@@ -131,6 +132,7 @@
             padding: 10px 20px;
         }
     }
+
     .list-group-item {
         cursor: pointer;
         padding: 15px;
@@ -185,49 +187,56 @@
         font-weight: 600 !important;
     }
 </style>
-<h5>
-    <?php echo (isset($pagamentos->pagamentos_id)) ? 'Editar Pagamentos' : 'Pagamentos'; ?>
-</h5>
+</head>
 
-<form action="<?php echo URL_BASE   . "Pagamentos/save" ?>" method="POST" enctype="multipart/form-data">
+<body>
+    <div class="container mt-4">
+        <h5>
+            <?php echo (isset($pagamentos->pagamentos_id)) ? 'Editar Pagamentos' : 'Pagamentos'; ?>
+        </h5>
 
-    <div class="form-group mb-2">
-        <label for="pagador"></label>
-        <select class="form-select" aria-label="Default select example" name="pagador">
-            <?php foreach ($users as $item) {
-                echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->pagador ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
-            } ?>
-        </select>
+        <form action="<?php echo URL_BASE . "Pagamentos/save" ?>" method="POST" enctype="multipart/form-data">
+
+            <div class="form-group mb-3">
+                <label for="pagador">Pagador</label>
+                <select class="form-select" aria-label="Default select example" name="pagador" id="pagador">
+                    <?php foreach ($users as $item) {
+                        echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->pagador ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
+                    } ?>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="recebedor">Recebedor</label>
+                <select class="form-select" aria-label="Default select example" name="recebedor" id="recebedor">
+                    <?php foreach ($users as $item) {
+                        echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->recebedor ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
+                    } ?>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="valor">Valor</label>
+                <input type="number" class="input-field form-control" id="valor" name="valor" step="0.01"
+                    value="<?php echo (isset($pagamentos->valor)) ? $pagamentos->valor : ''; ?>" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="data">Data</label>
+                <input type="date" class="input-field form-control" id="data" name="data"
+                    value="<?php echo (isset($pagamentos->data)) ? $pagamentos->data : date('Y-m-d'); ?>" required>
+            </div>
+
+            <input type="hidden" name="pagamentos_id"
+                value="<?php echo (isset($pagamentos->pagamentos_id)) ? $pagamentos->pagamentos_id : NULL; ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+            <div class="footer-bar">
+                <div class="footer-bar2">
+                    <button type="button" onclick="window.history.back()"
+                        class="btn btn-outline-secondary">Voltar</button>
+                    <button type="submit" class="btn btn-outline-secondary">Salvar</button>
+                </div>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group mb-2">
-        <label for="recebedor">vai pagar a</label>
-        <select class="form-select" aria-label="Default select example" name="recebedor">
-            <?php foreach ($users as $item) {
-                echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->recebedor ? "selected" : "") . ">".((empty($item->username)) ? $item->email : $item->username)."</option>";
-            } ?>
-        </select>
-    </div>
-
-    <div class="form-group mb-2 col-6">
-        <label for="valor">Valor</label>
-        <input type="number" class="input-field" id="valor" name="valor" step="0.01" value="<?php echo (isset($pagamentos->valor)) ? $pagamentos->valor : ''; ?>" required>
-    </div>
-
-    <div class="form-group mb-2 col-6">
-        <label for="data">Data</label>
-        <input type="date" class="input-field" id="data" name="data" value="<?php echo (isset($pagamentos->data)) ? $pagamentos->data : date('Y-m-d'); ?>" required>
-    </div>
-
-
-    <input type="hidden" name="pagamentos_id" value="<?php echo (isset($pagamentos->pagamentos_id)) ? $pagamentos->pagamentos_id : NULL; ?>">
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-
-    <div class="footer-bar">
-        <div class="footer-bar2">
-            
-            <button type="button" onclick="window.history.back()" class="btn btn-primary">Voltar</button>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-    </div>
-</form>

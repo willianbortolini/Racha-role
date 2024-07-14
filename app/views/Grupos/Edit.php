@@ -267,11 +267,11 @@
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <div class="footer-bar">
             <div class="footer-bar2">
-                <a href="<?php echo URL_BASE . "Grupos/home" ?>" class="btn btn-primary">Voltar</a>
+                <a href="<?php echo URL_BASE . "Grupos/home" ?>" class="btn btn-outline-secondary">Voltar</a>
                 <?php if (isset($grupos->grupos_id)) { ?>
-                    <button id="go2" type="button" class="btn btn-primary">Adicionar amigos</button>
+                    <button id="go2" type="button" class="btn btn-outline-secondary">Adicionar amigos</button>
                 <?php } ?>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-outline-secondary">Salvar</button>
             </div>
         </div>
 
@@ -347,10 +347,10 @@
             <div id="copyMessage" class="alert alert-success mt-3">Link copiado compartilhe com seus amigos para eles
                 fazerem parte desse grupo.</div>
             <div class="footer-bar2">
-                <button id="go1" type="button" class="btn btn-primary">Voltar</button>
-                <button type="submit" class="btn btn-primary">Adicionar selecionados</button>
+                <button id="go1" type="button" class="btn btn-outline-secondary">Voltar</button>
+                <button type="submit" class="btn btn-outline-secondary">Adicionar selecionados</button>
 
-                <button type="button" id="copyButton" class="btn btn-primary">Copiar link</button>
+                <button type="button" id="copyButton" class="btn btn-outline-secondary">Copiar link</button>
 
 
             </div>

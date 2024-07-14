@@ -273,19 +273,19 @@
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
     <div class="col-auto mt-4">
-        <a href="<?php echo URL_BASE . 'Politicaprivacidade' ?>" class="btn btn-primary" target="_blank">Política de
+        <a href="<?php echo URL_BASE . 'Politicaprivacidade' ?>" class="btn btn-outline-secondary" target="_blank">Política de
             privacidade</a>
     </div>
     <div class="col-auto mt-4">
-        <a href="<?php echo URL_BASE . "login/esqueci" ?>" class="btn btn-primary">Esqueci minha senha</a>
+        <a href="<?php echo URL_BASE . "login/esqueci" ?>" class="btn btn-outline-secondary">Esqueci minha senha</a>
     </div>
     <?php if ($users->ativo == 1) { ?>
         <div class="col-auto mt-4">
-            <a href="<?php echo URL_BASE . "users/desativar" ?>" class="btn btn-primary">desativar perfil</a>
+            <a href="<?php echo URL_BASE . "users/desativar" ?>" class="btn btn-outline-secondary">desativar perfil</a>
         </div>
     <?php } else { ?>
         <div class="col-auto mt-4">
-            <a href="<?php echo URL_BASE . "users/ativar" ?>" class="btn btn-primary">reativar perfil</a>
+            <a href="<?php echo URL_BASE . "users/ativar" ?>" class="btn btn-outline-secondary">reativar perfil</a>
         </div>
     <?php } ?>
 
@@ -293,8 +293,8 @@
 
     <div class="footer-bar">
         <div class="footer-bar2">
-            <a href="<?php echo URL_BASE ?>" class="btn btn-primary">Voltar</a>
-            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="<?php echo URL_BASE ?>" class="btn btn-outline-secondary">Voltar</a>
+            <button type="submit" class="btn btn-outline-secondary">Salvar</button>
         </div>
     </div>
 </form>
