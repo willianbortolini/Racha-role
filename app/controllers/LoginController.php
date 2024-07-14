@@ -91,12 +91,12 @@ class LoginController extends Controller
             $corpoEmail = "<style type='text/css'>"
                 . ".botao-email{border: solid 1px #21dc85;background: #60e2a6;cursor: pointer;font-size: 17px;padding: 5px 30px;margin: 5px;text-align: center;text-transform: uppercase;text-decoration: none;color:black;}"
                 . "</style>"
-                . "Recuperação de senha cursoswill <br>"
+                . "Recuperação de senha racharole <br>"
                 . "Clique no botão abaixo para cadastrar uma nova senha.<br>"
                 . "<p><a class='botao-email' href='" . URL_BASE . "login/redefinirSenha/" . $codigo_acesso . "'>Redefinir</a></p><br>";
 
             $de = "recuperacaosenha@invtrack.tech";
-            $from = "solicitacao@cursoswill.site";
+            $from = "solicitacao@racharole.site";
             $resposta = Service::email($usuario->email, "Recuperação senha W9B2", $corpoEmail, $de, $from);
             Flash::setMsg("Email de recuperação enviado ", 1);
             $this->redirect(URL_BASE);

@@ -1,13 +1,13 @@
 {
   "background_color": "#ffffff",
-  "description": "Sistema de inventario",
+  "description": "Divisão de despesas",
   "dir": "ltr",
   "display": "standalone",
-  "name": "invtrack",
+  "name": "RAacha Role",
   "orientation": "any",
   "scope": "/",
-  "short_name": "invtrack",
-  "start_url": "https://invtrack.tech",
+  "short_name": "Racha Role",
+  "start_url": "https://racharole.site",
   "theme_color": "#ffffff",
   "categories": [
     "utilities"
@@ -21,6 +21,6 @@
     }
   ],
   "shortcuts": [],
-  "id": "invtrack",
+  "id": "racharole",
   "iarc_rating_id": "18"
 }

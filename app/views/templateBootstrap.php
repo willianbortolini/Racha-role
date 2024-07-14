@@ -7,9 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <title>InvTrack
-    <?php //echo $titulo 
-    ?>
+  <title>Racha Role
   </title>
   <link rel="manifest" type="text/css" href="<?php echo URL_BASE  . "manifest.json" ?>">
   <script>
