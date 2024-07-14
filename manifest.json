@@ -3,10 +3,10 @@
   "description": "Divisão de despesas",
   "dir": "ltr",
   "display": "standalone",
-  "name": "RAacha Role",
+  "name": "Racha Rolê",
   "orientation": "any",
   "scope": "/",
-  "short_name": "Racha Role",
+  "short_name": "Racha Rolê",
   "start_url": "https://racharole.site",
   "theme_color": "#ffffff",
   "categories": [
