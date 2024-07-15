@@ -330,7 +330,7 @@
                                 <?php } else { ?>
                                     <div class="imagemCircular"></div>
                                 <?php } ?>
-                                <?php echo $item->username; ?>
+                                <?= (empty($item->username)) ? $item->email : $item->username ?>
                             </label>
                         </div>
                     <?php }
