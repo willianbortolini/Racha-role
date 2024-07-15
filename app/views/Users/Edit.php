@@ -258,13 +258,13 @@
         <div class="form-group mb-2">
             <label for="telefone">Telefone</label>
             <input type="text" class="input-field" id="telefone" name="telefone"
-                value="<?php echo (isset($users->telefone)) ? $users->telefone : ''; ?>" required>
+                value="<?php echo (isset($users->telefone)) ? $users->telefone : ''; ?>" >
         </div>
 
         <div class="form-group mb-2">
             <label for="pix">Pix</label>
             <input type="text" class="input-field" id="pix" name="pix"
-                value="<?php echo (isset($users->pix)) ? $users->pix : ''; ?>" required>
+                value="<?php echo (isset($users->pix)) ? $users->pix : ''; ?>" >
         </div>
 
 
