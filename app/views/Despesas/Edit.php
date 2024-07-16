@@ -205,14 +205,15 @@
 <form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
 
     <div id="step1" class="container mt-4">
-                <div class="input-container">
+        <div class="input-container">
             <input type="text" id="descricao" name="descricao" class="input-field" placeholder="Adicione uma descrição"
                 value="<?php echo (isset($despesas->descricao)) ? $despesas->descricao : ''; ?>" required>
         </div>
 
         <div class="input-container mt-4">
-            <input type="number" id="valor-total" inputmode="decimal" name="valor" class="input-field" placeholder="0,00"
-                value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required>
+            <input type="number" id="valor-total" inputmode="decimal" name="valor" class="input-field"
+                placeholder="0,00" value="<?php echo (isset($despesas->valor)) ? $despesas->valor : ''; ?>" required
+                step="0.01">
         </div>
 
         <input type="hidden" name="despesas_id"
@@ -223,7 +224,8 @@
             <div class="footer-bar2">
                 <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-outline-secondary">voltar</a>
 
-                <button type="button" class="btn btn-outline-secondary mb-2" id="step1-complete">Selecionar participantes</button>
+                <button type="button" class="btn btn-outline-secondary mb-2" id="step1-complete">Selecionar
+                    participantes</button>
                 <div class="date-picker-wrapper">
                     <span class="calendar-icon">&#128197;</span>
                     <input type="date" id="data" name="data"
@@ -309,7 +311,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        
+
 
         const participantesDiv = document.getElementById('participantes');
         const valorTotalInput = document.getElementById('valor-total');
@@ -348,6 +350,8 @@
                 valorInput.className = 'input-valor';
                 valorInput.placeholder = '0,00';
                 valorInput.value = '';
+                valorInput.step = '0.01';
+                valorInput.inputMode = 'decimal';
                 valorInput.addEventListener('input', updateTotalDisplay);
                 formCheckDiv.appendChild(valorInput);
             }
@@ -401,6 +405,7 @@
             inputs.forEach(input => {
                 input.disabled = false; // Habilitar todos os inputs antes de submeter
             });
+            valorTotalInput.disabled = false; // Habilitar campo valor antes de submeter
         });
 
         habilitarInputsButton.addEventListener('click', function () {
@@ -443,6 +448,8 @@
                 valorInput.name = 'valorporparticipante[]';
                 valorInput.className = 'input-valor input-field';
                 valorInput.placeholder = '0,00'
+                valorInput.step = '0.01';
+                valorInput.inputMode = 'decimal';
                 valorInput.value = valorDividido.toFixed(2); // Formatar valor com duas casas decimais
                 valorInput.disabled = true; // Inicialmente desabilitado
                 valorInput.addEventListener('input', updateTotalDisplay);
