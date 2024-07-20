@@ -5,6 +5,7 @@ namespace app\models\service;
 use app\models\validacao\DespesasValidacao;
 use app\models\dao\DespesasDao;
 use app\util\UtilService;
+use app\models\service\PushService;
 use app\core\Flash;
 
 class DespesasService
@@ -35,15 +36,24 @@ class DespesasService
                     $participantes_despesas->users_id = $participantes_id;
                     $participantes_despesas->devendo_para = $despesas->users_id;
                     $participantes_despesas->valor = $valorPorParticipante;
-                    if(Participantes_despesasService::salvar($participantes_despesas) <= 1){                       
-                        throw new \Exception('ao salvar a despesa do participante: ' . $participantes_id);   
+                    if (Participantes_despesasService::salvar($participantes_despesas) <= 1) {
+                        throw new \Exception('ao salvar a despesa do participante: ' . $participantes_id);
+                    }
+
+                    $usuario = Service::get('users', 'users_id', $participantes_id);
+                    // Verifica se a propriedade 'subscription' está definida e não é nula
+                    
+                    if (isset($usuario->subscription)) {
+                        // Se a propriedade 'subscription' está definida, executa o código abaixo
+                        $mensagem = 'Despesa ' . $despesas->descricao . ' no valor de ' . $valorPorParticipante . ' adicionada por ' . $usuario->username;
+                        PushService::push($usuario->subscription, 'Nova despesa', $mensagem);
                     }
                 }
             }
             service::commit();
             return $despesa;
         } catch (\Exception $e) {
-            Flash::setMsg('Erro '. $e->getMessage(), -1);
+            Flash::setMsg('Erro ' . $e->getMessage(), -1);
             service::rollback();
             return 0;
         }

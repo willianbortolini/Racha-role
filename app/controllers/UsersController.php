@@ -55,6 +55,30 @@ class UsersController extends Controller
             }
         }
     }
+
+    public function saveSubscription()
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $subscription = isset($input['subscription']) ? $input['subscription'] : null;
+        $userId = isset($input['userId']) ? $input['userId'] : null;
+        if ($subscription && $userId) {
+            $users = new \stdClass();
+            $users->users_id =  $userId;
+            $users->subscription =  $subscription;
+            // Executa a query
+            if (UsersService::salvar($users) == 1) //se é maior que um inseriu novo 
+            {
+                Flash::limpaMsg();
+                echo "Subscription saved successfully.";
+            } else {
+                Flash::limpaMsg();
+                echo "Error";
+            }
+        } else {
+            Flash::limpaMsg();
+            echo "Invalid input.";
+        }
+    }
     
     public function save()
     {

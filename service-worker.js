@@ -45,3 +45,29 @@ self.addEventListener('fetch', (event) => {
     })());
   }
 });
+
+self.addEventListener("push", (event) => {
+  // Verifique se há dados na notificação recebida
+  if (event.data) {
+    const notif = event.data.json().notification;
+
+    // Exibir a notificação
+    event.waitUntil(
+      self.registration.showNotification(notif.title, {
+        body: notif.body,
+        icon: notif.icon, // Ajuste para usar 'icon' ao invés de 'image'
+        data: {
+          url: notif.click_action // Ajuste para usar 'click_action' para URL de clique
+        }
+      })
+    );
+  }
+});
+
+// Adicionar listener para clicar na notificação
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow(event.notification.data.url)
+  );
+});

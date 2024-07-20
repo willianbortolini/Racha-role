@@ -163,11 +163,11 @@
             <li class="list-group-item"
                 onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_uid ?>'">
                 <?php if (!empty($despesa->foto_perfil)) { ?>
-                        <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                            <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
-                                style="width: 50px; height: 50px; object-fit: cover;">
-                        </div>
-                    <?php } ?>
+                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                        <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
+                            style="width: 50px; height: 50px; object-fit: cover;">
+                    </div>
+                <?php } ?>
                 <div class="name" style="display: inline-block; vertical-align: middle;">
                     <?= (empty($despesa->username)) ? $despesa->email : $despesa->username ?>
                     </br>
@@ -241,3 +241,64 @@
 
     </div>
 </div>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3Jhp9_OWc8O8xtrGCDWLugeLK0gATMUE",
+        authDomain: "racha-role.firebaseapp.com",
+        projectId: "racha-role",
+        storageBucket: "racha-role.appspot.com",
+        messagingSenderId: "716135852152",
+        appId: "1:716135852152:web:16c6bd5077f6adbf09258d"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    navigator.serviceWorker.register("<?php echo URL_BASE ?>service-worker.js").then(registration => {
+        getToken(messaging, {
+            serviceWorkerRegistration: registration,
+            vapidKey: 'BG3_X9Vofsg3fEYvjY14WXwhLcGqj5cvEssjkec1lRSa1W79uirtujZWjXeYFBbQapYyKrQpQBRC8q0qbMlp2DA'
+        }).then((currentToken) => {
+            if (currentToken) {
+                fetch('<?php echo URL_BASE ?>users/saveSubscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        subscription: currentToken,
+                        userId: <?php echo $_SESSION['id'] ?>
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        console.log('Subscription saved successfully.');
+                    } else {
+                        console.log('Failed to save subscription.');
+                    }
+                }).catch((error) => {
+                    console.error('Error saving subscription:', error);
+                });
+            } else {
+                // Show permission request UI
+                console.log('No registration token available. Request permission to generate one.');
+                // ...
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+            // ...
+        });
+    });
+
+
+
+</script>
