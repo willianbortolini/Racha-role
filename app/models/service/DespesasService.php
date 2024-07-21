@@ -41,11 +41,12 @@ class DespesasService
                     }
 
                     $usuario = Service::get('users', 'users_id', $participantes_id);
+                    $usuarioCadastro = Service::get('users', 'users_id', $_SESSION['id']);
                     // Verifica se a propriedade 'subscription' está definida e não é nula
                     
-                    if (isset($usuario->subscription) && ($usuario->users_id != $_SESSION['id'])) {
+                    if (isset($usuario->subscription) && ($usuario->users_id != $usuarioCadastro->users_id )) {
                         // Se a propriedade 'subscription' está definida, executa o código abaixo
-                        $mensagem = 'Despesa ' . $despesas->descricao . ' no valor de ' . $valorPorParticipante . ' adicionada por ' . $usuario->username;
+                        $mensagem = 'Despesa ' . $despesas->descricao . ' no valor de ' . moedaBr($valorPorParticipante) . ' adicionada por ' . $usuarioCadastro->username;
                         PushService::push($usuario->subscription, 'Nova despesa', $mensagem);
                     }
                 }
