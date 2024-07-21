@@ -9,6 +9,7 @@ use app\core\Flash;
 use app\models\service\Service;
 use app\models\service\ConvitesService;
 use app\models\service\Participantes_despesasService;
+use app\models\service\UsersService;
 
 class AmigosController extends Controller
 {
@@ -22,6 +23,22 @@ class AmigosController extends Controller
     }
 
     public function home() {  
+
+        $dadosUsuario = Service::get("users", "users_id", $_SESSION['id']);
+        if(!isset($dadosUsuario->auth_token)){
+            $newAuthToken = bin2hex(random_bytes(32));
+            $users = new \stdClass();
+            $users->users_id =  $_SESSION['id'];
+            $users->auth_token =  $newAuthToken;
+ 
+            if (UsersService::salvar($users) == 1) 
+            {
+                $dados["newAuthToken"] = $newAuthToken;
+            }
+        }else{
+            $dados["newAuthToken"] = $dadosUsuario->auth_token ; 
+        }
+
         $dados["minhasDespesas"] = Participantes_despesasService::resumoValoresAmigos($_SESSION['id']);
         $todosAmigos = AmigosService::meusAmigos($_SESSION['id']);
 
@@ -76,3 +93,4 @@ class AmigosController extends Controller
         }
     }
 }
+

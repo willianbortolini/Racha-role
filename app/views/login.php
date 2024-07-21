@@ -42,3 +42,34 @@
     </div>
   </div>
 </div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Função para verificar o token
+            function checkAuth() {
+                const token = localStorage.getItem('authTokenRachaRole');
+                console.log(token);
+                if (token) {
+                    fetch('<?php echo URL_BASE . 'login/loginComToken' ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ token: token })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.status === 'ok') {
+                            window.location.href = '<?php echo URL_BASE . 'amigos/Home' ?>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao verificar o token:', error);
+                    });
+                }
+            }
+
+            checkAuth();
+        });
+    </script>

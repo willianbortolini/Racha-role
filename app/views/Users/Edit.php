@@ -298,7 +298,7 @@
             </button>
         </div>
     </div>
-    <a class="nav-link text-wrapper-4  mt-4 text-danger" href="<?php echo URL_BASE . 'login/logoff' ?>">SAIR</a>
+    <a id="logout-link" class="nav-link text-wrapper-4  mt-4 text-danger" href="#' ?>">SAIR</a>
 
     <div class="footer-bar">
         <div class="footer-bar2">
@@ -309,6 +309,12 @@
 </form>
 
 <script>
+
+    document.getElementById('logout-link').addEventListener('click', function (event) {
+        event.preventDefault(); 
+        localStorage.removeItem('authTokenRachaRole');
+        window.location.href = '<?php echo URL_BASE . 'login/logoff' ?>'; 
+    });
 
     function handleFileInputChange(event) {
 

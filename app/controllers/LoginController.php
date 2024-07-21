@@ -14,9 +14,9 @@ class LoginController extends Controller
     public function index($grupo = 0)
     {
         $dados["authUrl"] = LoginService::urlGoogle();
-        if($grupo >0){
+        if ($grupo > 0) {
             $_SESSION['group_id'] = $grupo;
-        }        
+        }
         $dados["view"] = "login";
         $this->load("template", $dados);
     }
@@ -29,8 +29,8 @@ class LoginController extends Controller
     }*/
 
     public function google()
-    {        
-        if (isset($_GET['code'])) {           
+    {
+        if (isset($_GET['code'])) {
             LoginService::loginGoogle($_GET['code']);
             Flash::limpaErro();
             Flash::limpaMsg();
@@ -50,7 +50,7 @@ class LoginController extends Controller
         $senha = isset($_POST["senha"]) ? filter_input(INPUT_POST, "senha") : null;
 
         Flash::setForm($_POST);
-       
+
         $retornoUsusario = LoginService::login($email, $senha);
 
         if ($retornoUsusario == 1) {
@@ -61,6 +61,31 @@ class LoginController extends Controller
             $dados["erro"] = "Email ou senha invalidos";
             $dados["view"] = "login";
             $this->load("template", $dados);
+        }
+    }
+
+    public function loginComToken()
+    {
+        header('Content-Type: application/json');
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (isset($data['token'])) {
+            $usuarios = Service::get("users", "auth_token", $data['token']);
+
+            if(isset($usuarios->email)){
+                if(LoginService::loginPorEmail($usuarios->email) == 1){
+                    Flash::limpaMsg();
+                    echo json_encode(['status' => 'ok']);
+                }
+            } else {
+                // Token inválido
+                Flash::limpaMsg();
+                echo json_encode(['status' => 'invalid']);
+            }
+        } else {
+            // Nenhum token fornecido
+            Flash::limpaMsg();
+            echo json_encode(['status' => 'error', 'message' => 'No token provided']);
         }
     }
 

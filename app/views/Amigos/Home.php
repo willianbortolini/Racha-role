@@ -145,7 +145,6 @@
     </a>
 </div>
 
-
 <div class="card mt-2">
     <div class="card-body">
         <h5 class="card-title">No total,</h5>
@@ -187,7 +186,6 @@
                         <span class="amount voceDeve">R$ <?= number_format($despesa->valor * -1, 2, ',', '.') ?></span>
                     </div>
                 <?php } ?>
-
             </li>
         <?php } ?>
     </ul>
@@ -243,101 +241,8 @@
     </div>
 </div>
 
-<script type="module">
-   /* import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyB3Jhp9_OWc8O8xtrGCDWLugeLK0gATMUE",
-        authDomain: "racha-role.firebaseapp.com",
-        projectId: "racha-role",
-        storageBucket: "racha-role",
-        messagingSenderId: "716135852152",
-        appId: "1:716135852152:web:16c6bd5077f6adbf09258d"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-
-    async function requestPermissionAndGetToken() {
-        console.log('Requesting permission...');
-        if (Notification.permission === 'granted') {
-            console.log('Permission already granted.');
-            document.getElementById('notification-permission').style.display = 'none';
-            await getTokenAndSubscribe();
-        } else if (Notification.permission !== 'denied') {
-            // Exibe o botão para solicitar permissão
-            document.getElementById('notification-permission').style.display = 'block';
-            document.getElementById('request-permission-button').addEventListener('click', async () => {
-                try {
-                    const permission = await Notification.requestPermission();
-                    if (permission === 'granted') {
-                        console.log('Permission granted.');
-                        await getTokenAndSubscribe();
-                        document.getElementById('notification-permission').style.display = 'none';
-                    } else {
-                        console.log('Permission not granted for notifications.');
-                        document.getElementById('notification-permission').style.display = 'none';
-                    }
-                } catch (error) {
-                    console.error('Error requesting notification permission:', error);
-                    document.getElementById('notification-permission').style.display = 'none';
-                }
-            });
-        } else {
-            console.log('Permission for notifications was denied.');
-            document.getElementById('notification-permission').style.display = 'none';
-        }
-    }
-
-    async function getTokenAndSubscribe() {
-        try {
-            const registration = await navigator.serviceWorker.register("<?php echo URL_BASE ?>service-worker.js");
-            console.log('Service Worker registered:', registration);
-
-            const currentToken = await getToken(messaging, {
-                serviceWorkerRegistration: registration,
-                vapidKey: 'BG3_X9Vofsg3fEYvjY14WXwhLcGqj5cvEssjkec1lRSa1W79uirtujZWjXeYFBbQapYyKrQpQBRC8q0qbMlp2DA'
-            });
-
-            if (currentToken) {
-                console.log('Token obtained:', currentToken);
-                await saveSubscription(currentToken);
-            } else {
-                console.log('No registration token available.');
-            }
-        } catch (error) {
-            console.error('Error getting token:', error);
-        }
-    }
-
-    async function saveSubscription(token) {
-        try {
-            const response = await fetch('<?php echo URL_BASE ?>users/saveSubscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    subscription: token,
-                    userId: <?php echo $_SESSION['id'] ?>
-                })
-            });
-
-            if (response.ok) {
-                console.log('Subscription saved successfully.');
-            } else {
-                console.log('Failed to save subscription.');
-            }
-        } catch (error) {
-            console.error('Error saving subscription:', error);
-        }
-    }
-
-    requestPermissionAndGetToken();
-
-    onMessage(messaging, (payload) => {
-        console.log('Message received:', payload);
-        // Customize notification here if needed
-    });*/
+<script>
+    <?php if (isset($newAuthToken)) { ?>
+        localStorage.setItem('authTokenRachaRole', '<?php echo $newAuthToken; ?>');
+    <?php } ?>
 </script>
