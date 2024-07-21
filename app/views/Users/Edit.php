@@ -237,7 +237,8 @@
                         <div class="imagemCircular"></div>
                     </label>
                 <?php } ?>
-                <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil" onchange="processarImagem(this)">
+                <input type="file" class="form-control-file" id="foto_perfil" name="foto_perfil"
+                    onchange="processarImagem(this)">
             </div>
 
 
@@ -258,13 +259,13 @@
         <div class="form-group mb-2">
             <label for="telefone">Telefone</label>
             <input type="text" class="input-field" id="telefone" name="telefone"
-                value="<?php echo (isset($users->telefone)) ? $users->telefone : ''; ?>" >
+                value="<?php echo (isset($users->telefone)) ? $users->telefone : ''; ?>">
         </div>
 
         <div class="form-group mb-2">
             <label for="pix">Pix</label>
             <input type="text" class="input-field" id="pix" name="pix"
-                value="<?php echo (isset($users->pix)) ? $users->pix : ''; ?>" >
+                value="<?php echo (isset($users->pix)) ? $users->pix : ''; ?>">
         </div>
 
 
@@ -273,7 +274,8 @@
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
     <div class="col-auto mt-4">
-        <a href="<?php echo URL_BASE . 'Politicaprivacidade' ?>" class="btn btn-outline-secondary" target="_blank">Política de
+        <a href="<?php echo URL_BASE . 'Politicaprivacidade' ?>" class="btn btn-outline-secondary"
+            target="_blank">Política de
             privacidade</a>
     </div>
     <div class="col-auto mt-4">
@@ -289,6 +291,13 @@
         </div>
     <?php } ?>
 
+    <div class="col-auto mt-4">
+        <div id="notification-permission" style="display: none;">
+            <button type="button" id="request-permission-button" class="btn btn-outline-secondary">
+                <i class="fa fa-bell"> Ativar notificações</i>
+            </button>
+        </div>
+    </div>
     <a class="nav-link text-wrapper-4  mt-4 text-danger" href="<?php echo URL_BASE . 'login/logoff' ?>">SAIR</a>
 
     <div class="footer-bar">
@@ -400,4 +409,93 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3Jhp9_OWc8O8xtrGCDWLugeLK0gATMUE",
+        authDomain: "racha-role.firebaseapp.com",
+        projectId: "racha-role",
+        storageBucket: "racha-role",
+        messagingSenderId: "716135852152",
+        appId: "1:716135852152:web:16c6bd5077f6adbf09258d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    async function requestPermissionAndGetToken() {
+        if (Notification.permission === 'granted') {
+            document.getElementById('notification-permission').style.display = 'none';
+            await getTokenAndSubscribe();
+        } else if (Notification.permission !== 'denied') {
+            // Exibe o botão para solicitar permissão
+            document.getElementById('notification-permission').style.display = 'block';
+            document.getElementById('request-permission-button').addEventListener('click', async () => {
+                try {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        await getTokenAndSubscribe();
+                        document.getElementById('notification-permission').style.display = 'none';
+                    } else {
+                        document.getElementById('notification-permission').style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Error requesting notification permission:', error);
+                    document.getElementById('notification-permission').style.display = 'none';
+                }
+            });
+        } else {
+            document.getElementById('notification-permission').style.display = 'none';
+        }
+    }
+
+    async function getTokenAndSubscribe() {
+        try {
+            const registration = await navigator.serviceWorker.register("<?php echo URL_BASE ?>service-worker.js");
+
+            const currentToken = await getToken(messaging, {
+                serviceWorkerRegistration: registration,
+                vapidKey: 'BG3_X9Vofsg3fEYvjY14WXwhLcGqj5cvEssjkec1lRSa1W79uirtujZWjXeYFBbQapYyKrQpQBRC8q0qbMlp2DA'
+            });
+
+            if (currentToken) {
+                await saveSubscription(currentToken);
+            } else {
+                console.log('No registration token available.');
+            }
+        } catch (error) {
+            console.error('Error getting token:', error);
+        }
+    }
+
+    async function saveSubscription(token) {
+        try {
+            const response = await fetch('<?php echo URL_BASE ?>users/saveSubscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    subscription: token,
+                    userId: <?php echo $_SESSION['id'] ?>
+                })
+            });
+
+            if (response.ok) {
+            } else {
+            }
+        } catch (error) {
+            console.error('Error saving subscription:', error);
+        }
+    }
+
+    requestPermissionAndGetToken();
+
+    onMessage(messaging, (payload) => {
+        // Customize notification here if needed
+    });
 </script>

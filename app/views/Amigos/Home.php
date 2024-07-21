@@ -140,14 +140,9 @@
     }
 </style>
 <div class="mt-2 d-flex justify-content-between">
-    <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-secondary"> 
+    <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-secondary">
         <i class="fa fa-plus"></i> Adicionar amigo
     </a>
-    <div id="notification-permission" class="d-flex align-items-center" style="display: none;">
-        <button id="request-permission-button" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-bell"></i>
-        </button>
-    </div>
 </div>
 
 
@@ -249,7 +244,7 @@
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+   /* import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
     const firebaseConfig = {
@@ -268,6 +263,7 @@
         console.log('Requesting permission...');
         if (Notification.permission === 'granted') {
             console.log('Permission already granted.');
+            document.getElementById('notification-permission').style.display = 'none';
             await getTokenAndSubscribe();
         } else if (Notification.permission !== 'denied') {
             // Exibe o botão para solicitar permissão
@@ -281,13 +277,16 @@
                         document.getElementById('notification-permission').style.display = 'none';
                     } else {
                         console.log('Permission not granted for notifications.');
+                        document.getElementById('notification-permission').style.display = 'none';
                     }
                 } catch (error) {
                     console.error('Error requesting notification permission:', error);
+                    document.getElementById('notification-permission').style.display = 'none';
                 }
             });
         } else {
             console.log('Permission for notifications was denied.');
+            document.getElementById('notification-permission').style.display = 'none';
         }
     }
 
@@ -340,6 +339,5 @@
     onMessage(messaging, (payload) => {
         console.log('Message received:', payload);
         // Customize notification here if needed
-    });
-
+    });*/
 </script>
