@@ -46,39 +46,14 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-/*self.addEventListener("push", (event) => {
-  // Verifique se há dados na notificação recebida
-  if (event.data) {
-    const notif = event.data.json().notification;
-
-    // Exibir a notificação
-    event.waitUntil(
-      self.registration.showNotification(notif.title, {
-        body: notif.body,
-        icon: notif.icon, // Ajuste para usar 'icon' ao invés de 'image'
-        data: {
-          url: notif.click_action // Ajuste para usar 'click_action' para URL de clique
-        }
-      })
-    );
-  }
-});
-
-// Adicionar listener para clicar na notificação
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow(event.notification.data.url)
-  );
-});*/
-
 self.addEventListener('push', function(event) {
   const data = event.data.json();
+  console.log('Push event received:', data);
 
   const options = {
     body: data.body,
-    icon: '/path/to/icon.png',
-    badge: '/path/to/badge.png'
+    icon: '/path/to/icon.png', // Atualize com o caminho correto para o ícone
+    badge: '/path/to/badge.png' // Atualize com o caminho correto para o badge
   };
 
   event.waitUntil(
