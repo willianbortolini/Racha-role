@@ -283,11 +283,11 @@
     </div>
     <?php if ($users->ativo == 1) { ?>
         <div class="col-auto mt-4">
-            <a href="<?php echo URL_BASE . "users/desativar" ?>" class="btn btn-outline-secondary">desativar perfil</a>
+            <a href="<?php echo URL_BASE . "users/desativar" ?>" class="btn btn-outline-secondary">Desativar perfil</a>
         </div>
     <?php } else { ?>
         <div class="col-auto mt-4">
-            <a href="<?php echo URL_BASE . "users/ativar" ?>" class="btn btn-outline-secondary">reativar perfil</a>
+            <a href="<?php echo URL_BASE . "users/ativar" ?>" class="btn btn-outline-secondary">Reativar perfil</a>
         </div>
     <?php } ?>
 
