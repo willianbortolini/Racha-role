@@ -210,7 +210,6 @@
             <?php } ?>
         <?php } ?>
     </ul>
-<div id="chave">chave aqui</div>
     <div class="footer-bar">
 
         <a href="<?php echo URL_BASE . 'amigos/home' ?>"
@@ -264,7 +263,7 @@
     const app = initializeApp(firebaseConfig);
     const messaging = getMessaging(app);
 
-    navigator.serviceWorker.register("<?php //echo URL_BASE ?>service - worker.js").then(registration => {
+    navigator.serviceWorker.register("<?php echo URL_BASE ?>service - worker.js").then(registration => {
     getToken(messaging, {
         serviceWorkerRegistration: registration,
         vapidKey: 'BG3_X9Vofsg3fEYvjY14WXwhLcGqj5cvEssjkec1lRSa1W79uirtujZWjXeYFBbQapYyKrQpQBRC8q0qbMlp2DA'
@@ -317,49 +316,35 @@
     const app = initializeApp(firebaseConfig);
     const messaging = getMessaging(app);
 
+    // Function to request permission and get token
     async function requestPermissionAndGetToken() {
-        console.log('Requesting permission...');
-        if (Notification.permission === 'granted') {
-            console.log('Permission already granted.');
-            await getTokenAndSubscribe();
-        } else if (Notification.permission !== 'denied') {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    console.log('Permission granted.');
-                    await getTokenAndSubscribe();
-                } else {
-                    console.log('Permission not granted for notifications.');
-                }
-            } catch (error) {
-                console.error('Error requesting notification permission:', error);
-            }
-        } else {
-            console.log('Permission for notifications was denied.');
-        }
-    }
-
-    async function getTokenAndSubscribe() {
         try {
             const registration = await navigator.serviceWorker.register("<?php echo URL_BASE ?>service-worker.js");
-            console.log('Service Worker registered:', registration);
-
             const currentToken = await getToken(messaging, {
                 serviceWorkerRegistration: registration,
                 vapidKey: 'BG3_X9Vofsg3fEYvjY14WXwhLcGqj5cvEssjkec1lRSa1W79uirtujZWjXeYFBbQapYyKrQpQBRC8q0qbMlp2DA'
             });
 
             if (currentToken) {
-                console.log('Token obtained:', currentToken);
                 await saveSubscription(currentToken);
             } else {
-                console.log('No registration token available.');
+                console.log('No registration token available. Request permission to generate one.');
+                await Notification.requestPermission();
+                const newToken = await getToken(messaging, {
+                    serviceWorkerRegistration: registration,
+                    vapidKey: 'BG3_X9Vofsg3fEYvjY14WXwhLcGqj5cvEssjkec1lRSa1W79uirtujZWjXeYFBbQapYyKrQpQBRC8q0qbMlp2DA'
+                });
+                if (newToken) {
+
+                    await saveSubscription(newToken);
+                }
             }
         } catch (error) {
             console.error('Error getting token:', error);
         }
     }
 
+    // Function to save subscription
     async function saveSubscription(token) {
         try {
             const response = await fetch('<?php echo URL_BASE ?>users/saveSubscription', {
@@ -383,10 +368,12 @@
         }
     }
 
+    // Initialize messaging and request permission
     requestPermissionAndGetToken();
 
+    // Handle incoming messages
     onMessage(messaging, (payload) => {
-        console.log('Message received:', payload);
+        console.log('Message received. ', payload);
         // Customize notification here if needed
     });
 
