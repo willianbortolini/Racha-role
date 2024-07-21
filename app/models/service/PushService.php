@@ -36,11 +36,29 @@ class PushService
                 "webpush" => [
                     "fcm_options" => [
                         "link" => "https://racharole.site"
+                    ],
+                    "notification" => [
+                        "icon" => URL_BASE . "logoApp.png",
+                        "badge" => URL_BASE . "badge.png"
+                    ]
+                ],
+                "apns" => [
+                    "payload" => [
+                        "aps" => [
+                            "alert" => [
+                                "title" => $titulo,
+                                "body" => $conteudo
+                            ],
+                            "sound" => "default"
+                        ]
+                    ],
+                    "fcm_options" => [
+                        "image" => URL_BASE . "logoApp.png"
                     ]
                 ]
             ]
         ];
-        
+
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
