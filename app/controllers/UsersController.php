@@ -70,11 +70,9 @@ class UsersController extends Controller
             {
                 echo "Subscription saved successfully.";
             } else {
-                Flash::limpaMsg();
                 echo "Error";
             }
         } else {
-            Flash::limpaMsg();
             echo "Invalid input.";
         }
     }
