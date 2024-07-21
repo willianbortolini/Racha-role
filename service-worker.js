@@ -46,47 +46,28 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-self.addEventListener('push', function(event) {
-  let data = {};
+self.addEventListener("push", (event) => {
+  // Verifique se há dados na notificação recebida
   if (event.data) {
-    data = event.data.json();
+    const notif = event.data.json().notification;
+
+    // Exibir a notificação
+    event.waitUntil(
+      self.registration.showNotification(notif.title, {
+        body: notif.body,
+        icon: notif.icon, // Ajuste para usar 'icon' ao invés de 'image'
+        data: {
+          url: notif.click_action // Ajuste para usar 'click_action' para URL de clique
+        }
+      })
+    );
   }
-  console.log('Push event received:', data);
-
-  const options = {
-    body: data.body || 'Você tem uma nova mensagem!',
-    icon: data.icon || '/path/to/icon.png', // Atualize com o caminho correto para o ícone
-    badge: data.badge || '/path/to/badge.png', // Atualize com o caminho correto para o badge
-    data: {
-      url: data.url || '/'
-    }
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title || 'Nova Notificação', options)
-  );
 });
 
+// Adicionar listener para clicar na notificação
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  const urlToOpen = event.notification.data.url;
-
   event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then(windowClients => {
-      // Verifica se a URL já está aberta e foca nela
-      for (let i = 0; i < windowClients.length; i++) {
-        const client = windowClients[i];
-        if (client.url === urlToOpen && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      // Abre uma nova janela se a URL não estiver aberta
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
+    clients.openWindow(event.notification.data.url)
   );
 });
