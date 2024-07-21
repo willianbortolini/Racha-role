@@ -138,13 +138,18 @@
     .card-body {
         background-color: #ECCBAC;
     }
-
-
 </style>
-<div class="mt-2">
-    <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-secondary"> <i class="fa fa-plus"></i>
-        Adicionar amigo</a>
+<div class="mt-2 d-flex justify-content-between">
+    <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-secondary"> 
+        <i class="fa fa-plus"></i> Adicionar amigo
+    </a>
+    <div id="notification-permission" class="d-flex align-items-center" style="display: none;">
+        <button id="request-permission-button" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-bell"></i>
+        </button>
+    </div>
 </div>
+
 
 <div class="card mt-2">
     <div class="card-body">
@@ -158,9 +163,7 @@
         <?php } ?>
     </div>
 </div>
-<div id="notification-permission">
-    <button id="request-permission-button" class="btn btn-primary">Permitir Notificações</button>
-</div>
+
 <div class="inf">
     <ul class="list-group">
         <?php foreach ($minhasDespesas as $despesa) { ?>

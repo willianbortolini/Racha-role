@@ -68,11 +68,14 @@ class UsersController extends Controller
             // Executa a query
             if (UsersService::salvar($users) == 1) //se é maior que um inseriu novo 
             {
+                Flash::limpaMsg();
                 echo "Subscription saved successfully.";
             } else {
+                Flash::limpaMsg();
                 echo "Error";
             }
         } else {
+            Flash::limpaMsg();
             echo "Invalid input.";
         }
     }
