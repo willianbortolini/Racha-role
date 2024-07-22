@@ -237,7 +237,8 @@ class Participantes_despesasDao extends Model
                         s.saldo AS valor,
                         u.foto_perfil,
                         u.users_uid,
-                        u.pix
+                        u.pix,
+                        u.avatar
                     FROM 
                         saldos s
                     INNER JOIN 

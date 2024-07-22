@@ -53,7 +53,7 @@ class UsersService
             $Users->password = password_hash($Users->password, PASSWORD_DEFAULT);
             $Users->users_uid = UtilService::generateUUID();
         }
-
+        $Users->avatar = rand(1, 16);
         global $config_upload;
         if ($validacao->qtdeErro() <= 0) {
             if (isset($_POST["remove_foto_perfil"]) && $_POST["remove_foto_perfil"] === "1") {

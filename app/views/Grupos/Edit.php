@@ -284,12 +284,10 @@
                     <li class="list-group-item"
                         onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $usuario->users_uid ?>'">
 
-                        <?php if (!empty($usuario->foto_perfil)) { ?>
-                            <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                                <img src="<?= URL_IMAGEM_150 . $usuario->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
-                                    style="width: 50px; height: 50px; object-fit: cover;">
-                            </div>
-                        <?php } ?>
+                        <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                            <img src="<?= (!empty($usuario->foto_perfil)) ? URL_IMAGEM_150 . $usuario->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $usuario->avatar . ".jpg" ?>"
+                                alt="Profile Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                        </div>
                         <div class="name" style="display: inline-block; vertical-align: middle;">
                             <?= (empty($usuario->username)) ? $usuario->email : $usuario->username ?></br>
                         </div>
@@ -323,14 +321,12 @@
                             <label class="form-check-label" for="user-<?php echo $item->users_uid; ?>">
                                 <input class="form-check-input" type="checkbox" name="participantes[]"
                                     value="<?php echo $item->users_uid; ?>" id="user-<?php echo $item->users_uid; ?>">
-                                <span class="custom-checkbox"></span>                                
-                                <?php if (!empty($item->foto_perfil)) { ?>
+                                <span class="custom-checkbox"></span>
                                     <div class="profile-image"
                                         style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                                        <img src="<?= URL_IMAGEM_150 . $item->foto_perfil ?>" alt="Profile Image"
+                                        <img src="<?= (!empty($item->foto_perfil)) ? URL_IMAGEM_150 . $item->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $item->avatar . ".jpg" ?>" alt="Profile Image"
                                             class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                     </div>
-                                <?php } ?>
                                 <?= (empty($item->username)) ? $item->email : $item->username ?>
                             </label>
                         </div>

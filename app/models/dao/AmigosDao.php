@@ -8,26 +8,26 @@ class AmigosDao extends Model
     {
         $conn = $this->db;
         try {
-            $sql = "SELECT u.users_id, u.users_uid, u.username, u.email, u.telefone, u.foto_perfil
+            $sql = "SELECT u.users_id, u.users_uid, u.username, u.email, u.telefone, u.foto_perfil, u.avatar
                     FROM amigos a
                     INNER JOIN users u ON a.amigo_id = u.users_id
                     WHERE a.usuario_id = :users_id
 
                     UNION
 
-                    SELECT u.users_id, u.users_uid, u.username, u.email, u.telefone, u.foto_perfil
+                    SELECT u.users_id, u.users_uid, u.username, u.email, u.telefone, u.foto_perfil, u.avatar
                     FROM amigos a
                     INNER JOIN users u ON a.usuario_id = u.users_id
                     WHERE a.amigo_id = :users_id
 
                     UNION
 
-                    SELECT u.users_id, u.users_uid, u.username, u.email, u.telefone, u.foto_perfil
+                    SELECT u.users_id, u.users_uid, u.username, u.email, u.telefone, u.foto_perfil, u.avatar
                     FROM usuarios_grupos ug
                     INNER JOIN usuarios_grupos ug2 ON ug.grupos_id = ug2.grupos_id
                     INNER JOIN users u ON u.users_id = ug2.users_id
                     WHERE ug.users_id = :users_id
-                    GROUP BY u.users_id, u.username, u.email, u.telefone, u.foto_perfil;
+                    GROUP BY u.users_id, u.username, u.email, u.telefone, u.foto_perfil, u.avatar;
                     ";
 
             $parametro = array(

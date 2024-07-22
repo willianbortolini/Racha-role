@@ -163,12 +163,10 @@
         <?php foreach ($minhasDespesas as $despesa) { ?>
             <li class="list-group-item"
                 onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_uid ?>'">
-                <?php if (!empty($despesa->foto_perfil)) { ?>
                     <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                        <img src="<?= URL_IMAGEM_150 . $despesa->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
+                        <img src="<?=  (!empty($despesa->foto_perfil))? URL_IMAGEM_150 . $despesa->foto_perfil: URL_BASE . "assets/img/avatares/avatar".$despesa->avatar.".jpg" ?>" alt="Profile Image" class="rounded-circle"
                             style="width: 50px; height: 50px; object-fit: cover;">
                     </div>
-                <?php } ?>
                 <div class="name" style="display: inline-block; vertical-align: middle;">
                     <?= (empty($despesa->username)) ? $despesa->email : $despesa->username ?>
                     </br>
@@ -195,12 +193,10 @@
             <?php if ($amigo->users_uid != $_SESSION['uid']) { ?>
                 <li class="list-group-item"
                     onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $amigo->users_uid ?>'">
-                    <?php if (!empty($amigo->foto_perfil)) { ?>
                         <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                            <img src="<?= URL_IMAGEM_150 . $amigo->foto_perfil ?>" alt="Profile Image" class="rounded-circle"
+                            <img src="<?=  (!empty($amigo->foto_perfil))? URL_IMAGEM_150 . $amigo->foto_perfil: URL_BASE . "assets/img/avatares/avatar".$amigo->avatar.".jpg" ?>" alt="Profile Image" class="rounded-circle"
                                 style="width: 50px; height: 50px; object-fit: cover;">
                         </div>
-                    <?php } ?>
                     <div class="name" style="display: inline-block; vertical-align: middle;">
                         <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?></br>
                         <?php echo (isset($amigo->pix)) ? "<span class='pix'>pix: " . $amigo->pix . " </span> " : "" ?>
