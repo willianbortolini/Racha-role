@@ -197,22 +197,35 @@
 
         <form action="<?php echo URL_BASE . "Pagamentos/save" ?>" method="POST" enctype="multipart/form-data">
 
+            <!-- Adicione um botão para abrir o modal no campo Pagador -->
             <div class="form-group mb-3">
                 <label for="pagador">Pagador</label>
-                <select class="form-select" aria-label="Default select example" name="pagador" id="pagador">
-                    <?php foreach ($users as $item) {
-                        echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->pagador ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
-                    } ?>
-                </select>
+                <div class="input-group">
+                    <select class="form-select" aria-label="Default select example" name="pagador" id="pagador">
+                        <?php foreach ($users as $item) {
+                            echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->pagador ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
+                        } ?>
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" data-toggle="modal"
+                            data-target="#pagadorModal">Selecionar</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group mb-3">
                 <label for="recebedor">Recebedor</label>
-                <select class="form-select" aria-label="Default select example" name="recebedor" id="recebedor">
-                    <?php foreach ($users as $item) {
-                        echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->recebedor ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
-                    } ?>
-                </select>
+                <div class="input-group">
+                    <select class="form-select" aria-label="Default select example" name="recebedor" id="recebedor">
+                        <?php foreach ($users as $item) {
+                            echo "<option value='$item->users_uid'" . ($item->users_uid == $pagamentos->recebedor ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
+                        } ?>
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" data-toggle="modal"
+                            data-target="#recebedorModal">Selecionar</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group mb-3">
@@ -240,3 +253,114 @@
             </div>
         </form>
     </div>
+
+<!-- Modal Pagador -->
+<div class="modal fade" id="pagadorModal" tabindex="-1" role="dialog" aria-labelledby="pagadorModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pagadorModalLabel">Selecione o Pagador</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos" id="filter-input-pagador">
+        <div class="form-group mb-2">
+          <label for="participantes">Amigos</label>
+          <div id="participantes-pagador">
+            <?php foreach ($users as $item) { ?>
+              <div class="form-check user-option" data-user-id="<?php echo $item->users_uid; ?>" data-user-name="<?= (empty($item->username)) ? $item->email : $item->username ?>">
+                <label class="form-check-label">
+                  <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <img src="<?= (!empty($item->foto_perfil)) ? URL_IMAGEM_150 . $item->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $item->avatar . ".jpg" ?>" alt="Profile Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                  </div>
+                  <?= (empty($item->username)) ? $item->email : $item->username ?>
+                </label>
+              </div>
+            <?php } ?>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Modal Recebedor -->
+    <div class="modal fade" id="recebedorModal" tabindex="-1" role="dialog" aria-labelledby="recebedorModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recebedorModalLabel">Selecione o Recebedor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
+                        id="filter-input-recebedor">
+                    <div class="form-group mb-2">
+                        <label for="participantes">Amigos</label>
+                        <div id="participantes-recebedor">
+                            <?php foreach ($users as $item) { ?>
+                                <div class="form-check user-option" data-user-id="<?php echo $item->users_uid; ?>"
+                                    data-user-name="<?= (empty($item->username)) ? $item->email : $item->username ?>">
+                                    <label class="form-check-label">
+                                        <div class="profile-image"
+                                            style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                                            <img src="<?= (!empty($item->foto_perfil)) ? URL_IMAGEM_150 . $item->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $item->avatar . ".jpg" ?>"
+                                                alt="Profile Image" class="rounded-circle"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                        </div>
+                                        <?= (empty($item->username)) ? $item->email : $item->username ?>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Filtrar participantes no modal Pagador
+            $("#filter-input-pagador").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#participantes-pagador .form-check").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            // Filtrar participantes no modal Recebedor
+            $("#filter-input-recebedor").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#participantes-recebedor .form-check").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            // Selecionar pagador no modal
+            $("#participantes-pagador .user-option").on("click", function () {
+                var selectedUserId = $(this).data('user-id');
+                var selectedUserName = $(this).data('user-name');
+                $("#pagador").val(selectedUserId).change();
+                $('#pagadorModal').modal('hide');
+            });
+
+            // Selecionar recebedor no modal
+            $("#participantes-recebedor .user-option").on("click", function () {
+                var selectedUserId = $(this).data('user-id');
+                var selectedUserName = $(this).data('user-name');
+                $("#recebedor").val(selectedUserId).change();
+                $('#recebedorModal').modal('hide');
+            });
+        });
+    </script>

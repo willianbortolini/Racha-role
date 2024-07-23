@@ -239,18 +239,25 @@
     <div id="step2" class="hidden">
 
 
+        <!-- Campo "Pago por" -->
         <div class="form-group mb-2 w-100">
             <label for="users_id" class="form-label mt-4">Pago por</label>
-            <select class="form-select col-12 input-field" aria-label=".form-select-lg example" name="users_id"
-                id="users_id">
-                <?php foreach ($users as $item) {
-                    if (isset($despesas->users_id)) {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_uid ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
-                    } else {
-                        echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
-                    }
-                } ?>
-            </select>
+            <div class="input-group">
+                <select class="form-select col-8 input-field" aria-label=".form-select-lg example" name="users_id"
+                    id="users_id">
+                    <?php foreach ($users as $item) {
+                        if (isset($despesas->users_id)) {
+                            echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_uid ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
+                        } else {
+                            echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
+                        }
+                    } ?>
+                </select>
+                <div class="input-group-append col-4 ">
+                    <button class="btn btn-outline-secondary" type="button" data-toggle="modal"
+                        data-target="#usersModal">Selecionar</button>
+                </div>
+            </div>
         </div>
 
         como dividir <br>
@@ -306,9 +313,66 @@
     </div>
 </form>
 
-
+<!-- Modal -->
+<div class="modal fade" id="usersModal" tabindex="-1" role="dialog" aria-labelledby="usersModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="usersModalLabel">Selecione o Usuário</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
+                    id="filter-input-users">
+                <div class="form-group mb-2">
+                    <label for="participantes">Amigos</label>
+                    <div id="participantes-users">
+                        <?php foreach ($users as $item) { ?>
+                            <div class="form-check user-option" data-user-id="<?php echo $item->users_id; ?>"
+                                data-user-name="<?= (empty($item->username)) ? $item->email : $item->username ?>">
+                                <label class="form-check-label">
+                                    <div class="profile-image"
+                                        style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                                        <img src="<?= (!empty($item->foto_perfil)) ? URL_IMAGEM_150 . $item->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $item->avatar . ".jpg" ?>"
+                                            alt="Profile Image" class="rounded-circle"
+                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                    </div>
+                                    <?= (empty($item->username)) ? $item->email : $item->username ?>
+                                </label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
+    $(document).ready(function () {
+        // Filtrar participantes no modal
+        $("#filter-input-users").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#participantes-users .form-check").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        // Selecionar usuário no modal
+        $("#participantes-users .user-option").on("click", function () {
+            var selectedUserId = $(this).data('user-id');
+            var selectedUserName = $(this).data('user-name');
+            $("#users_id").val(selectedUserId).change();
+            $('#usersModal').modal('hide');
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
 
 
