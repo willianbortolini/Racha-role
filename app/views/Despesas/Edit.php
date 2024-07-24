@@ -130,7 +130,7 @@
         left: 0;
         width: 100%;
         background-color: #ffffff;
-        padding: 10px 0;
+        padding: 10px 0 20px 0px;
         box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-around;
@@ -199,8 +199,31 @@
         width: 50px;
         margin-left: 10px;
     }
-</style>
 
+    .select-field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 5px 0;
+        cursor: pointer;
+        border-bottom: 2px solid gray;
+    }
+
+    .select-field:hover {
+        border-bottom: 2px solid blue;
+    }
+
+    .select-field span {
+        font-size: 16px;
+        color: black;
+    }
+
+    .select-field i {
+        font-size: 20px;
+        color: gray;
+    }
+</style>
 
 <form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
 
@@ -238,34 +261,15 @@
 
     <div id="step2" class="hidden">
 
-
         <!-- Campo "Pago por" -->
         <div class="form-group mb-2 w-100">
             <label for="users_id" class="form-label mt-4">Pago por</label>
-            <div class="input-group">
-                <select class="form-select col-8 input-field" aria-label=".form-select-lg example" name="users_id"
-                    id="users_id">
-                    <?php foreach ($users as $item) {
-                        if (isset($despesas->users_id)) {
-                            echo "<option value='$item->users_id'" . ($item->users_id == $despesas->users_uid ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
-                        } else {
-                            echo "<option value='$item->users_id'" . ($item->users_id == $_SESSION['id'] ? "selected" : "") . ">" . ((empty($item->username)) ? $item->email : $item->username) . "</option>";
-                        }
-                    } ?>
-                </select>
-                <div class="input-group-append col-4 ">
-                    <button class="btn btn-outline-secondary" type="button" data-toggle="modal"
-                        data-target="#usersModal">Selecionar</button>
-                </div>
+            <div class="select-field" id="select-users">
+                <span id="users-selected"><?php echo isset($despesas->users_id) ? $despesas->users_id : 'Selecione o Pagador'; ?></span>
+                <i class="fas fa-chevron-down"></i>
             </div>
+            <input type="hidden" name="users_id" id="users_id">
         </div>
-
-        como dividir <br>
-        <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
-        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>
-
-        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
-            id="filter-input">
 
         <div class="form-group mb-2">
             <label for="grupos_id">Grupos</label>
@@ -299,6 +303,11 @@
             </div>
         </div>
 
+        <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
+        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>
+
+        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
+            id="filter-input">
 
         <div class="footer-bar">
             <div id="total-display" class="total-display mb-4" id="total-display" style="display: none;">
@@ -353,9 +362,13 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
+        // Abre o modal ao clicar no campo Pagador
+        $("#select-users").on("click", function () {
+            $('#usersModal').modal('show');
+        });
+
         // Filtrar participantes no modal
         $("#filter-input-users").on("keyup", function () {
             var value = $(this).val().toLowerCase();
@@ -368,15 +381,13 @@
         $("#participantes-users .user-option").on("click", function () {
             var selectedUserId = $(this).data('user-id');
             var selectedUserName = $(this).data('user-name');
-            $("#users_id").val(selectedUserId).change();
+            $("#users_id").val(selectedUserId);
+            $("#users-selected").text(selectedUserName);
             $('#usersModal').modal('hide');
         });
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-
-
-
         const participantesDiv = document.getElementById('participantes');
         const valorTotalInput = document.getElementById('valor-total');
         const descricaolInput = document.getElementById('descricao');
@@ -588,7 +599,6 @@
 
         // Step 1 complete button
         document.getElementById('step1-complete').addEventListener('click', function () {
-
             if (descricaolInput.value.trim() === '') {
                 alert('Adicione uma descrição');
             } else if (valorTotalInput.value.trim() === '') {
@@ -687,6 +697,5 @@
         document.querySelectorAll('.grupo-checkbox:checked').forEach(function (checkbox) {
             checkbox.dispatchEvent(new Event('change'));
         });
-
     });
 </script>

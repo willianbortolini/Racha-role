@@ -34,13 +34,9 @@ class PagamentosController extends Controller
     public function quitar($valor, $pagador, $recebedor)
     {
         $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);     
-
-        $pagamentos = new \stdClass();
-        $pagamentos->pagador = $pagador;
-        $pagamentos->recebedor = $recebedor;
-        $pagamentos->valor = abs($valor);
-
-        $dados["pagamentos"] = $pagamentos;
+        $dados["pagador"] = Service::get('users', 'users_uid', $pagador);
+        $dados["recebedor"] = Service::get('users', 'users_uid', $recebedor);
+        $dados["valor"] = abs($valor);
         $dados["view"] = "Pagamentos/Edit";
         $this->load("templateBootstrap", $dados);
     }
