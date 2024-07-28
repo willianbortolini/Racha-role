@@ -85,12 +85,13 @@
 
     .date-picker-wrapper {
         position: relative;
-        display: inline-block;
+        display: flex;
+        align-items: center;
     }
 
     .calendar-icon {
         font-size: 50px;
-        margin: 5px;
+        margin-right: 5px;
         cursor: pointer;
     }
 
@@ -121,6 +122,8 @@
 
     .footer-bar2 {
         display: flex;
+        align-items: center;
+        gap: 10px;
         width: 100%;
     }
 
@@ -245,14 +248,13 @@
 
         <div class="footer-bar">
             <div class="footer-bar2">
-                <a href="<?php echo URL_BASE . "amigos/home" ?>" class="btn btn-outline-secondary">voltar</a>
-
+                <a href="<?php echo URL_BASE . 'amigos/home'; ?>" class="btn btn-outline-secondary">voltar</a>
                 <button type="button" class="btn btn-outline-secondary mb-2" id="step1-complete">Selecionar
                     participantes</button>
                 <div class="date-picker-wrapper">
                     <span class="calendar-icon">&#128197;</span>
                     <input type="date" id="data" name="data"
-                        value="<?php echo (isset($despesas->data)) ? $despesas->data : ''; ?>" required>
+                        value="<?php echo isset($despesas->data) ? $despesas->data : ''; ?>" required>
                 </div>
             </div>
         </div>
@@ -265,7 +267,8 @@
         <div class="form-group mb-2 w-100">
             <label for="users_id" class="form-label mt-4">Pago por</label>
             <div class="select-field" id="select-users">
-                <span id="users-selected"><?php echo isset($despesas->users_id) ? $despesas->users_id : 'Selecione o Pagador'; ?></span>
+                <span
+                    id="users-selected"><?php echo isset($despesas->users_id) ? $despesas->users_id : 'Selecione o Pagador'; ?></span>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <input type="hidden" name="users_id" id="users_id">
