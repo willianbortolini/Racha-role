@@ -12,7 +12,7 @@
 
 
 <div class="modal modal-sheet position-static d-block" tabindex="-1" role="dialog" id="modalSignin">
-<div class="modal-header p-5 pb-4 border-bottom-0">
+<div class="modal-header pe-5 mt-2 border-bottom-0">
     <a href="javascript:void(0);" onclick="window.history.back();" class="btn-close" aria-label="Close"></a>
 
   </div>
