@@ -9,12 +9,17 @@ class PushService
 {
     public static function push($to, $titulo, $conteudo)
     {
+
+        $usuario = Service::get('users', 'users_id', $to);
+        
+        if (!isset($usuario->subscription)){
+            return false;
+        }
         // Carregar as credenciais do serviço
         $credential = new ServiceAccountCredentials(
             "https://www.googleapis.com/auth/firebase.messaging",
             json_decode(SERVICE_ACCOUNT_KEY, true)
         );
-
         // Obter o token de autenticação
         $token = $credential->fetchAuthToken(HttpHandlerFactory::build());
 
@@ -27,7 +32,7 @@ class PushService
 
         $data = [
             "message" => [
-                "token" => $to,
+                "token" => $usuario->subscription,
                 "notification" => [
                     "title" => $titulo,
                     "body" => $conteudo,
@@ -55,11 +60,9 @@ class PushService
         $response = curl_exec($ch);
 
         if ($response === false) {
-            echo 'Erro cURL: ' . curl_error($ch);
+            return false;
         } else {
-            echo 'Resposta da API: ' . $response;
+            return true;
         }
-
-        curl_close($ch);
     }
 }

@@ -3,8 +3,7 @@
 namespace app\models\service;
 
 use app\models\validacao\PagamentosValidacao;
-use app\models\dao\PagamentosDao;
-use app\util\UtilService;
+use app\models\service\PushService;
 
 class PagamentosService
 {
@@ -16,11 +15,11 @@ class PagamentosService
         $validacao = PagamentosValidacao::salvar($pagamentos);
 
         $resposta = Service::salvar($pagamentos, self::CAMPO, $validacao->listaErros(), self::TABELA);
-        
+
         if ($resposta > 1) {
             $valorRestante = $pagamentos->valor;
             $valoresPendentes = Participantes_despesasService::dividaEntreUsuarios($pagamentos->pagador, $pagamentos->recebedor);
-            
+
             foreach ($valoresPendentes as $valor) {
                 if ($valorRestante > 0) {
                     $participantes_despesas = new \stdClass();
@@ -39,7 +38,7 @@ class PagamentosService
                     }
                 }
             }
-            
+
             //se sobrou saldo faz uma nova despesa com a quantidade restante
             if ($valorRestante > 0) {
                 $despesas = new \stdClass();
@@ -51,11 +50,15 @@ class PagamentosService
                 $participantes = [$pagamentos->recebedor];
                 $valores = [$valorRestante];
                 $despesa = DespesasService::salvar($despesas, $participantes, $valores);
-                
+
                 if ($despesa < 1) {
                     throw new \Exception();
                 }
             }
+
+            $usuarioPagador = Service::get('users', 'users_id', $pagamentos->pagador);
+            $mensagem =  (empty($usuarioPagador->username)) ? $usuarioPagador->email : $usuarioPagador->username . ' pagou a você R$ ' . $pagamentos->valor;
+            PushService::push($pagamentos->recebedor, 'Nova despesa', $mensagem);
         }
         return $resposta;
     }

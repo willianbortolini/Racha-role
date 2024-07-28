@@ -38,14 +38,11 @@ class DespesasService
                         throw new \Exception('ao salvar a despesa do participante: ' . $participantes_id);
                     }
 
-                    $usuario = Service::get('users', 'users_id', $participantes_id);
                     $usuarioCadastro = Service::get('users', 'users_id', $_SESSION['id']);
-                    // Verifica se a propriedade 'subscription' está definida e não é nula
-
-                    if (isset($usuario->subscription) && ($usuario->users_id != $usuarioCadastro->users_id)) {
+                    if (($participantes_id != $usuarioCadastro->users_id)) {
                         // Se a propriedade 'subscription' está definida, executa o código abaixo
                         $mensagem = 'Despesa ' . $despesas->descricao . ' no valor de ' . moedaBr($valorPorParticipante) . ' adicionada por ' . $usuarioCadastro->username;
-                        PushService::push($usuario->subscription, 'Nova despesa', $mensagem);
+                        PushService::push($participantes_id, 'Nova despesa', $mensagem);
                     }
                 }
             }
