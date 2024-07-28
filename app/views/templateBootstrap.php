@@ -29,9 +29,9 @@
   <script src="<?php echo URL_BASE  . "assets/js/jquery-3.7.0.js" ?>"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE  . "assets/css2/jquery.dataTables.min.css" ?>">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?php echo URL_BASE  . "assets/css2/bootstrap.min.css" ?>">
   <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE  . "assets/css/estilos.css" ?>">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  <script src="<?php echo URL_BASE  . "assets/js/jquery.mask.js" ?>"></script>
 </head>
 
 
@@ -58,8 +58,7 @@
   </div>
 
   </div>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="<?php echo URL_BASE  . "assets/js/jquery-3.5.1.slim.min.js" ?>"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <script src="<?php echo URL_BASE  . "assets/js/jsBase.js" ?>"></script>
