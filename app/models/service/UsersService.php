@@ -51,7 +51,7 @@ class UsersService
         unset($Users->confirmacao);
         if (isset($Users->password)) {
             $Users->password = password_hash($Users->password, PASSWORD_DEFAULT);
-            $Users->users_uid = UtilService::generateUUID();
+            $Users->users_uid = self::generateUUID();
         }
         $Users->avatar = rand(1, 16);
         global $config_upload;
@@ -97,6 +97,33 @@ class UsersService
             $usuario->password = password_hash($usuario->password, PASSWORD_DEFAULT);
         }
         return Service::salvar($usuario, $campo, $validacao->listaErros(), $tabela);
+    }
+
+    public static function generateUUID() {
+        if (function_exists('com_create_guid')) {
+            return trim(com_create_guid(), '{}');
+        } else {
+            mt_srand((double)microtime()*10000);
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = chr(45); // "-"
+            $uuid = substr($charid, 0, 8) . $hyphen
+                  . substr($charid, 8, 4) . $hyphen
+                  . substr($charid, 12, 4) . $hyphen
+                  . substr($charid, 16, 4) . $hyphen
+                  . substr($charid, 20, 12);
+            return $uuid;
+        }
+    }
+
+    public static function usuarioAutorizado($id)
+    {
+        if (
+            !((isset($_SESSION['uid']) && $id == $_SESSION['uid']) || 
+              (isset($_SESSION['id']) && $id == $_SESSION['id']))
+        ) {
+            http_response_code(401);
+            throw new \Exception("Não autorizado");
+        }
     }
 
 }

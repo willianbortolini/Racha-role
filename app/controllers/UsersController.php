@@ -23,7 +23,7 @@ class UsersController extends Controller
 
     public function edit($id)
     {        
-        UtilService::usuarioAutorizado($id);
+        UsersService::usuarioAutorizado($id);
         $dados["users"] = Service::get($this->tabela, $this->campo, $id);
         $dados["btnAtivo"] = "perfil";
         $dados["view"] = "Users/Edit";
@@ -43,7 +43,7 @@ class UsersController extends Controller
             $csrfToken = $_POST['csrf_token'];
             if ($csrfToken === $_SESSION['csrf_token']) {
                 $id = $_POST['id'];
-                UtilService::usuarioAutorizado($id);
+                UsersService::usuarioAutorizado($id);
                 // Excluir a imagem, se existir               
                 $existe_imagem = service::get($this->tabela, $this->campo, $id);
                 if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
@@ -90,7 +90,7 @@ class UsersController extends Controller
 
                 if (isset($_POST["users_id"]) && is_numeric($_POST["users_id"]) && $_POST["users_id"] > 0) {
                     $users->users_id = $_POST["users_id"];
-                    UtilService::usuarioAutorizado($users->users_id);
+                    UsersService::usuarioAutorizado($users->users_id);
                 } else {
                     throw new \Exception("Não autorizado", 401);
                 }
