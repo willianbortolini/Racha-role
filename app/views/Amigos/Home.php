@@ -9,13 +9,6 @@
         align-items: center;
     }
 
-
-
-    .list-group-item .btn-quitar {
-        font-weight: 600 !important;
-    }
-
-
     .btn-container {
         display: flex;
         flex-direction: column;
@@ -33,20 +26,6 @@
         font-size: medium;
     }
 
-    .footer-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #ffffff;
-        padding: 10px 0 20px 0px;
-        box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 1000;
-    }
-
     .footer-bar .btn {
         margin: 0 auto;
         display: flex;
@@ -57,48 +36,6 @@
         height: 60px;
         font-size: 14px;
 
-    }
-
-    .footer-bar .btn.active {
-        background-color: #007bff;
-        /* Active color */
-    }
-
-    .footer-bar .btn i {
-        margin-bottom: 5px;
-        font-size: 20px;
-    }
-
-    .fixed-bottom-btn {
-        width: 70px;
-        height: 70px;
-        font-size: 20px;
-    }
-
-    @media (min-width: 768px) {
-        .footer-bar .btn {
-            width: auto;
-            height: auto;
-            font-size: 16px;
-            border-radius: 5px;
-            padding: 10px 20px;
-        }
-
-        .footer-bar .btn i {
-            margin-bottom: 0;
-        }
-
-        .fixed-bottom-btn {
-            width: auto;
-            height: auto;
-            font-size: 16px;
-            border-radius: 5px;
-            padding: 10px 20px;
-        }
-    }
-
-    .card-body {
-        background-color: #ECCBAC;
     }
 </style>
 <div class="mt-2 d-flex justify-content-between">
@@ -125,10 +62,10 @@
         <?php foreach ($minhasDespesas as $despesa) { ?>
             <li class="list-group-item"
                 onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $despesa->users_uid ?>'">
-                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                        <img src="<?=  (!empty($despesa->foto_perfil))? URL_IMAGEM_150 . $despesa->foto_perfil: URL_BASE . "assets/img/avatares/avatar".$despesa->avatar.".jpg" ?>" alt="Profile Image" class="rounded-circle"
-                            style="width: 50px; height: 50px; object-fit: cover;">
-                    </div>
+                <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <img src="<?= (!empty($despesa->foto_perfil)) ? URL_IMAGEM_150 . $despesa->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $despesa->avatar . ".jpg" ?>"
+                        alt="Profile Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                </div>
                 <div class="name" style="display: inline-block; vertical-align: middle;">
                     <?= (empty($despesa->username)) ? $despesa->email : $despesa->username ?>
                     </br>
@@ -155,10 +92,10 @@
             <?php if ($amigo->users_uid != $_SESSION['uid']) { ?>
                 <li class="list-group-item"
                     onclick="location.href='<?php echo URL_BASE . 'despesas/detalhe/' . $amigo->users_uid ?>'">
-                        <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                            <img src="<?=  (!empty($amigo->foto_perfil))? URL_IMAGEM_150 . $amigo->foto_perfil: URL_BASE . "assets/img/avatares/avatar".$amigo->avatar.".jpg" ?>" alt="Profile Image" class="rounded-circle"
-                                style="width: 50px; height: 50px; object-fit: cover;">
-                        </div>
+                    <div class="profile-image" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                        <img src="<?= (!empty($amigo->foto_perfil)) ? URL_IMAGEM_150 . $amigo->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $amigo->avatar . ".jpg" ?>"
+                            alt="Profile Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                    </div>
                     <div class="name" style="display: inline-block; vertical-align: middle;">
                         <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?></br>
                         <?php echo (isset($amigo->pix)) ? "<span class='pix'>pix: " . $amigo->pix . " </span> " : "" ?>
@@ -169,33 +106,33 @@
         <?php } ?>
     </ul>
     <div class="footer-bar">
+        <div class="footer-bar2">
+            <a href="<?php echo URL_BASE . 'amigos/home' ?>"
+                class="btn <?php echo ($btnAtivo == "amigos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+                <i class="fa fa-user-friends"></i>
+                <span>Amigos</span>
+            </a>
+            <a href="<?php echo URL_BASE . 'Grupos/home' ?>"
+                class="btn <?php echo ($btnAtivo == "grupos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+                <i class="fa fa-users"></i>
+                <span>Grupos</span>
+            </a>
 
-        <a href="<?php echo URL_BASE . 'amigos/home' ?>"
-            class="btn <?php echo ($btnAtivo == "amigos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
-            <i class="fa fa-user-friends"></i>
-            <span>Amigos</span>
-        </a>
-        <a href="<?php echo URL_BASE . 'Grupos/home' ?>"
-            class="btn <?php echo ($btnAtivo == "grupos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
-            <i class="fa fa-users"></i>
-            <span>Grupos</span>
-        </a>
-
-        <a href="<?php echo URL_BASE . 'Despesas/create' ?>" class="btn btn-outline-secondary">
-            <i class="fa fa-plus"></i>
-            <span>Adicionar</span>
-        </a>
-        <a href="<?php echo URL_BASE . 'pagamentos/create' ?>"
-            class="btn <?php echo ($btnAtivo == "pagamentos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
-            <i class="fa fa-money-bill"></i>
-            <span>Pagar</span>
-        </a>
-        <a href="<?php echo URL_BASE . 'users/edit/' . $_SESSION['id'] ?>"
-            class="btn <?php echo ($btnAtivo == "perfil") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
-            <i class="fa fa-user"></i>
-            <span>Perfil</span>
-        </a>
-
+            <a href="<?php echo URL_BASE . 'Despesas/create' ?>" class="btn btn-outline-secondary">
+                <i class="fa fa-plus"></i>
+                <span>Adicionar</span>
+            </a>
+            <a href="<?php echo URL_BASE . 'pagamentos/create' ?>"
+                class="btn <?php echo ($btnAtivo == "pagamentos") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+                <i class="fa fa-money-bill"></i>
+                <span>Pagar</span>
+            </a>
+            <a href="<?php echo URL_BASE . 'users/edit/' . $_SESSION['id'] ?>"
+                class="btn <?php echo ($btnAtivo == "perfil") ? 'btn-secondary' : 'btn-outline-secondary' ?>">
+                <i class="fa fa-user"></i>
+                <span>Perfil</span>
+            </a>
+        </div>
     </div>
 </div>
 

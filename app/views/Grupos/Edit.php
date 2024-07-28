@@ -14,70 +14,6 @@
         flex-direction: column;
     }
 
-    .footer-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #ffffff;
-        padding: 10px 0 20px 0px;
-        box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    .footer-bar .btn {
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        height: 60px;
-        font-size: 14px;
-
-    }
-
-    .footer-bar .btn.active {
-        background-color: #007bff;
-        /* Active color */
-    }
-
-    .footer-bar .btn i {
-        margin-bottom: 5px;
-        font-size: 20px;
-    }
-
-    .fixed-bottom-btn {
-        width: 70px;
-        height: 70px;
-        font-size: 20px;
-    }
-
-    @media (min-width: 768px) {
-        .footer-bar .btn {
-            width: auto;
-            height: auto;
-            font-size: 16px;
-            border-radius: 5px;
-            padding: 10px 20px;
-        }
-
-        .footer-bar .btn i {
-            margin-bottom: 0;
-        }
-
-        .fixed-bottom-btn {
-            width: auto;
-            height: auto;
-            font-size: 16px;
-            border-radius: 5px;
-            padding: 10px 20px;
-        }
-    }
-
     .list-group-item {
         cursor: pointer;
         padding: 15px;
@@ -188,16 +124,14 @@
     .hidden {
         display: none;
     }
-
-
-
+    
     #copyMessage {
         display: none;
     }
 </style>
 <div id="step1" class="container mt-4">
     <h1>
-        <?php echo (isset($grupos->grupos_id)) ? 'Editar Grupos' : 'Adicionar Grupos'; ?>
+        <?php echo (isset($grupos->grupos_id)) ? 'Editar Grupo' : 'Adicionar Grupo'; ?>
     </h1>
 
     <form action="<?php echo URL_BASE . "Grupos/save" ?>" method="POST" enctype="multipart/form-data">
@@ -340,7 +274,7 @@
         // Hide the message after 3 seconds
         setTimeout(function () {
             copyMessage.style.display = 'none';
-        }, 3000);
+        }, 6000);
     });
     function handleFileInputChange(event) {
 

@@ -475,3 +475,4 @@ composer.lock
 
 # Ignorar a pasta config
 config/
+app/upload
