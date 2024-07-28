@@ -1,11 +1,6 @@
 <style>
-    .deveAvoce {
-        color: #00a5a5;
-    }
+ 
 
-    .voceDeve {
-        color: #f79b0c;
-    }
 
     ul li {
         list-style-type: none;

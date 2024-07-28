@@ -3,8 +3,6 @@
 namespace app\models\service;
 
 use app\models\validacao\DespesasValidacao;
-use app\models\dao\DespesasDao;
-use app\util\UtilService;
 use app\models\service\PushService;
 use app\core\Flash;
 
@@ -43,19 +41,23 @@ class DespesasService
                     $usuario = Service::get('users', 'users_id', $participantes_id);
                     $usuarioCadastro = Service::get('users', 'users_id', $_SESSION['id']);
                     // Verifica se a propriedade 'subscription' está definida e não é nula
-                    
-                    if (isset($usuario->subscription) && ($usuario->users_id != $usuarioCadastro->users_id )) {
+
+                    if (isset($usuario->subscription) && ($usuario->users_id != $usuarioCadastro->users_id)) {
                         // Se a propriedade 'subscription' está definida, executa o código abaixo
                         $mensagem = 'Despesa ' . $despesas->descricao . ' no valor de ' . moedaBr($valorPorParticipante) . ' adicionada por ' . $usuarioCadastro->username;
                         PushService::push($usuario->subscription, 'Nova despesa', $mensagem);
                     }
                 }
             }
-            service::commit();
+            if ($transaction) {
+                service::commit();
+            }
             return $despesa;
         } catch (\Exception $e) {
             Flash::setMsg('Erro ' . $e->getMessage(), -1);
-            service::rollback();
+            if ($transaction) {
+                service::rollback();
+            }
             return 0;
         }
     }

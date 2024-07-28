@@ -33,7 +33,7 @@ class PagamentosController extends Controller
 
     public function quitar($valor, $pagador, $recebedor)
     {
-        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);     
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);
         $dados["pagador"] = Service::get('users', 'users_uid', $pagador);
         $dados["recebedor"] = Service::get('users', 'users_uid', $recebedor);
         $dados["valor"] = abs($valor);
@@ -77,7 +77,7 @@ class PagamentosController extends Controller
                     $pagamentos->pagamentos_id = 0;
                 }
                 if (isset($_POST["pagador"]))
-                    $pagamentos->pagador =  Service::getUsers_idComUid($_POST["pagador"]);
+                    $pagamentos->pagador = Service::getUsers_idComUid($_POST["pagador"]);
                 if (isset($_POST["recebedor"]))
                     $pagamentos->recebedor = Service::getUsers_idComUid($_POST["recebedor"]);
                 if (isset($_POST["valor"]))
@@ -86,7 +86,9 @@ class PagamentosController extends Controller
                     $pagamentos->data = $_POST["data"];
             }
             Flash::setForm($pagamentos);
+
             Service::begin_tran();
+
             try {
 
                 $pagamentos_id = PagamentosService::salvar($pagamentos); //se é maior que um inseriu novo 
@@ -97,15 +99,11 @@ class PagamentosController extends Controller
                     $this->redirect(URL_BASE);
 
                 } else {
-                    if (!$pagamentos->pagamentos_id) {
-                        $this->redirect(URL_BASE . "Pagamentos/create");
-                    } else {
-                        $this->redirect(URL_BASE . "Pagamentos/edit/" . $pagamentos->pagamentos_id);
-                    }
+                    $this->redirect(URL_BASE . "Pagamentos/create");
                 }
             } catch (\Exception $e) {
                 Flash::setMsg($e->getMessage());
-                $this->redirect(URL_BASE . "Pagamentos");
+                $this->redirect(URL_BASE . "Pagamentos/create");
                 Service::rollback();
             }
         }

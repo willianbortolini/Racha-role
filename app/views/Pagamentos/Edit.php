@@ -26,14 +26,6 @@
         color: transparent;
     }
 
-    .deveAvoce {
-        color: #00a5a5;
-    }
-
-    .voceDeve {
-        color: #f79b0c;
-    }
-
     ul li {
         list-style-type: none;
         padding-left: 0;
@@ -64,10 +56,7 @@
         flex-direction: column;
     }
 
-    .footer-bar2 {
-        display: flex;
-        width: 100%;
-    }
+  
 
     .footer-bar {
         position: fixed;
@@ -143,45 +132,6 @@
         align-items: center;
     }
 
-    .list-group-item:hover {
-        background-color: #f1f1f1;
-    }
-
-    .list-group-item .name {
-        font-weight: bold;
-        font-size: 1.2rem;
-        flex-grow: 1;
-        text-align: left;
-    }
-
-    .list-group-item .amount {
-        font-size: 1.2rem;
-        font-weight: bold;
-        text-align: right;
-    }
-
-    .list-group-item .description {
-        font-size: 0.9rem;
-        text-align: right;
-    }
-
-    .list-group-item .valor {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Center the items horizontally */
-        justify-content: center;
-        /* Center the items vertically */
-        margin-right: 10px;
-    }
-
-    .deveAvoce {
-        color: #00a5a5;
-    }
-
-    .voceDeve {
-        color: #f79b0c;
-    }
 
     .list-group-item .btn-quitar {
         font-weight: 600 !important;
@@ -219,25 +169,30 @@
             <?php echo (isset($pagamentos->pagamentos_id)) ? 'Editar Pagamentos' : 'Pagamentos'; ?>
         </h5>
 
-        <form action="<?php echo URL_BASE . "Pagamentos/save" ?>" method="POST" enctype="multipart/form-data">
+        <form action="<?php echo URL_BASE . "Pagamentos/save" ?>" method="POST" enctype="multipart/form-data"
+            onsubmit="return validateForm()">
 
             <!-- Campo Pagador -->
             <div class="form-group mb-3">
                 <label for="pagador">Pagador</label>
                 <div class="select-field" id="select-pagador">
-                    <span id="pagador-selected"><?php echo (isset($pagador->username) or ($pagador->email)) ? ((empty($pagador->username)) ? $pagador->email : $pagador->username) : 'Selecione o Pagador'; ?></span>
+                    <span
+                        id="pagador-selected"><?php echo (isset($pagador->username) or isset($pagador->email)) ? ((empty($pagador->username)) ? $pagador->email : $pagador->username) : 'Selecione o Pagador'; ?></span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <input type="hidden" name="pagador" id="pagador" value="<?= isset($pagador->users_uid)?$pagador->users_uid:'' ?>" required>
+                <input type="hidden" name="pagador" id="pagador"
+                    value="<?= isset($pagador->users_uid) ? $pagador->users_uid : '' ?>" required>
             </div>
             <!-- Campo Recebedor -->
             <div class="form-group mb-3">
                 <label for="recebedor">Recebedor</label>
                 <div class="select-field" id="select-recebedor">
-                    <span id="recebedor-selected"><?php echo (isset($recebedor->username) or ($recebedor->email)) ? ((empty($recebedor->username)) ? $recebedor->email : $recebedor->username) : 'Selecione o Recebedor'; ?></span>
+                    <span
+                        id="recebedor-selected"><?php echo (isset($recebedor->username) or isset($recebedor->email)) ? ((empty($recebedor->username)) ? $recebedor->email : $recebedor->username) : 'Selecione o Recebedor'; ?></span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <input type="hidden" name="recebedor" id="recebedor" value="<?= isset($recebedor->users_uid)?$recebedor->users_uid:'' ?>" required>
+                <input type="hidden" name="recebedor" id="recebedor"
+                    value="<?= isset($recebedor->users_uid) ? $recebedor->users_uid : '' ?>" required>
             </div>
 
             <div class="form-group mb-3">
@@ -349,7 +304,24 @@
     </div>
 
     <script>
+        function validateForm() {
+            var pagador = document.getElementById('pagador').value;
+            var recebedor = document.getElementById('recebedor').value;
+
+            if (pagador === '') {
+                alert('Por favor, selecione o pagador.');
+                return false;
+            }
+
+            if (recebedor === '') {
+                alert('Por favor, selecione o recebedor.');
+                return false;
+            }
+
+            return true;
+        }
         $(document).ready(function () {
+
             // Abre o modal ao clicar no campo Pagador
             $("#select-pagador").on("click", function () {
                 $('#pagadorModal').modal('show');

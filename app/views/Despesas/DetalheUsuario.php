@@ -1,11 +1,6 @@
 <style>
-    .deveAvoce {
-        color: #00a5a5;
-    }
 
-    .voceDeve {
-        color: #f79b0c;
-    }
+
 
     ul li {
         list-style-type: none;
@@ -37,10 +32,6 @@
         flex-direction: column;
     }
 
-    .footer-bar2 {
-        display: flex;
-        width: 100%;
-    }
 
     .footer-bar {
         position: fixed;

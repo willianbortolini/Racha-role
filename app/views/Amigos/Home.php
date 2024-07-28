@@ -9,45 +9,7 @@
         align-items: center;
     }
 
-    .list-group-item:hover {
-        background-color: #f1f1f1;
-    }
 
-    .list-group-item .name {
-        font-weight: bold;
-        font-size: 1.2rem;
-        flex-grow: 1;
-        text-align: left;
-    }
-
-    .list-group-item .amount {
-        font-size: 1.2rem;
-        font-weight: bold;
-        text-align: right;
-    }
-
-    .list-group-item .description {
-        font-size: 0.9rem;
-        text-align: right;
-    }
-
-    .list-group-item .valor {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Center the items horizontally */
-        justify-content: center;
-        /* Center the items vertically */
-        margin-right: 10px;
-    }
-
-    .deveAvoce {
-        color: #00a5a5;
-    }
-
-    .voceDeve {
-        color: #f79b0c;
-    }
 
     .list-group-item .btn-quitar {
         font-weight: 600 !important;

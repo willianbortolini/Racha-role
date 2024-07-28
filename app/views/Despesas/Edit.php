@@ -228,7 +228,7 @@
     }
 </style>
 
-<form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data">
+<form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
 
     <div id="step1" class="container mt-4">
         <div class="input-container">
@@ -274,6 +274,12 @@
             <input type="hidden" name="users_id" id="users_id">
         </div>
 
+        <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
+        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>
+
+        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
+            id="filter-input">
+
         <div class="form-group mb-2">
             <label for="grupos_id">Grupos</label>
             <div id="grupos_id">
@@ -306,11 +312,7 @@
             </div>
         </div>
 
-        <button type="button" id="dividir-igualmente" class="btn btn-primary mt-3">Igualmente</button>
-        <button type="button" id="habilitar-inputs" class="btn btn-secondary mt-3">Valor</button>
-
-        <input type="text" class="form-control filter-input mt-4" placeholder="Filtrar grupos ou amigos"
-            id="filter-input">
+        
 
         <div class="footer-bar">
             <div id="total-display" class="total-display mb-4" id="total-display" style="display: none;">
@@ -366,6 +368,15 @@
     </div>
 </div>
 <script>
+    function validateForm() {
+            var pagador = document.getElementById('users_id').value;
+
+            if (pagador === '') {
+                alert('Por favor, selecione o pagador.');
+                return false;
+            }        
+            return true;
+        }
     $(document).ready(function () {
         // Abre o modal ao clicar no campo Pagador
         $("#select-users").on("click", function () {
