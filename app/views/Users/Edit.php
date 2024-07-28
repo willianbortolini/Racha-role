@@ -154,7 +154,7 @@
 
         <div class="form-group mb-2">
             <label for="telefone">Telefone</label>
-            <input type="text" class="input-field" id="telefone" name="telefone"
+            <input type="text" class="input-field mascara-fone" id="telefone" name="telefone"
                 value="<?php echo (isset($users->telefone)) ? $users->telefone : ''; ?>">
         </div>
 
@@ -205,6 +205,7 @@
 </form>
 
 <script>
+    $('.mascara-fone').mask('(00) 0000-0000');
 
     document.getElementById('logout-link').addEventListener('click', function (event) {
         event.preventDefault(); 
