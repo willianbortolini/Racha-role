@@ -25,7 +25,7 @@
     var controller;
     var caminhoRetornoDelete;
   </script>
-
+  <script src="<?php echo URL_BASE  . "assets/js/jquery-3.5.1.slim.min.js" ?>"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="<?php echo URL_BASE  . "assets/css2/jquery.dataTables.min.css" ?>">
   <link rel="stylesheet" href="<?php echo URL_BASE  . "assets/css2/bootstrap.min.css" ?>">
@@ -57,7 +57,7 @@
   </div>
 
   </div>
-  <script src="<?php echo URL_BASE  . "assets/js/jquery-3.5.1.slim.min.js" ?>"></script>
+
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <script src="<?php echo URL_BASE  . "assets/js/jsBase.js" ?>"></script>

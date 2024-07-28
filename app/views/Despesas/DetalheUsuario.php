@@ -46,6 +46,7 @@
             <img src="<?= (!empty($amigo->foto_perfil)) ? URL_IMAGEM_150 . $amigo->foto_perfil : URL_BASE . "assets/img/avatares/avatar" . $amigo->avatar . ".jpg" ?>"
                 alt="Profile Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
         </div>
+        <?php if(abs($saldo) > 0){ ?>
         <h5 class="card-title">No total</h5>
         <?php if ($saldo > 0) { ?>
             <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?> deve a você <span class="deveAvoce">R$
@@ -53,6 +54,9 @@
         <?php } else { ?>
             você deve <span class="deveAvoce">R$ <?= number_format($saldo * -1, 2, ',', '.') ?> a
             <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?></span>
+        <?php } ?>
+        <?php }else{ ?>
+            <br>Você não possui dividas com  <?= (empty($amigo->username)) ? $amigo->email : $amigo->username ?> 
         <?php } ?>
     </div>
 </div>
