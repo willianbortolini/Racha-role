@@ -10,6 +10,7 @@ use app\core\Flash;
 use app\models\service\Service;
 use app\models\service\AmigosService;
 use app\models\service\Participantes_despesasService;
+use app\models\service\UsersService;
 
 class GruposController extends Controller
 {
@@ -19,7 +20,7 @@ class GruposController extends Controller
 
     public function __construct()
     {
-        UtilService::validaUsuario();
+        UsersService::usuarioLogado();
     }
 
     public function home()

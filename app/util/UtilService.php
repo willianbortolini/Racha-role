@@ -64,30 +64,4 @@ class UtilService
             return false;
         }
     }
-
-    public static function getUsuario()
-    {
-        $usuario = null;
-        if (isset($_SESSION['id'])) {
-            $usuario = $_SESSION['id'];
-        }
-        return $usuario;
-    }
-
-    public static function validaUsuario()
-    {
-        $usuario = null;
-        if (isset($_SESSION['id'])) {
-            $usuario = $_SESSION['id'];
-        } else {
-            header('Location:' . URL_BASE . "login");
-            exit;
-        }
-        return $usuario;
-    }
-
-    
-  
-
-
 }

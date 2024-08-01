@@ -115,14 +115,20 @@ class UsersService
         }
     }
 
-    public static function usuarioAutorizado($id)
+    public static function usuarioLogado($id = 0)
     {
-        if (
+        
+        if ($id == 0){
+            if(!isset($_SESSION['id'])){
+                header('Location:' . URL_BASE . "login");
+                exit;
+            }    
+        } else  if (
             !((isset($_SESSION['uid']) && $id == $_SESSION['uid']) || 
               (isset($_SESSION['id']) && $id == $_SESSION['id']))
         ) {
-            http_response_code(401);
-            throw new \Exception("Não autorizado");
+            header('Location:' . URL_BASE . "login");
+            exit;
         }
     }
 

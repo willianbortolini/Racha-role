@@ -3,11 +3,11 @@
 namespace app\controllers;
 
 use app\core\Controller;
-use app\util\UtilService;
+
 use app\core\Flash;
 use app\models\service\Usuarios_gruposService;
-use app\models\service\AmigosService;
 use app\models\service\Service;
+use app\models\service\UsersService;
 
 class Usuarios_gruposController extends Controller
 {
@@ -16,7 +16,7 @@ class Usuarios_gruposController extends Controller
 
     public function __construct()
     {
-        UtilService::validaUsuario();
+        UsersService::usuarioLogado();
     }
 
     public function usuariosDoGrupo($id)

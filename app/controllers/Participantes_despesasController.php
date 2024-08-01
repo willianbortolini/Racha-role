@@ -3,16 +3,15 @@
 namespace app\controllers;
 
 use app\core\Controller;
-use app\util\UtilService;
 use app\models\service\Participantes_despesasService;
 use app\core\Flash;
-use app\models\service\Service;
+use app\models\service\UsersService;
 
 class Participantes_despesasController extends Controller
 {
     public function __construct()
     {
-        UtilService::validaUsuario();
+        UsersService::usuarioLogado();
     }
 
     public function delete()

@@ -3,11 +3,11 @@
 namespace app\controllers;
 
 use app\core\Controller;
-use app\util\UtilService;
 use app\models\service\DespesasService;
 use app\models\service\Participantes_despesasService;
 use app\models\service\GruposService;
 use app\models\service\AmigosService;
+use app\models\service\UsersService;
 use app\core\Flash;
 use app\models\service\Service;
 
@@ -19,7 +19,7 @@ class DespesasController extends Controller
 
     public function __construct()
     {
-        UtilService::validaUsuario();
+        UsersService::usuarioLogado();
     }
 
     public function detalhe($user_uid)
