@@ -26,6 +26,9 @@
         font-size: 14px;
 
     }
+    .fundo-tabela{
+        height: 100px;
+    }
 </style>
 <div class="mt-2">
     <a href="<?php echo URL_BASE . 'grupos/create' ?>" class="btn btn-outline-secondary"> <i class="fa fa-plus"></i>

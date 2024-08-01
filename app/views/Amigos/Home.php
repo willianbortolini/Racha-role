@@ -37,6 +37,9 @@
         font-size: 14px;
 
     }
+    .fundo-tabela{
+        height: 100px;
+    }
 </style>
 <div class="mt-2 d-flex justify-content-between">
     <a href="<?php echo URL_BASE . 'amigos/create' ?>" class="btn btn-outline-secondary">
@@ -105,6 +108,7 @@
             <?php } ?>
         <?php } ?>
     </ul>
+    <div class="fundo-tabela">efwefwe</div>
     <div class="footer-bar">
         <div class="footer-bar2">
             <a href="<?php echo URL_BASE . 'amigos/home' ?>"
