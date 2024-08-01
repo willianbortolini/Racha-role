@@ -3,7 +3,6 @@
 namespace app\models\service;
 
 use app\models\validacao\UsersValidacao;
-use app\models\dao\UsersDao;
 use app\models\service\Service;
 use app\util\UtilService;
 
