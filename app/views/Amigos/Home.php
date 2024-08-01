@@ -108,7 +108,7 @@
             <?php } ?>
         <?php } ?>
     </ul>
-    <div class="fundo-tabela">efwefwe</div>
+    <div class="fundo-tabela"></div>
     <div class="footer-bar">
         <div class="footer-bar2">
             <a href="<?php echo URL_BASE . 'amigos/home' ?>"
