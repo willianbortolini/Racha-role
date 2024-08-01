@@ -128,6 +128,9 @@
     #copyMessage {
         display: none;
     }
+    .fundo-tabela{
+        height: 100px;
+    }
 </style>
 <div id="step1" class="container mt-4">
     <h1>
@@ -189,6 +192,7 @@
         <?php } ?>
     <?php } ?>
 </div>
+<div class="fundo-tabela"></div>
 <div id="step2" class="hidden">
     <form action="<?php echo URL_BASE . "Usuarios_grupos/save" ?>" method="POST" enctype="multipart/form-data">
 
