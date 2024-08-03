@@ -152,21 +152,21 @@ function upload($arq, $config_upload)
     return $retorno;
 }
 
-function uploadImagem2($arq, $config_upload)
+function uploadImagem150e500($arq, $config_upload)
 {
-   
     set_time_limit(0);
     $nome_arquivo = $_FILES[$arq]["name"];
-    
     $tamanho_arquivo = $_FILES[$arq]["size"];
     $arquivo_temporario = $_FILES[$arq]["tmp_name"];
     $erro = 0;
     $msg = "";
     $retorno = array();
+
     if (!empty($nome_arquivo)) {
         $ext = strrchr($nome_arquivo, ".");
         $nome_final = ($config_upload["renomeia"]) ? uniqid() . $ext : $nome_arquivo;
         $caminho = $config_upload["caminho_absoluto"] . $nome_final;
+        
         if (($config_upload["verifica_extensao"]) && (in_array(strtolower($ext), $config_upload["extensoes_imagem"]))) {
             $msg = "O arquivo não é permitido para upload";
             $erro = -1;
@@ -175,90 +175,24 @@ function uploadImagem2($arq, $config_upload)
                 $msg = "Arquivo enviado com sucesso";
                 $erro = 0;
 
+                $imagem = imagecreatefromstring(file_get_contents($caminho));
+                $largura_original = imagesx($imagem);
+                $altura_original = imagesy($imagem);
+                $proporcao_original = $largura_original / $altura_original;
 
-                // Verifica se o arquivo é uma imagem
-                          
+                // Cria miniatura de 500px
+                $caminho_miniatura_500 = $config_upload["caminho_absoluto"] . "mini_500_" . $nome_final;
+                redimensionar_e_salvar($imagem, $largura_original, $altura_original, $proporcao_original, 500, 500, $caminho_miniatura_500);
 
-                    // Cria uma nova imagem a partir do arquivo
-                    $imagem = imagecreatefromstring(file_get_contents($caminho));
-                    imagealphablending($imagem, true);
-                    imagesavealpha($imagem, true);
+                // Cria miniatura de 150px
+                $caminho_miniatura_150 = $config_upload["caminho_absoluto"] . "mini_150_" . $nome_final;
+                redimensionar_e_salvar($imagem, $largura_original, $altura_original, $proporcao_original, 150, 150, $caminho_miniatura_150);
 
-                    // Redimensiona a imagem original para 1800px de largura ou altura (mantendo proporções)
-                    $largura_original = imagesx($imagem);
-                    $altura_original = imagesy($imagem);
-                    $proporcao_original = $largura_original / $altura_original;
+                imagedestroy($imagem);
+                unlink($caminho); // Remove a imagem original
 
-                    $largura_maxima = 1800;
-                    $altura_maxima = 1800;
-
-                    if ($largura_original > $largura_maxima || $altura_original > $altura_maxima) {
-                        if ($largura_original > $altura_original) {
-                            $nova_largura = $largura_maxima;
-                            $nova_altura = round($nova_largura / $proporcao_original);
-                        } else {
-                            $nova_altura = $altura_maxima;
-                            $nova_largura = round($nova_altura * $proporcao_original);
-                        }
-
-                        $imagem_redimensionada = imagecreatetruecolor($nova_largura, $nova_altura);
-                        imagealphablending($imagem_redimensionada, false);
-                        imagesavealpha($imagem_redimensionada, true);
-                        imagecopyresampled($imagem_redimensionada, $imagem, 0, 0, 0, 0, $nova_largura, $nova_altura, $largura_original, $altura_original);
-                        imagedestroy($imagem);
-
-                        $caminho = $config_upload["caminho_absoluto"] . $nome_final;
-                        imagepng($imagem_redimensionada, $caminho);
-                        imagedestroy($imagem_redimensionada);
-                    }
-
-                    // Cria miniatura de 500px de largura ou altura (mantendo proporções)
-                    $largura_maxima_miniatura_500 = 500;
-                    $altura_maxima_miniatura_500 = 500;
-
-                    if ($largura_original > $largura_maxima_miniatura_500 || $altura_original > $altura_maxima_miniatura_500) {
-                        if ($largura_original > $altura_original) {
-                            $nova_largura_miniatura_500 = $largura_maxima_miniatura_500;
-                            $nova_altura_miniatura_500 = round($nova_largura_miniatura_500 / $proporcao_original);
-                        } else {
-                            $nova_altura_miniatura_500 = $altura_maxima_miniatura_500;
-                            $nova_largura_miniatura_500 = round($nova_altura_miniatura_500 * $proporcao_original);
-                        }
-
-                        $imagem_miniatura_500 = imagecreatetruecolor($nova_largura_miniatura_500, $nova_altura_miniatura_500);
-                        imagealphablending($imagem_miniatura_500, false);
-                        imagesavealpha($imagem_miniatura_500, true);
-                        imagecopyresampled($imagem_miniatura_500, $imagem, 0, 0, 0, 0, $nova_largura_miniatura_500, $nova_altura_miniatura_500, $largura_original, $altura_original);
-
-                        $caminho_miniatura_500 = $config_upload["caminho_absoluto"] . "mini_500_" . $nome_final;
-                        imagepng($imagem_miniatura_500, $caminho_miniatura_500);
-                        imagedestroy($imagem_miniatura_500);
-                    }
-
-                    // Cria miniatura de 150px de largura ou altura (mantendo proporções)
-                    $largura_maxima_miniatura_150 = 150;
-                    $altura_maxima_miniatura_150 = 150;
-
-                    if ($largura_original > $largura_maxima_miniatura_150 || $altura_original > $altura_maxima_miniatura_150) {
-                        if ($largura_original > $altura_original) {
-                            $nova_largura_miniatura_150 = $largura_maxima_miniatura_150;
-                            $nova_altura_miniatura_150 = round($nova_largura_miniatura_150 / $proporcao_original);
-                        } else {
-                            $nova_altura_miniatura_150 = $altura_maxima_miniatura_150;
-                            $nova_largura_miniatura_150 = round($nova_altura_miniatura_150 * $proporcao_original);
-                        }
-
-                        $imagem_miniatura_150 = imagecreatetruecolor($nova_largura_miniatura_150, $nova_altura_miniatura_150);
-                        imagealphablending($imagem_miniatura_150, false);
-                        imagesavealpha($imagem_miniatura_150, true);
-                        imagecopyresampled($imagem_miniatura_150, $imagem, 0, 0, 0, 0, $nova_largura_miniatura_150, $nova_altura_miniatura_150, $largura_original, $altura_original);
-
-                        $caminho_miniatura_150 = $config_upload["caminho_absoluto"] . "mini_150_" . $nome_final;
-                        imagepng($imagem_miniatura_150, $caminho_miniatura_150);
-                        imagedestroy($imagem_miniatura_150);                    
-                }
             } else {
-                $msg = "Erro ao fazer o upload ";
+                $msg = "Erro ao fazer o upload";
                 $erro = -1;
             }
         }
@@ -266,82 +200,30 @@ function uploadImagem2($arq, $config_upload)
         $msg = "Arquivo vazio";
         $erro = -1;
     }
+
     $retorno = (object) array("erro" => $erro, "msg" => $msg, "nome" => $nome_final);
     return $retorno;
 }
 
-function uploadImagemGrande($arq, $config_upload)
-{
-    set_time_limit(0);
-    $nome_arquivo = $_FILES[$arq]["name"];
-    $arquivo_temporario = $_FILES[$arq]["tmp_name"];
-    $erro = 0;
-    $msg = "";
-    $retorno = array();
-
-    if (!empty($nome_arquivo)) {
-        $ext = strrchr($nome_arquivo, ".");
-        $nome_final = ($config_upload["renomeia"]) ? uniqid() . $ext : $nome_arquivo;
-        $caminho = $config_upload["caminho_absoluto"] . $nome_final;
-
-        if (!($config_upload["verifica_extensao"]) || (in_array(strtolower($ext), $config_upload["extensoes_imagem"]))) {
-            if (move_uploaded_file($arquivo_temporario, $caminho)) {
-                $msg = "Arquivo enviado com sucesso";
-                $erro = 0;
-
-                // Verifica se o arquivo é uma imagem
-                if (in_array(exif_imagetype($caminho), $config_upload["extensoes_imagem"])) {
-                    // Cria uma nova imagem a partir do arquivo
-                    $imagem = imagecreatefromstring(file_get_contents($caminho));
-                    imagealphablending($imagem, true);
-                    imagesavealpha($imagem, true);
-
-                    // Redimensiona a imagem original para 1800px de largura ou altura (mantendo proporções)
-                    $largura_original = imagesx($imagem);
-                    $altura_original = imagesy($imagem);
-                    $proporcao_original = $largura_original / $altura_original;
-
-                    $largura_maxima = 1800;
-                    $altura_maxima = 1800;
-
-                    if ($largura_original > $largura_maxima || $altura_original > $altura_maxima) {
-                        if ($largura_original > $altura_original) {
-                            $nova_largura = $largura_maxima;
-                            $nova_altura = round($nova_largura / $proporcao_original);
-                        } else {
-                            $nova_altura = $altura_maxima;
-                            $nova_largura = round($nova_altura * $proporcao_original);
-                        }
-
-                        $imagem_redimensionada = imagecreatetruecolor($nova_largura, $nova_altura);
-                        imagealphablending($imagem_redimensionada, false);
-                        imagesavealpha($imagem_redimensionada, true);
-                        imagecopyresampled($imagem_redimensionada, $imagem, 0, 0, 0, 0, $nova_largura, $nova_altura, $largura_original, $altura_original);
-                        imagedestroy($imagem);
-
-                        $caminho = $config_upload["caminho_absoluto"] . $nome_final;
-                        imagepng($imagem_redimensionada, $caminho);
-                        imagedestroy($imagem_redimensionada);
-                    }
-                }
-            } else {
-                $msg = "Erro ao fazer o upload ";
-                $erro = -1;
-            }
+// Função para redimensionar e salvar a imagem
+function redimensionar_e_salvar($imagem, $largura_original, $altura_original, $proporcao_original, $largura_maxima, $altura_maxima, $caminho_destino) {
+    if ($largura_original > $largura_maxima || $altura_original > $altura_maxima) {
+        if ($largura_original > $altura_original) {
+            $nova_largura = $largura_maxima;
+            $nova_altura = round($nova_largura / $proporcao_original);
         } else {
-            $msg = "O arquivo não é permitido para upload";
-            $erro = -1;
+            $nova_altura = $altura_maxima;
+            $nova_largura = round($nova_altura * $proporcao_original);
         }
-    } else {
-        $msg = "Arquivo vazio";
-        $erro = -1;
+
+        $imagem_redimensionada = imagecreatetruecolor($nova_largura, $nova_altura);
+        imagealphablending($imagem_redimensionada, false);
+        imagesavealpha($imagem_redimensionada, true);
+        imagecopyresampled($imagem_redimensionada, $imagem, 0, 0, 0, 0, $nova_largura, $nova_altura, $largura_original, $altura_original);
+        imagepng($imagem_redimensionada, $caminho_destino);
+        imagedestroy($imagem_redimensionada);
     }
-    
-    $retorno = (object) array("erro" => $erro, "msg" => $msg, "nome" => $nome_final);
-    return $retorno;
 }
-
-
 
 function deletarImagens($nomeImagem)
 {

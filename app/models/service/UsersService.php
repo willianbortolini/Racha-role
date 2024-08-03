@@ -32,7 +32,7 @@ class UsersService
                     if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
                         UtilService::deletarImagens($existe_imagem->foto_perfil);
                     }
-                    $Users->foto_perfil = UtilService::uploadImagem("foto_perfil", $config_upload);
+                    $Users->foto_perfil = UtilService::uploadImagem150e500("foto_perfil", $config_upload);
                     if (!$Users->foto_perfil) {
                         return false;
                     }
@@ -67,7 +67,7 @@ class UsersService
                     if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
                         UtilService::deletarImagens($existe_imagem->foto_perfil);
                     }
-                    $Users->foto_perfil = UtilService::uploadImagem("foto_perfil", $config_upload);
+                    $Users->foto_perfil = UtilService::uploadImagem150e500("foto_perfil", $config_upload);
                     if (!$Users->foto_perfil) {
                         return false;
                     }

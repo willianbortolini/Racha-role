@@ -21,25 +21,10 @@ class UtilService
         }
     }
 
-    public static function uploadImagem($arquivo, $config)
+    public static function uploadImagem150e500($arquivo, $config)
     {
         
-        $subir = uploadImagem2($arquivo, $config);
-
-        if ($subir->erro == 0) {
-            Flash::limpaForm();
-            return $subir->nome;
-        } else {
-            Flash::limpaMsg();
-            Flash::setMsg("Erro: " . $subir->msg, -1);
-            return false;
-        }
-    }
-
-    public static function uploadImagemGrande($arquivo, $config)
-    {
-        
-        $subir = uploadImagemGrande($arquivo, $config);
+        $subir = uploadImagem150e500($arquivo, $config);
 
         if ($subir->erro == 0) {
             Flash::limpaForm();

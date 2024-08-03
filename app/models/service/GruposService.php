@@ -31,7 +31,7 @@ class GruposService
                     if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
                       UtilService::deletarImagens($existe_imagem->foto);
                     }
-                    $Grupos->foto = UtilService::uploadImagem("foto", $config_upload);
+                    $Grupos->foto = UtilService::uploadImagem150e500("foto", $config_upload);
                     if (!$Grupos->foto) {
                         return false;
                     }
