@@ -5,7 +5,6 @@ const CACHE_RACHA_ROLE = 'currency-converter-cache-v3'; // Incrementar a versão
 const CACHE = "pwabuilder-page";
 
 const urlsToCache = [
-  '/',
   '/index.html',
   '/offline.html',
 ];

@@ -11,55 +11,16 @@
   </title>
   <link rel="manifest" type="text/css" href="<?php echo URL_BASE . "manifest.json" ?>">
   <script>
-    /*if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('<?php //echo URL_BASE . "service-worker.js" ?>')
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('<?php echo URL_BASE . "service-worker.js" ?>')
         .then(function (registration) {
           //console.log('Service Worker registrado com sucesso:', registration);
         })
         .catch(function (error) {
           console.log('Falha ao registrar o Service Worker:', error);
         });
-    }*/
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-
-          // Verifica se há uma atualização do service worker
-          registration.onupdatefound = function () {
-            const installingWorker = registration.installing;
-            installingWorker.onstatechange = function () {
-              if (installingWorker.state === 'installed') {
-                if (navigator.serviceWorker.controller) {
-                  // Novo service worker encontrado, informe ao usuário
-                  console.log('New or updated content is available.');
-                  showUpdateNotification();
-                } else {
-                  // Conteúdo pré-cachado foi atualizado
-                  console.log('Content is now available offline!');
-                  alert('Service Worker instalado com sucesso!');
-                }
-              }
-            };
-          };
-        }).catch(function (error) {
-          console.log('ServiceWorker registration failed: ', error);
-        });
-      });
     }
 
-    // Função para mostrar a notificação de atualização
-    function showUpdateNotification() {
-      alert('Nova versão disponível. Clique OK para atualizar.');
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
-      }
-    }
-
-    navigator.serviceWorker.addEventListener('controllerchange', function () {
-      window.location.reload();
-    });
 
 
     const URL_BASE = "<?php echo URL_BASE ?>";
