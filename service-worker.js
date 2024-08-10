@@ -77,7 +77,7 @@ self.addEventListener('fetch', (event) => {
         return networkResp;
       } catch (error) {
 
-        const cache = await caches.open(CACHE);
+        const cache = await caches.open(CACHE_RACHA_ROLE);
         const cachedResp = await cache.match(offlineFallbackPage);
         return cachedResp;
       }
