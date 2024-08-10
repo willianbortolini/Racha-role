@@ -1,15 +1,9 @@
 // This is the "Offline page" service worker
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-const CACHE_RACHA_ROLE = 'currency-converter-cache-v3'; // Incrementar a versão do cache
 const CACHE = "pwabuilder-page";
 
-const urlsToCache = [
-  '/offline.html',
-];
-
-// TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
-const offlineFallbackPage = "/offline.html";
+const offlineFallbackPage = "offline.html";
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -19,29 +13,9 @@ self.addEventListener("message", (event) => {
 
 self.addEventListener('install', async (event) => {
   event.waitUntil(
-    caches.open(CACHE_RACHA_ROLE)
-      .then(function (cache) {
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE)
+      .then((cache) => cache.add(offlineFallbackPage))
   );
-  self.skipWaiting();
-});
-
-// Ativar o service worker e remover caches antigos
-self.addEventListener('activate', function (event) {
-  const cacheWhitelist = [CACHE_RACHA_ROLE];
-  event.waitUntil(
-    caches.keys().then(function (cacheNames) {
-      return Promise.all(
-        cacheNames.map(function (cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-  return self.clients.claim(); // Fazer o service worker controlar imediatamente
 });
 
 if (workbox.navigationPreload.isSupported()) {
@@ -53,6 +27,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       try {
         const preloadResp = await event.preloadResponse;
+
         if (preloadResp) {
           return preloadResp;
         }
@@ -60,12 +35,10 @@ self.addEventListener('fetch', (event) => {
         const networkResp = await fetch(event.request);
         return networkResp;
       } catch (error) {
-        const cache = await caches.open(CACHE_RACHA_ROLE);
+
+        const cache = await caches.open(CACHE);
         const cachedResp = await cache.match(offlineFallbackPage);
-        return cachedResp || new Response('Você está offline. Por favor, conecte-se à internet para continuar.', {
-          status: 200,
-          headers: { 'Content-Type': 'text/html' }
-        });
+        return cachedResp;
       }
     })());
   }
