@@ -5,11 +5,11 @@ const CACHE_RACHA_ROLE = 'currency-converter-cache-v3'; // Incrementar a versão
 const CACHE = "pwabuilder-page";
 
 const urlsToCache = [
-  'offline.html',
+  '/offline.html',
 ];
 
 // TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
-const offlineFallbackPage = "offline.html";
+const offlineFallbackPage = "/offline.html";
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -53,7 +53,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       try {
         const preloadResp = await event.preloadResponse;
-
         if (preloadResp) {
           return preloadResp;
         }
@@ -61,10 +60,12 @@ self.addEventListener('fetch', (event) => {
         const networkResp = await fetch(event.request);
         return networkResp;
       } catch (error) {
-
         const cache = await caches.open(CACHE_RACHA_ROLE);
         const cachedResp = await cache.match(offlineFallbackPage);
-        return cachedResp;
+        return cachedResp || new Response('Você está offline. Por favor, conecte-se à internet para continuar.', {
+          status: 200,
+          headers: { 'Content-Type': 'text/html' }
+        });
       }
     })());
   }
