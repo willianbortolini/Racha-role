@@ -40,6 +40,11 @@ RewriteRule ^(.*)$ index.php/$1 [L]
     Deny from all
 </Files>
 
+<Files "service-worker.js">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
 
  
 

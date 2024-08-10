@@ -144,4 +144,16 @@
     <?php if (isset($newAuthToken)) { ?>
         localStorage.setItem('authTokenRachaRole', '<?php echo $newAuthToken; ?>');
     <?php } ?>
+
+    try {
+      const response = await fetch('https://v6.exchangerate-api.com/v6/ccf43821c8928b0a0486dd6b/latest/BRL');
+      const data = await response.json();
+      const rates = data.conversion_rates;
+
+      localStorage.setItem('conversionRateUSD', rates.USD);
+      localStorage.setItem('conversionRateARS', rates.ARS);
+
+    } catch (error) {
+      console.error('Error fetching exchange rates:', error);
+    }
 </script>

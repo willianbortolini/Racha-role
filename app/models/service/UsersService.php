@@ -4,7 +4,7 @@ namespace app\models\service;
 
 use app\models\validacao\UsersValidacao;
 use app\models\service\Service;
-use app\util\UtilService;
+use app\models\service\ImagemService;
 
 class UsersService
 {
@@ -23,16 +23,16 @@ class UsersService
             if (isset($_POST["remove_foto_perfil"]) && $_POST["remove_foto_perfil"] === "1") {
                 $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
                 if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
-                    UtilService::deletarImagens($existe_imagem->foto_perfil);
+                    ImagemService::deletarImagens($existe_imagem->foto_perfil);
                 }
                 $Users->foto_perfil = '';
             } else {
                 if (isset($_FILES["foto_perfil"]["name"]) && $_FILES["foto_perfil"]["error"] === UPLOAD_ERR_OK) {
                     $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
                     if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
-                        UtilService::deletarImagens($existe_imagem->foto_perfil);
+                        ImagemService::deletarImagens($existe_imagem->foto_perfil);
                     }
-                    $Users->foto_perfil = UtilService::uploadImagem150e500("foto_perfil", $config_upload);
+                    $Users->foto_perfil = ImagemService::uploadImagem150e500("foto_perfil", $config_upload);
                     if (!$Users->foto_perfil) {
                         return false;
                     }
@@ -58,16 +58,16 @@ class UsersService
             if (isset($_POST["remove_foto_perfil"]) && $_POST["remove_foto_perfil"] === "1") {
                 $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
                 if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
-                    UtilService::deletarImagens($existe_imagem->foto_perfil);
+                    ImagemService::deletarImagens($existe_imagem->foto_perfil);
                 }
                 $Users->foto_perfil = '';
             } else {
                 if (isset($_FILES["foto_perfil"]["name"]) && $_FILES["foto_perfil"]["error"] === UPLOAD_ERR_OK) {
                     $existe_imagem = service::get(self::TABELA, self::CAMPO, $Users->users_id);
                     if (isset($existe_imagem->foto_perfil) && $existe_imagem->foto_perfil != '') {
-                        UtilService::deletarImagens($existe_imagem->foto_perfil);
+                        ImagemService::deletarImagens($existe_imagem->foto_perfil);
                     }
-                    $Users->foto_perfil = UtilService::uploadImagem150e500("foto_perfil", $config_upload);
+                    $Users->foto_perfil = ImagemService::uploadImagem150e500("foto_perfil", $config_upload);
                     if (!$Users->foto_perfil) {
                         return false;
                     }

@@ -5,7 +5,7 @@ namespace app\models\service;
 use app\models\validacao\GruposValidacao;
 use app\models\dao\GruposDao;
 use app\models\service\Usuarios_gruposService;
-use app\util\UtilService;
+use app\models\service\ImagemService;
 
 
 class GruposService
@@ -22,16 +22,16 @@ class GruposService
             if (isset($_POST["remove_foto"]) && $_POST["remove_foto"] === "1") {
                 $existe_imagem = service::get(self::TABELA, self::CAMPO, $Grupos->grupos_id);
                 if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
-                    UtilService::deletarImagens($existe_imagem->foto);
+                    ImagemService::deletarImagens($existe_imagem->foto);
                 }
                 $Grupos->foto = '';
             } else {
                 if (isset($_FILES["foto"]["name"]) && $_FILES["foto"]["error"] === UPLOAD_ERR_OK) {
                     $existe_imagem = service::get(self::TABELA, self::CAMPO, $Grupos->grupos_id);
                     if (isset($existe_imagem->foto) && $existe_imagem->foto != '') {
-                      UtilService::deletarImagens($existe_imagem->foto);
+                        ImagemService::deletarImagens($existe_imagem->foto);
                     }
-                    $Grupos->foto = UtilService::uploadImagem150e500("foto", $config_upload);
+                    $Grupos->foto = ImagemService::uploadImagem150e500("foto", $config_upload);
                     if (!$Grupos->foto) {
                         return false;
                     }
