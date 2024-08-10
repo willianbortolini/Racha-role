@@ -21,8 +21,6 @@
         });
     }
 
-
-
     const URL_BASE = "<?php echo URL_BASE ?>";
     const csrfToken = <?php echo json_encode($_SESSION['csrf_token']); ?>;
     var controller;
