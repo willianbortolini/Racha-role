@@ -45,19 +45,6 @@ self.addEventListener('activate', function (event) {
   return self.clients.claim(); // Fazer o service worker controlar imediatamente
 });
 
-// Recuperar os recursos do cache
-self.addEventListener('fetch', function (event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function (response) {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
-});
-
 if (workbox.navigationPreload.isSupported()) {
   workbox.navigationPreload.enable();
 }
