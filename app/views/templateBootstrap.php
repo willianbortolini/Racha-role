@@ -11,14 +11,14 @@
   </title>
   <link rel="manifest" type="text/css" href="<?php echo URL_BASE . "manifest.json" ?>">
   <script>
-   /* if ('serviceWorker' in navigator) {
+    /*if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('<?php //echo URL_BASE . "service-worker.js" ?>')
-      .then(function (registration) {
-        //console.log('Service Worker registrado com sucesso:', registration);
-      })
-      .catch(function (error) {
-        console.log('Falha ao registrar o Service Worker:', error);
-      });
+        .then(function (registration) {
+          //console.log('Service Worker registrado com sucesso:', registration);
+        })
+        .catch(function (error) {
+          console.log('Falha ao registrar o Service Worker:', error);
+        });
     }*/
 
     if ('serviceWorker' in navigator) {
