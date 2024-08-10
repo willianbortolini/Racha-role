@@ -1,7 +1,7 @@
 // This is the "Offline page" service worker
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-const CACHE_RACHA_ROLE = 'currency-converter-cache-v2'; // Incrementar a versão do cache
+const CACHE_RACHA_ROLE = 'currency-converter-cache-v3'; // Incrementar a versão do cache
 const CACHE = "pwabuilder-page";
 
 const urlsToCache = [
@@ -30,12 +30,12 @@ self.addEventListener('install', async (event) => {
 });
 
 // Ativar o service worker e remover caches antigos
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   const cacheWhitelist = [CACHE_RACHA_ROLE];
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(function (cacheNames) {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.map(function (cacheName) {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }
@@ -47,10 +47,10 @@ self.addEventListener('activate', function(event) {
 });
 
 // Recuperar os recursos do cache
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(event.request)
-      .then(function(response) {
+      .then(function (response) {
         if (response) {
           return response;
         }
