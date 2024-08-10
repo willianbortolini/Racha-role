@@ -144,55 +144,8 @@
 <script>
     <?php if (isset($newAuthToken)) { ?>
         localStorage.setItem('authTokenRachaRole', '<?php echo $newAuthToken; ?>');
-    <?php } ?>
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
-                // Verifica se há uma atualização do service worker
-                registration.onupdatefound = function () {
-                    const installingWorker = registration.installing;
-                    installingWorker.onstatechange = function () {
-                        if (installingWorker.state === 'installed') {
-                            if (navigator.serviceWorker.controller) {
-                                // Novo service worker encontrado, informe ao usuário
-                                console.log('New or updated content is available.');
-                                showUpdateNotification();
-                            } else {
-                                // Conteúdo pré-cachado foi atualizado
-                                console.log('Content is now available offline!');
-                            }
-                        }
-                    };
-                };
-            }).catch(function (error) {
-                console.log('ServiceWorker registration failed: ', error);
-            });
-        });
-    }
-
-    // Função para mostrar a notificação de atualização
-    function showUpdateNotification() {
-        const updateNotification = document.createElement('div');
-        updateNotification.classList.add('update-notification');
-        updateNotification.innerHTML = `
-    <div class="alert alert-info" role="alert">
-      New version available. <button id="refresh" class="btn btn-primary">Refresh</button>
-    </div>
-  `;
-        document.body.appendChild(updateNotification);
-
-        document.getElementById('refresh').addEventListener('click', function () {
-            if (navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
-            }
-        });
-    }
-
-    navigator.serviceWorker.addEventListener('controllerchange', function () {
-        window.location.reload();
-    });
-
+    <?php } ?>   
+   
     try {
         const response = await fetch('https://v6.exchangerate-api.com/v6/ccf43821c8928b0a0486dd6b/latest/BRL');
         const data = await response.json();

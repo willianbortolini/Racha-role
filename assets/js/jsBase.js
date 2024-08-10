@@ -35,3 +35,30 @@ function fecharAlerta(botao) {
 function fecharMsg(obj) {
     $(".msg").hide();
 }
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
+            // Verifica se há uma atualização do service worker
+            registration.onupdatefound = function () {
+                const installingWorker = registration.installing;
+                installingWorker.onstatechange = function () {
+                    if (installingWorker.state === 'installed') {
+                        if (navigator.serviceWorker.controller) {
+                            // Novo service worker encontrado, informe ao usuário
+                            console.log('New or updated content is available.');
+                            alert('Nova versão disponível. Atualize a página.');
+                        } else {
+                            // Conteúdo pré-cachado foi atualizado
+                            console.log('Content is now available offline!');
+                        }
+                    }
+                };
+            };
+        }).catch(function (error) {
+            console.log('ServiceWorker registration failed: ', error);
+        });
+    });
+}
