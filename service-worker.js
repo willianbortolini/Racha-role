@@ -1,7 +1,7 @@
 // This is the "Offline page" service worker
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-const CACHE_RACHA_ROLE = 'currency-converter-cache-v1'; // Incrementar a versão do cache
+const CACHE_RACHA_ROLE = 'currency-converter-cache-v2'; // Incrementar a versão do cache
 const CACHE = "pwabuilder-page";
 
 const urlsToCache = [
