@@ -50,7 +50,7 @@
 
 <div class="card mt-2">
     <div class="card-body">
-        <h5 class="card-title">No total,</h5>
+        <h5 class="card-title">No total</h5>
         <?php if ($saldo > 0) { ?>
             <p class="card-text">Devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
             </p>
