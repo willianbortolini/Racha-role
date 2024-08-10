@@ -1,8 +1,14 @@
 // This is the "Offline page" service worker
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-
+const CACHE_RACHA_ROLE = 'currency-converter-cache-v1'; // Incrementar a versão do cache
 const CACHE = "pwabuilder-page";
+
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/offline.html',
+];
 
 // TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
 const offlineFallbackPage = "offline.html";
@@ -15,8 +21,41 @@ self.addEventListener("message", (event) => {
 
 self.addEventListener('install', async (event) => {
   event.waitUntil(
-    caches.open(CACHE)
-      .then((cache) => cache.add(offlineFallbackPage))
+    caches.open(CACHE_RACHA_ROLE)
+      .then(function (cache) {
+        return cache.addAll(urlsToCache);
+      })
+  );
+  self.skipWaiting();
+});
+
+// Ativar o service worker e remover caches antigos
+self.addEventListener('activate', function(event) {
+  const cacheWhitelist = [CACHE_RACHA_ROLE];
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  return self.clients.claim(); // Fazer o service worker controlar imediatamente
+});
+
+// Recuperar os recursos do cache
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
   );
 });
 
@@ -65,7 +104,7 @@ self.addEventListener("push", (event) => {
 });
 
 // Adicionar listener para clicar na notificação
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   event.notification.close();
   event.waitUntil(
     clients.openWindow(event.notification.data.url)
