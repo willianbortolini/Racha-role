@@ -5,8 +5,7 @@ const CACHE_RACHA_ROLE = 'currency-converter-cache-v3'; // Incrementar a versão
 const CACHE = "pwabuilder-page";
 
 const urlsToCache = [
-  '/index.html',
-  '/offline.html',
+  'offline.html',
 ];
 
 // TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
