@@ -116,6 +116,20 @@
         amountUSD.addEventListener('input', convertFromUSD);
         amountARS.addEventListener('input', convertFromARS);
         clearButton.addEventListener('click', clearFields);
+
+        function updateOnlineStatus() {
+            if (!navigator.onLine) {
+                document.getElementById('offline-message').style.display = 'block';
+                //alert('Você está offline. Alguns recursos podem não estar disponíveis.');
+            } else {
+                document.getElementById('offline-message').style.display = 'none';
+                //alert('Você está online. Todos os recursos estão disponíveis.');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus(); // Verificar o status quando a página
     });
 
 </script>
