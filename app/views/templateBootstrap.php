@@ -22,6 +22,7 @@
     }*/
 
     if ('serviceWorker' in navigator) {
+      alert('serviceWorker')
       navigator.serviceWorker.register('<?php echo URL_BASE . "service-worker.js" ?>').then(function (registration) {
         //console.log('ServiceWorker registration successful with scope: ', registration.scope);
 
