@@ -1,121 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de moeda</title>
-    <style>
-        #offline-message {
-            display: none;
-            color: red;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      color: #333333;
+    }
+
+    p {
+      color: #555555;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container mt-5">
-        <div id="offline-message">
-            Você esta offline!
-        </div>
-        <form id="currency-converter-form">
-            <div class="form-group">
-                <label for="amount-real">Real BR:</label>
-                <input type="number" class="form-control" id="amount-real" placeholder="Insira um valor em BRL">
-            </div>
-            <div class="form-group">
-                <label for="amount-usd">Dollar:</label>
-                <div class="input-group">
-                    <input type="number" class="form-control" id="amount-usd" placeholder="Insira um valor em USD">
-                    <input type="number" class="form-control" id="conversion-usd" placeholder="Converção USD">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="amount-ars">Peso Argentino:</label>
-                <div class="input-group">
-                    <input type="number" class="form-control" id="amount-ars" placeholder="Insira um valor em ARS">
-                    <input type="number" class="form-control" id="conversion-ars" placeholder="Converção ARS">
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary ml-2" id="clear-button">Clear</button>
-            <div id="result" class="mt-3"></div>
-        </form>
-    </div>
+  <h1>Ops! Você está offline.</h1>
+  <p>Verifique sua conexão com a internet e tente novamente.</p>
 </body>
-
 </html>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-
-        const amountReal = document.getElementById('amount-real');
-        const amountUSD = document.getElementById('amount-usd');
-        const amountARS = document.getElementById('amount-ars');
-        const conversionRateUSD = document.getElementById('conversion-usd');
-        const conversionRateARS = document.getElementById('conversion-ars');
-        const result = document.getElementById('result');
-        const clearButton = document.getElementById('clear-button');
-
-        const savedRateUSD = localStorage.getItem('conversionRateUSD');
-        const savedRateARS = localStorage.getItem('conversionRateARS');
-
-        if (savedRateUSD) {
-            conversionRateUSD.value = savedRateUSD;
-        }
-        if (savedRateARS) {
-            conversionRateARS.value = savedRateARS;
-        }
-
-        function convertFromReal() {
-            const real = parseFloat(amountReal.value) || 0;
-            const rateUSD = parseFloat(conversionRateUSD.value) || 0;
-            const rateARS = parseFloat(conversionRateARS.value) || 0;
-
-            amountUSD.value = (real * rateUSD).toFixed(2);
-            amountARS.value = (real * rateARS).toFixed(2);
-            result.innerText = `Converted Amounts: USD ${amountUSD.value}, ARS ${amountARS.value}`;
-        }
-
-        function convertFromUSD() {
-            const usd = parseFloat(amountUSD.value) || 0;
-            const rateUSD = parseFloat(conversionRateUSD.value) || 0;
-            const rateARS = parseFloat(conversionRateARS.value) || 0;
-
-            if (rateUSD !== 0) {
-                amountReal.value = (usd / rateUSD).toFixed(2);
-                amountARS.value = (amountReal.value * rateARS).toFixed(2);
-                result.innerText = `Converted Amounts: BRL ${amountReal.value}, ARS ${amountARS.value}`;
-            }
-        }
-
-        function convertFromARS() {
-            const ars = parseFloat(amountARS.value) || 0;
-            const rateUSD = parseFloat(conversionRateUSD.value) || 0;
-            const rateARS = parseFloat(conversionRateARS.value) || 0;
-
-            if (rateARS !== 0) {
-                amountReal.value = (ars / rateARS).toFixed(2);
-                amountUSD.value = (amountReal.value * rateUSD).toFixed(2);
-                result.innerText = `Converted Amounts: BRL ${amountReal.value}, USD ${amountUSD.value}`;
-            }
-        }
-
-        function clearFields() {
-            amountReal.value = '';
-            amountUSD.value = '';
-            amountARS.value = '';
-            conversionRateUSD.value = '';
-            conversionRateARS.value = '';
-            result.innerText = '';
-        }
-
-        amountReal.addEventListener('input', convertFromReal);
-        amountUSD.addEventListener('input', convertFromUSD);
-        amountARS.addEventListener('input', convertFromARS);
-        clearButton.addEventListener('click', clearFields);
-    });
-
-</script>
