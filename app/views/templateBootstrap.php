@@ -28,6 +28,7 @@
 
         // Verifica se há uma atualização do service worker
         registration.onupdatefound = function () {
+          alert('tem atualização')
           const installingWorker = registration.installing;
           installingWorker.onstatechange = function () {
             if (installingWorker.state === 'installed') {
