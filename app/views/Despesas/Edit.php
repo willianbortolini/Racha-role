@@ -147,6 +147,10 @@
         font-size: 20px;
         color: gray;
     }
+    
+    .fundo-tabela {
+        height: 100px;
+    }
 </style>
 
 <form id="despesas-form" action="<?php echo URL_BASE . "Despesas/save" ?>" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
@@ -233,7 +237,7 @@
             </div>
         </div>
 
-        
+        <div class="fundo-tabela"></div>
 
         <div class="footer-bar">
             <div id="total-display" class="total-display mb-4" id="total-display" style="display: none;">
