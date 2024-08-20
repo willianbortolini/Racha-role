@@ -120,7 +120,7 @@
 
     .input-valor {
         padding: 5px;
-        width: 80px;
+        width: 70px;
         margin-left: 10px;
     }
 
