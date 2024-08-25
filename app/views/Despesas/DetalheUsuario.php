@@ -60,7 +60,7 @@
         <?php } ?>
     </div>
 </div>
-
+<?php i($item); ?>
 <ul class="list-group">
     <?php foreach ($detalhe as $item) { ?>
         <li class="list-group-item lista-item">
@@ -73,7 +73,13 @@
                 </div>
             </div>
             <div>
-                <strong>Descrição:</strong> <?= $item->descricao ?>
+                <div>
+                    <strong>Descrição:</strong> <?= $item->descricao ?>
+                </div>
+                <div>
+                    <a href="<?php echo URL_BASE . 'despesa/deleta/' ?>"
+                        class="btn btn-outline-danger">Deletar</a>    
+                </div>
             </div>
             <div>
                 <?php if ($item->valor > 0) { ?>
