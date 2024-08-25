@@ -60,7 +60,6 @@
         <?php } ?>
     </div>
 </div>
-<?php i($detalhe); ?>
 <ul class="list-group">
     <?php foreach ($detalhe as $item) { ?>
         <li class="list-group-item lista-item">
