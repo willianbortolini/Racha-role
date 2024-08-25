@@ -381,6 +381,7 @@ class Participantes_despesasDao extends Model
             SELECT 
                 'despesa' AS tipo,
                 despesas.descricao AS descricao,
+                despesas.despesas_id,
                 CASE 
                     WHEN participantes_despesas.users_id = :eu THEN -participantes_despesas.valor
                     WHEN participantes_despesas.users_id = :outro THEN participantes_despesas.valor
@@ -403,6 +404,7 @@ class Participantes_despesasDao extends Model
             SELECT 
                 'pagamento' AS tipo,
                 'pagamento' AS descricao,
+                0 despesas_id,
                 CASE 
                     WHEN pagamentos.pagador = :eu THEN -pagamentos.valor
                     WHEN pagamentos.pagador = :outro THEN pagamentos.valor
