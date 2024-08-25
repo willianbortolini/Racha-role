@@ -76,8 +76,8 @@
                     <strong>Descrição:</strong> <?= $item->descricao ?>
                 </div>
                 <div>
-                    <a href="<?php echo URL_BASE . 'despesa/deleta/' ?>"
-                        class="btn btn-outline-danger">Deletar</a>    
+                    <a href="<?php echo URL_BASE . 'despesa/deleta/' . $item->despesas_id ?>"
+                        class="btn btn-outline-danger btn-sm">Deletar</a>    
                 </div>
             </div>
             <div>
