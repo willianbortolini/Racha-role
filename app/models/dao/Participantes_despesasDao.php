@@ -399,7 +399,8 @@ class Participantes_despesasDao extends Model
                 END AS valor,
                 DATE_ADD(despesas.created_at, INTERVAL 1 SECOND) AS data,
                 grupos.nome grupos_nome,
-                despesas.ativo
+                despesas.ativo,
+                despesas.valor totalDespesa
             FROM 
                 participantes_despesas
             INNER JOIN despesas ON
@@ -424,7 +425,8 @@ class Participantes_despesasDao extends Model
                 END AS valor,
                 pagamentos.created_at data,
                 '' grupos_nome,
-                1 ativo
+                1 ativo,
+                0 totalDespesa
             FROM 
                 pagamentos
             WHERE

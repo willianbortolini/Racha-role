@@ -90,34 +90,40 @@
                 </div>
 
             </div>
-            <div class="row">
-                <div class="col-8">
+            <div class="d-flex justify-content-between">
+                <div>
                     <?php if ($item->valor > 0) { ?>
-                        <strong class="deveAvoce">R$ <?= number_format($item->valor, 2, ',', '.') ?></strong>
+                        Sua parte: <strong class="deveAvoce"> R$ <?= number_format($item->valor, 2, ',', '.') ?></strong>
                     <?php } else { ?>
-                        <strong class="voceDeve">R$ <?= number_format(abs($item->valor), 2, ',', '.') ?></strong>
+                        Sua parte: <strong class="voceDeve">R$ <?= number_format(abs($item->valor), 2, ',', '.') ?></strong>
                     <?php } ?>
                 </div>
 
-                <?php if ($item->despesas_id > 0) { ?>
-                    <?php if ($item->ativo == 1) { ?>
-                        <a href="<?php echo URL_BASE . 'despesas/desativa/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
-                            class="btn btn-outline-danger btn-sm"
-                            onclick="return confirm('Tem certeza de que deseja deletar esta despesa?');">
-                            Deletar
-                        </a>
-                    <?php } else { ?>
-                        <div class="col-4">
-                            <a href="<?php echo URL_BASE . 'despesas/ativar/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
-                                class="btn btn-outline-info btn-sm">Recuperar</a>
-                        </div>
-                    <?php } ?>
-                <?php } ?>
+                <div>
+                    Total: R$ <?= number_format(abs($item->totalDespesa), 2, ',', '.') ?>
+                </div>
+
             </div>
             <?php if (!empty($item->grupos_nome)) { ?>
                 <div>
                     <strong>Grupo:</strong> <?= $item->grupos_nome ?>
                 </div>
+            <?php } ?>
+
+
+            <?php if ($item->despesas_id > 0) { ?>
+                <?php if ($item->ativo == 1) { ?>
+                    <a href="<?php echo URL_BASE . 'despesas/desativa/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
+                        class="btn btn-outline-danger btn-sm"
+                        onclick="return confirm('Tem certeza de que deseja deletar esta despesa?');">
+                        Deletar
+                    </a>
+                <?php } else { ?>
+                    <div>
+                        <a href="<?php echo URL_BASE . 'despesas/ativar/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
+                            class="btn btn-outline-info btn-sm">Recuperar</a>
+                    </div>
+                <?php } ?>
             <?php } ?>
         </li>
     <?php } ?>
