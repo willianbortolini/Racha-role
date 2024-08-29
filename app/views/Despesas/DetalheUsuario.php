@@ -41,6 +41,10 @@
     .deleted {
         background-color: #dddddd;
     }
+
+    .fundo-tabela {
+        height: 100px;
+    }
 </style>
 
 
@@ -118,7 +122,7 @@
     <?php } ?>
 </ul>
 
-
+<div class="fundo-tabela"></div>
 <div class="footer-bar">
     <div class="footer-bar2">
         <a href="<?php echo URL_BASE ?>" class="btn btn-outline-secondary">Voltar</a>
