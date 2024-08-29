@@ -78,7 +78,7 @@
             <?= ($item->ativo == 0) ? '<strong> Deletado</strong>' : '' ?>
             <div class="d-flex justify-content-between">
                 <div>
-                    <strong>Tipo:</strong> <?= ucfirst($item->tipo) ?> 
+                    <strong>Tipo:</strong> <?= ucfirst($item->tipo) ?>
                 </div>
                 <div>
                     <strong>Data:</strong> <?= date('d/m/Y H:i:s', strtotime($item->data)) ?>
@@ -101,10 +101,11 @@
 
                 <?php if ($item->despesas_id > 0) { ?>
                     <?php if ($item->ativo == 1) { ?>
-                        <div class="col-4">
-                            <a href="<?php echo URL_BASE . 'despesas/desativa/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
-                                class="btn btn-outline-danger btn-sm">Deletar</a>
-                        </div>
+                        <a href="<?php echo URL_BASE . 'despesas/desativa/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
+                            class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('Tem certeza de que deseja deletar esta despesa?');">
+                            Deletar
+                        </a>
                     <?php } else { ?>
                         <div class="col-4">
                             <a href="<?php echo URL_BASE . 'despesas/ativar/' . $item->despesas_id . '/' . $amigo->users_uid ?>"
