@@ -55,7 +55,7 @@
             <p class="card-text">Devem a você <span class="deveAvoce">R$ <?= number_format($saldo, 2, ',', '.') ?></span>
             </p>
         <?php } else { ?>
-            <p class="card-text">Você deve <span class="deveAvoce">R$ <?= number_format($saldo * -1, 2, ',', '.') ?></span>
+            <p class="card-text">Você deve <span class="voceDeve">R$ <?= number_format($saldo * -1, 2, ',', '.') ?></span>
             </p>
         <?php } ?>
     </div>
