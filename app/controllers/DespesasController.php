@@ -24,11 +24,10 @@ class DespesasController extends Controller
 
     public function detalhe($user_uid)
     {
-        $dados["amigo"] = Service::get("users", "users_uid",$user_uid );
+        $dados["amigo"] = Service::get("users", "users_uid", $user_uid);
         $user_id = $dados["amigo"]->users_id;
         $dados["detalhe"] = Participantes_despesasService::negociacoesEntreDoisUsuarios($_SESSION['id'], $user_id);
         $dados["saldo"] = Participantes_despesasService::totalDividasEntreUsuarios($_SESSION['id'], $user_id);
-       
         $dados["view"] = "Despesas/DetalheUsuario";
         $this->load("templateBootstrap", $dados);
     }
@@ -36,7 +35,7 @@ class DespesasController extends Controller
     public function edit($id)
     {
         $dados["despesas"] = Service::get($this->view, $this->campo, $id);
-        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);        
+        $dados["users"] = AmigosService::meusAmigos($_SESSION['id']);
         $dados["grupos"] = GruposService::gruposDoUsuario($_SESSION['id']);
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
@@ -50,21 +49,29 @@ class DespesasController extends Controller
 
         $dados["view"] = "Despesas/Edit";
         $this->load("templateBootstrap", $dados);
-    }    
+    }
 
     public function delete()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method']) && $_POST['_method'] === 'DELETE') {
-            $csrfToken = $_POST['csrf_token'];
-            if ($csrfToken === $_SESSION['csrf_token']) {
-                $id = $_POST['id'];
 
-                // Excluir a imagem, se existir               
+    }
 
-                // Excluir
-                DespesasService::excluir($id);
-            }
-        }
+    public function desativa($despesas_id, $user_uid)
+    {
+        $despesas = new \stdClass();
+        $despesas->despesas_id = $despesas_id;
+        $despesas->ativo = 0;
+        Service::salvar($despesas, 'despesas_id', [], 'despesas');
+        $this->redirect(URL_BASE . "despesas/detalhe/" . $user_uid);
+    }
+
+    public function ativar($despesas_id, $user_uid)
+    {
+        $despesas = new \stdClass();
+        $despesas->despesas_id = $despesas_id;
+        $despesas->ativo = 1;
+        Service::salvar($despesas, 'despesas_id', [], 'despesas');
+        $this->redirect(URL_BASE . "despesas/detalhe/" . $user_uid);
     }
 
     public function save()
@@ -89,7 +96,7 @@ class DespesasController extends Controller
                     $despesas->users_id = $_POST["users_id"];
                 if (isset($_POST["grupos_id"]))
                     $despesas->grupos_id = $_POST["grupos_id"];
-                
+
 
             }
             $participantes = $_POST['participantes']; // Array de IDs de participantes
@@ -97,7 +104,7 @@ class DespesasController extends Controller
             Flash::setForm($despesas);
             $despesa = DespesasService::salvar($despesas, $participantes, $valorPorParticipante);
             if ($despesa > 1) //se é maior que um inseriu novo 
-            {               
+            {
                 $this->redirect(URL_BASE);
             } else {
                 if (!$despesas->despesas_id) {
@@ -108,5 +115,7 @@ class DespesasController extends Controller
             }
         }
     }
+
+   
 
 }

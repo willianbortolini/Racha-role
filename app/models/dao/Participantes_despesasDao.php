@@ -168,11 +168,12 @@ class Participantes_despesasDao extends Model
                         FROM 
                             participantes_despesas p1
     					INNER JOIN despesas ON
-    					despesas.despesas_id = p1.despesas_id 
+    					    despesas.despesas_id = p1.despesas_id 
                         WHERE 
                             (p1.valor - p1.valor_pago) > 0
                             AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
                             AND p1.devendo_para != p1.users_id
+                            AND despesas.ativo = 1
                         GROUP BY 
                             CASE 
                                 WHEN p1.devendo_para = :users_id THEN p1.users_id
@@ -221,10 +222,13 @@ class Participantes_despesasDao extends Model
                             END) AS saldo
                         FROM 
                             participantes_despesas p1
+                        INNER JOIN despesas ON
+                	        despesas.despesas_id = p1.despesas_id
                         WHERE 
                             (p1.valor - p1.valor_pago) > 0
                             AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
                             AND p1.devendo_para != p1.users_id
+                            AND despesas.ativo = 1
                         GROUP BY 
                             CASE 
                                 WHEN p1.devendo_para = :users_id THEN p1.users_id
@@ -272,10 +276,13 @@ class Participantes_despesasDao extends Model
                             END) AS saldo
                         FROM 
                             participantes_despesas p1
+                        INNER JOIN despesas ON
+                	        despesas.despesas_id = p1.despesas_id
                         WHERE 
                             (p1.valor - p1.valor_pago) > 0
                             AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
                             AND p1.devendo_para != p1.users_id
+                            AND despesas.ativo = 1
                         GROUP BY 
                             CASE 
                                 WHEN p1.devendo_para = :users_id THEN p1.users_id
@@ -335,11 +342,14 @@ class Participantes_despesasDao extends Model
                     END) AS saldo
                 FROM 
                     participantes_despesas p1
+                INNER JOIN despesas ON
+                	despesas.despesas_id = p1.despesas_id
                 WHERE 
                     (p1.valor - p1.valor_pago) > 0
                     AND (p1.devendo_para = :devedor OR p1.users_id = :devedor)
                     AND (p1.devendo_para = :credor OR p1.users_id = :credor)
                     AND p1.devendo_para != p1.users_id
+                    AND despesas.ativo = 1
                 GROUP BY 
                     CASE 
                         WHEN p1.devendo_para = :devedor THEN p1.users_id
@@ -382,12 +392,14 @@ class Participantes_despesasDao extends Model
                 'despesa' AS tipo,
                 despesas.descricao AS descricao,
                 despesas.despesas_id,
+                0 pagamentos_id,
                 CASE 
                     WHEN participantes_despesas.users_id = :eu THEN -participantes_despesas.valor
                     WHEN participantes_despesas.users_id = :outro THEN participantes_despesas.valor
                 END AS valor,
                 DATE_ADD(despesas.created_at, INTERVAL 1 SECOND) AS data,
-                grupos.nome grupos_nome
+                grupos.nome grupos_nome,
+                despesas.ativo
             FROM 
                 participantes_despesas
             INNER JOIN despesas ON
@@ -405,12 +417,14 @@ class Participantes_despesasDao extends Model
                 'pagamento' AS tipo,
                 'pagamento' AS descricao,
                 0 despesas_id,
+                pagamentos.pagamentos_id pagamentos_id,
                 CASE 
                     WHEN pagamentos.pagador = :eu THEN -pagamentos.valor
                     WHEN pagamentos.pagador = :outro THEN pagamentos.valor
                 END AS valor,
                 pagamentos.created_at data,
-                '' grupos_nome
+                '' grupos_nome,
+                1 ativo
             FROM 
                 pagamentos
             WHERE
