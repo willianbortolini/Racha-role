@@ -309,11 +309,14 @@ class Participantes_despesasDao extends Model
     {
         $conn = $this->db;
         try {
-            $sql = "SELECT participantes_despesas_id, valor, valor_pago
+            $sql = "SELECT participantes_despesas.participantes_despesas_id, participantes_despesas.valor, participantes_despesas.valor_pago
                     FROM participantes_despesas 
+                    INNER JOIN despesas ON
+                	    despesas.despesas_id = participantes_despesas.despesas_id
                     WHERE participantes_despesas.users_id = :devedor
-                    AND participantes_despesas.devendo_para = :credor
-                    AND (valor-valor_pago) > 0 ";
+                    AND participantes_despesas.devendo_para = :credor                    
+                    AND (participantes_despesas.valor - participantes_despesas.valor_pago) > 0 
+                    AND despesas.ativo = 1";
 
             $parametro = array(
                 'devedor' => $devedor,
