@@ -47,6 +47,7 @@ class GruposDao extends Model
                                 (p1.valor - p1.valor_pago) > 0
                                 AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
                                 AND p1.devendo_para != p1.users_id
+                                AND despesas.ativo = 1
                             GROUP BY 
                                 despesas.grupos_id,
                                 CASE 
