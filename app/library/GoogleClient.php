@@ -20,7 +20,7 @@ class GoogleClient
     {
         $guzzleClient = new GuzzleClient(['curl' => [CURLOPT_SSL_VERIFYPEER => false]]);
         $this->client->setHttpClient($guzzleClient);
-        $this->client->setAuthConfig('credentials_google.json');
+        $this->client->setAuthConfig('config/credentials_google.json');
         $this->client->setRedirectUri('http://localhost:80/login/google');
         $this->client->addScope('email');
         $this->client->addScope('profile');

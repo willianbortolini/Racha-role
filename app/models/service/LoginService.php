@@ -22,7 +22,7 @@ class LoginService
 
         $guzzleClient = new GuzzleClient(['curl' => [CURLOPT_SSL_VERIFYPEER => false]]);
         $client->setHttpClient($guzzleClient);
-        $client->setAuthConfig('credentials_google.json');
+        $client->setAuthConfig('config/credentials_google.json');
         $client->setRedirectUri(URL_BASE.'login/google');
         $client->addScope('email');
         $client->addScope('profile');
@@ -34,7 +34,7 @@ class LoginService
         $client = new Client;
         $guzzleClient = new GuzzleClient(['curl' => [CURLOPT_SSL_VERIFYPEER => false]]);
         $client->setHttpClient($guzzleClient);
-        $client->setAuthConfig('credentials_google.json');
+        $client->setAuthConfig('config/credentials_google.json');
         $client->setRedirectUri(URL_BASE.'login/google');
         $client->addScope('email');
         $client->addScope('profile');
