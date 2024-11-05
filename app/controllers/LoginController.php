@@ -148,9 +148,9 @@ class LoginController extends Controller
 
     public function redefinirSenhaSalvar()
     {
-        $usuario = new \stdClass();
-        $usuario->users_id = $_POST["users_id"];
-        $getUsuario = Service::getGeral("users", "users_uid", "=", $usuario->users_uid);
+        $usuario = new \stdClass();        
+        $getUsuario = Service::getGeral("users", "users_uid", "=", $_POST["users_uid"]);
+        $usuario->users_id = $getUsuario->users_id;
         $usuario->password = $_POST['password'];
         $usuario->confirmacao = $_POST['confirmacao'];
         $usuario->recuperacao = "";
