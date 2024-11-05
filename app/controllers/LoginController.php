@@ -150,7 +150,7 @@ class LoginController extends Controller
     {
         $usuario = new \stdClass();
         $usuario->users_id = $_POST["users_id"];
-        $getUsuario = Service::getGeral("users", "users_id", "=", $usuario->users_id);
+        $getUsuario = Service::getGeral("users", "users_uid", "=", $usuario->users_uid);
         $usuario->password = $_POST['password'];
         $usuario->confirmacao = $_POST['confirmacao'];
         $usuario->recuperacao = "";
