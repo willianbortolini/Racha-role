@@ -17,6 +17,7 @@ class DespesasService
 
         $dao = new DespesasDao();
         if ($dao->jaGravouEssaDespesa($despesas)){
+            Flash::setMsg('Aviso ' . 'Essa despesa já foi adicionada anteriormente.', 2);
             return 2;    
         }
 
