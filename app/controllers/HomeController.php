@@ -4,10 +4,7 @@ namespace app\controllers;
 
 use app\core\Controller;
 use app\core\Flash;
-use app\models\service\Service;
-use app\models\service\Participantes_despesasService;
 use app\models\service\Usuarios_gruposService;
-use app\util\UtilService;
 
 class HomeController extends Controller
 {
