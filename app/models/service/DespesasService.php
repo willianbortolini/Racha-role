@@ -4,7 +4,7 @@ namespace app\models\service;
 
 use app\models\validacao\DespesasValidacao;
 use app\models\service\PushService;
-use app\models\Dao\DespesasDao;
+use app\models\dao\DespesasDao;
 use app\core\Flash;
 
 class DespesasService
