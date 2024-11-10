@@ -16,8 +16,8 @@ class HomeController extends Controller
     public function __construct()
     {
         if (!isset($_SESSION['id'])) {
-            $this->redirect(URL_BASE . "login");
-            exit;
+            $dados["view"] = "Home/Index";
+            $this->load("templateBootstrap", $dados);
         }
     }
 
