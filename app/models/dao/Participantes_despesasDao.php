@@ -156,30 +156,32 @@ class Participantes_despesasDao extends Model
         try {
             $sql = "WITH saldos AS (
                         SELECT 
-                            CASE 
-                                WHEN p1.devendo_para = :users_id THEN p1.users_id
-                                ELSE p1.devendo_para 
-                            END AS usuario,
-                            SUM(CASE 
-                                WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
-                                ELSE -(p1.valor - p1.valor_pago) 
-                            END) AS saldo,
-    						despesas.grupos_id
-                        FROM 
-                            participantes_despesas p1
-    					INNER JOIN despesas ON
-    					    despesas.despesas_id = p1.despesas_id 
-                        WHERE 
-                            (p1.valor - p1.valor_pago) > 0
-                            AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
-                            AND p1.devendo_para != p1.users_id
-                            AND despesas.ativo = 1
+                            usuario,
+                            grupos_id,
+                            SUM(saldo) AS saldo
+                        FROM (
+                            SELECT 
+                                CASE 
+                                    WHEN p1.devendo_para = :users_id THEN p1.users_id
+                                    ELSE p1.devendo_para 
+                                END AS usuario,
+                                CASE 
+                                    WHEN p1.devendo_para = :users_id THEN p1.valor - p1.valor_pago
+                                    ELSE -(p1.valor - p1.valor_pago) 
+                                END AS saldo,
+                                despesas.grupos_id
+                            FROM 
+                                participantes_despesas p1
+                            INNER JOIN despesas ON
+                                despesas.despesas_id = p1.despesas_id 
+                            WHERE 
+                                (p1.valor - p1.valor_pago) > 0
+                                AND (p1.devendo_para = :users_id OR p1.users_id = :users_id)
+                                AND p1.devendo_para != p1.users_id
+                                AND despesas.ativo = 1
+                        ) AS saldos
                         GROUP BY 
-                            CASE 
-                                WHEN p1.devendo_para = :users_id THEN p1.users_id
-                                ELSE p1.devendo_para 
-                            END
-    						, despesas.grupos_id
+                            usuario
                     )
                     SELECT 
                         s.usuario AS users_id,
@@ -328,7 +330,7 @@ class Participantes_despesasDao extends Model
             throw new \Exception($e->getMessage());
         }
     }
-    
+
     public function totalDividasEntreUsuarios($devedor, $credor)
     {
         $conn = $this->db;
@@ -369,7 +371,7 @@ class Participantes_despesasDao extends Model
                 'credor' => $credor
             );
 
-            return self::consultar($this->db, $sql, $parametro,FALSE)->valor;
+            return self::consultar($this->db, $sql, $parametro, FALSE)->valor;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
