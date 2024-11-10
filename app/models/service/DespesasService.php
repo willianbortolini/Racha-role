@@ -4,6 +4,7 @@ namespace app\models\service;
 
 use app\models\validacao\DespesasValidacao;
 use app\models\service\PushService;
+use app\models\Dao\DespesasDao;
 use app\core\Flash;
 
 class DespesasService
@@ -13,6 +14,12 @@ class DespesasService
 
     public static function salvar($despesas, $participantes, $valoresPorParticipante)
     {
+
+        $dao = new DespesasDao();
+        if ($dao->jaGravouEssaDespesa($despesas)){
+            return 2;    
+        }
+
         $transaction = false;
         if (!Service::inTransaction()) {
             Service::begin_tran();
@@ -20,7 +27,8 @@ class DespesasService
         }
 
         try {
-            $validacao = DespesasValidacao::salvar($despesas);
+            $validacao = DespesasValidacao::salvar($despesas);       
+
             $despesa = Service::salvar($despesas, self::CAMPO, $validacao->listaErros(), self::TABELA);
 
             if ($despesa > 1) {
