@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DivideAí - Divisão de Contas</title>
+  <style>
+    :root {
+      --primary: #5e60ce;
+      --secondary: #6930c3;
+      --accent: #7400b8;
+      --background: #f8f9fa;
+      --card: #ffffff;
+      --text: #333333;
+      --text-light: #777777;
+      --success: #38b000;
+      --danger: #d90429;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      flex: 1;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 20px 80px;
+      width: 100%;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .header .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .card {
+      background-color: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .balance {
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    .balance-amount {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .balance-positive {
+      color: var(--success);
+    }
+
+    .balance-negative {
+      color: var(--danger);
+    }
+
+    .balance-text {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--secondary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .item-subtitle {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .item-amount {
+      font-weight: 600;
+      margin-left: 16px;
+    }
+
+    .amount-positive {
+      color: var(--success);
+    }
+
+    .amount-negative {
+      color: var(--danger);
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background-color: var(--accent);
+    }
+
+    .fab {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--card);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: 12px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .search-bar {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 50px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      width: 100%;
+      margin-left: 8px;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    /* Form styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      font-size: 16px;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-container input {
+      margin-right: 12px;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 50px;
+      padding: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 50px;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 16px;
+    }
+
+    .profile-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .profile-email {
+      color: var(--text-light);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      margin-top: 32px;
+    }
+
+    .split-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .split-option {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background-color: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    .split-option.active {
+      border: 2px solid var(--primary);
+    }
+
+    .split-option-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(94, 96, 206, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      color: var(--primary);
+    }
+
+    .split-option-details {
+      flex: 1;
+    }
+
+    .split-option-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .split-option-description {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .payment-content {
+      display: none;
+    }
+
+    .payment-content.active {
+      display: block;
+    }
+
+    /* AMIGOS LIST ITEM */
+    .amigo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background-color: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 12px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .amigo-item:hover {
+      background-color: rgba(94, 96, 206, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .amigo-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .amigo-input-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .division-input {
+      width: 80px;
+      padding: 10px 12px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: right;
+      color: var(--text);
+      background-color: var(--background);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .division-input:disabled {
+      background-color: #eee;
+      color: var(--text-light);
+    }
+
+    .input-unit {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .valor-calculado {
+      font-weight: 600;
+      color: var(--primary);
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .feedback-message {
+      margin-top: 10px;
+      font-weight: 600;
+      color: var(--danger);
+    }
+
+    /* Esconde o campo se o checkbox não estiver ativo (opcional) */
+    .amigo-item:not(:has(input[type="checkbox"]:checked)) .amigo-input-container {
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 500px) {
+      .container {
+        padding: 16px;
+      }
+    }
+
+    .scroll-padding {
+      height: 50px;
+      /* ou ajuste conforme o tamanho do seu menu + fab */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Tela de Amigos -->
+    <div id="amigos-screen" class="screen active">
+      <div class="header">
+        <h1>Amigos</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Procurar amigos...">
+      </div>
+
+      <div class="card">
+        <div class="balance">
+          <div class="balance-text">SALDO TOTAL</div>
+          <div class="balance-amount balance-positive">R$ 125,50</div>
+          <div class="balance-text">você vai receber</div>
+        </div>
+      </div>
+
+      <button class="btn" style="margin-top: 20px; margin-bottom: 20px;"
+        onclick="showScreen('adicionar-amigo-screen')">Adicionar
+        Amigo</button>
+
+      <div class="card">
+        <div class="item" onclick="showScreen('amigo-detalhes-screen')">
+          <div class="item-avatar">JC</div>
+          <div class="item-details">
+            <div class="item-title">João Carlos</div>
+            <div class="item-subtitle">deve a você</div>
+          </div>
+          <div class="item-amount amount-positive">R$ 75,00</div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">AM</div>
+          <div class="item-details">
+            <div class="item-title">Ana Maria</div>
+            <div class="item-subtitle">deve a você</div>
+          </div>
+          <div class="item-amount amount-positive">R$ 85,50</div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">PL</div>
+          <div class="item-details">
+            <div class="item-title">Paulo Lima</div>
+            <div class="item-subtitle">você deve</div>
+          </div>
+          <div class="item-amount amount-negative">R$ 35,00</div>
+        </div>
+      </div>
+
+      <div class="fab" onclick="showScreen('nova-despesa-screen')">+</div>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela de Grupos -->
+    <div id="grupos-screen" class="screen">
+      <div class="header">
+        <h1>Grupos</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Procurar grupos...">
+      </div>
+
+      <div class="card">
+        <div class="item" onclick="showScreen('grupo-detalhes-screen')">
+          <div class="item-avatar">🍔</div>
+          <div class="item-details">
+            <div class="item-title">Almoço de Sexta</div>
+            <div class="item-subtitle">4 membros • última atividade hoje</div>
+          </div>
+          <div class="item-amount amount-positive">R$ 45,00</div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">🏠</div>
+          <div class="item-details">
+            <div class="item-title">República</div>
+            <div class="item-subtitle">3 membros • última atividade ontem</div>
+          </div>
+          <div class="item-amount amount-negative">R$ 120,00</div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">🏖️</div>
+          <div class="item-details">
+            <div class="item-title">Viagem Praia</div>
+            <div class="item-subtitle">8 membros • última atividade 3 dias atrás</div>
+          </div>
+          <div class="item-amount amount-positive">R$ 200,50</div>
+        </div>
+      </div>
+
+      <button class="btn" onclick="showScreen('adicionar-grupo-screen')" style="margin-top: 20px;">Criar novo
+        grupo</button>
+
+      <div class="fab" onclick="showScreen('nova-despesa-screen')">+</div>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela Nova Despesa -->
+    <div id="nova-despesa-screen" class="screen">
+      <div class="header">
+        <h1>Nova Despesa</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <input type="text" class="form-input" placeholder="Ex: Jantar no restaurante">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Valor</label>
+          <input type="text" class="form-input" placeholder="R$ 0,00">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Data</label>
+          <input type="date" class="form-input" value="2025-03-19">
+        </div>
+
+
+      </div>
+
+      <div class="section-title">Como dividir?</div>
+
+      <div class="split-options">
+        <div class="split-option active">
+          <div class="split-option-icon">=</div>
+          <div class="split-option-details">
+            <div class="split-option-title">Igualmente</div>
+            <div class="split-option-description">Dividir o valor igualmente entre todos</div>
+          </div>
+        </div>
+
+        <div class="split-option">
+          <div class="split-option-icon">%</div>
+          <div class="split-option-details">
+            <div class="split-option-title">Percentual</div>
+            <div class="split-option-description">Definir uma porcentagem para cada um</div>
+          </div>
+        </div>
+
+        <div class="split-option">
+          <div class="split-option-icon">$</div>
+          <div class="split-option-details">
+            <div class="split-option-title">Valores exatos</div>
+            <div class="split-option-description">Definir valores diferentes para cada um</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Dividir com</label>
+
+          <!-- Campo de busca para filtrar -->
+          <div class="search-bar" style="margin-bottom: 12px;">
+            <span>🔍</span>
+            <input type="text" id="search-amigos" placeholder="Procurar amigo...">
+          </div>
+
+          <!-- Lista de amigos -->
+          <div id="amigos-list">
+            <div class="checkbox-container amigo-item">
+              <div class="amigo-info">
+                <input type="checkbox" id="amigo1" checked onchange="updateDivision()">
+                <label for="amigo1">Você</label>
+              </div>
+              <div class="amigo-input-container">
+                <input type="number" class="division-input" value="0" step="any" min="0" disabled>
+                <span class="input-unit">R$</span>
+                <div class="valor-calculado"></div>
+              </div>
+            </div>
+
+            <div class="checkbox-container amigo-item">
+              <div class="amigo-info">
+                <input type="checkbox" id="amigo2" checked onchange="updateDivision()">
+                <label for="amigo2">João Carlos</label>
+              </div>
+              <div class="amigo-input-container">
+                <input type="number" class="division-input" value="0" step="any" min="0" disabled>
+                <span class="input-unit">R$</span>
+                <div class="valor-calculado"></div>
+              </div>
+            </div>
+
+            <div class="checkbox-container amigo-item">
+              <div class="amigo-info">
+                <input type="checkbox" id="amigo3" checked onchange="updateDivision()">
+                <label for="amigo3">Ana Maria</label>
+              </div>
+              <div class="amigo-input-container">
+                <input type="number" class="division-input" value="0" step="any" min="0" disabled>
+                <span class="input-unit">R$</span>
+                <div class="valor-calculado"></div>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+
+      <button class="btn" style="margin-top: 20px;">Salvar despesa</button>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela Pagar -->
+    <div id="pagar-screen" class="screen">
+      <div class="header">
+        <h1>Pagamentos</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">A receber</div>
+        <div class="tab">A pagar</div>
+      </div>
+
+      <div id="receber-content" class="payment-content active">
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar">JC</div>
+            <div class="item-details">
+              <div class="item-title">João Carlos</div>
+              <div class="item-subtitle">deve a você</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 75,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar">AM</div>
+            <div class="item-details">
+              <div class="item-title">Ana Maria</div>
+              <div class="item-subtitle">deve a você</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 85,50</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pagar-content" class="payment-content">
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar">PL</div>
+            <div class="item-details">
+              <div class="item-title">Paulo Lima</div>
+              <div class="item-subtitle">você deve</div>
+            </div>
+            <div class="item-amount amount-negative">R$ 35,00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Atividades recentes</div>
+
+      <div class="card">
+        <div class="item">
+          <div class="item-avatar">AM</div>
+          <div class="item-details">
+            <div class="item-title">Ana Maria pagou a você</div>
+            <div class="item-subtitle">Hoje às 14:30</div>
+          </div>
+          <div class="item-amount amount-positive">R$ 45,00</div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">PL</div>
+          <div class="item-details">
+            <div class="item-title">Você pagou a Paulo</div>
+            <div class="item-subtitle">Ontem às 19:15</div>
+          </div>
+          <div class="item-amount amount-negative">R$ 25,00</div>
+        </div>
+      </div>
+
+      <button class="btn" style="margin-top: 20px;" onclick="showScreen('registrar-pagamento-screen')">Registrar
+        pagamento</button>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela Perfil -->
+    <div id="perfil-screen" class="screen">
+      <div class="header">
+        <h1>Perfil</h1>
+      </div>
+
+      <div class="profile-header">
+        <div class="profile-avatar">MS</div>
+        <div class="profile-name">Maria Silva</div>
+        <div class="profile-email">maria.silva@email.com</div>
+      </div>
+
+      <div class="card">
+        <div class="item">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">💳</div>
+          <div class="item-details">
+            <div class="item-title">Métodos de pagamento</div>
+            <div class="item-subtitle">Adicione cartões e Pix</div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">🔔</div>
+          <div class="item-details">
+            <div class="item-title">Notificações</div>
+            <div class="item-subtitle">Gerencie suas notificações</div>
+          </div>
+        </div>
+
+        <div class="item" onclick="showScreen('config-usuario-screen')">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">⚙️</div>
+          <div class="item-details">
+            <div class="item-title">Configurações</div>
+            <div class="item-subtitle">Idioma, moeda e privacidade</div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">❓</div>
+          <div class="item-details">
+            <div class="item-title">Ajuda e suporte</div>
+            <div class="item-subtitle">Perguntas frequentes e contato</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" style="margin-top: 20px; background-color: var(--danger);">Sair da conta</button>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela de Amigo Individual -->
+    <div id="amigo-detalhes-screen" class="screen">
+      <div class="header">
+        <h1>
+          <span onclick="showScreen('amigos-screen')" style="margin-right: 10px; cursor: pointer;">←</span>
+          João Carlos
+        </h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="card">
+        <div class="balance">
+          <div class="balance-text">SALDO COM JOÃO</div>
+          <div class="balance-amount balance-positive">R$ 75,00</div>
+          <div class="balance-text">João deve a você</div>
+        </div>
+      </div>
+
+      <div id="transacoes-amigo-content" class="payment-content active">
+        <div class="section-title">Março, 2025</div>
+
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--success); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Restaurante Italiano</div>
+              <div class="item-subtitle">Você pagou • 18 de março</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 45,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--primary); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Supermercado</div>
+              <div class="item-subtitle">João pagou • 10 de março</div>
+            </div>
+            <div class="item-amount amount-negative">R$ 25,00</div>
+          </div>
+        </div>
+
+        <div class="section-title">Fevereiro, 2025</div>
+
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--success); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Pizza</div>
+              <div class="item-subtitle">Você pagou • 25 de fevereiro</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 55,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--success); font-size: 14px;">💸</div>
+            <div class="item-details">
+              <div class="item-title">Pagamento recebido</div>
+              <div class="item-subtitle">Via Pix • 15 de fevereiro</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 30,00</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="resumo-amigo-content" class="payment-content">
+        <div class="card">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Despesas pagas por você</label>
+            <div class="item-amount amount-positive" style="font-size: 20px; margin-top: 5px;">R$ 130,00</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Despesas pagas por João</label>
+            <div class="item-amount amount-negative" style="font-size: 20px; margin-top: 5px;">R$ 25,00</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Pagamentos recebidos</label>
+            <div class="item-amount amount-positive" style="font-size: 20px; margin-top: 5px;">R$ 30,00</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Saldo final</label>
+            <div class="item-amount amount-positive" style="font-size: 24px; margin-top: 5px; font-weight: bold;">R$
+              75,00
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fab-container"
+        style="position: fixed; bottom: 90px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+        <div class="fab"
+          style="width: auto; padding: 0 20px; border-radius: 30px; display: flex; align-items: center; gap: 10px;"
+          onclick="showScreen('registrar-pagamento-screen')">
+          <span>💸</span> Registrar pagamento
+        </div>
+
+      </div>
+
+      <div class="scroll-padding"></div>
+    </div>
+
+
+    <!-- Tela de Grupo Individual -->
+    <div id="grupo-detalhes-screen" class="screen">
+      <div class="header">
+        <h1>
+          <span onclick="showScreen('grupos-screen')" style="margin-right: 10px; cursor: pointer;">←</span>
+          República
+        </h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="card">
+        <div class="balance">
+          <div class="balance-text">SALDO NO GRUPO</div>
+          <div class="balance-amount balance-negative">R$ 120,00</div>
+          <div class="balance-text">você deve ao grupo</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Membros</div>
+        <div class="tab">Transações</div>
+        <div class="tab">Informações</div>
+      </div>
+
+      <div id="membros-grupo-content" class="payment-content active">
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar">MS</div>
+            <div class="item-details">
+              <div class="item-title">Você (Maria Silva)</div>
+              <div class="item-subtitle">deve ao grupo</div>
+            </div>
+            <div class="item-amount amount-negative">R$ 120,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar">JC</div>
+            <div class="item-details">
+              <div class="item-title">João Carlos</div>
+              <div class="item-subtitle">deve receber</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 60,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar">AM</div>
+            <div class="item-details">
+              <div class="item-title">Ana Maria</div>
+              <div class="item-subtitle">deve receber</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 60,00</div>
+          </div>
+        </div>
+
+        <button class="btn" style="margin-top: 20px;" onclick="showScreen('adicionar-pessoa-grupo-screen')">Adicionar
+          pessoa ao grupo</button>
+      </div>
+
+      <div id="transacoes-grupo-content" class="payment-content">
+        <div class="section-title">Março, 2025</div>
+
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--primary); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Aluguel</div>
+              <div class="item-subtitle">João pagou • 15 de março</div>
+            </div>
+            <div class="item-amount amount-negative">R$ 400,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--primary); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Internet</div>
+              <div class="item-subtitle">Ana pagou • 12 de março</div>
+            </div>
+            <div class="item-amount amount-negative">R$ 120,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--success); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Água e luz</div>
+              <div class="item-subtitle">Você pagou • 5 de março</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 150,00</div>
+          </div>
+        </div>
+
+        <div class="section-title">Fevereiro, 2025</div>
+
+        <div class="card">
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--primary); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Aluguel</div>
+              <div class="item-subtitle">João pagou • 15 de fevereiro</div>
+            </div>
+            <div class="item-amount amount-negative">R$ 400,00</div>
+          </div>
+
+          <div class="item">
+            <div class="item-avatar" style="background-color: var(--success); font-size: 14px;">R$</div>
+            <div class="item-details">
+              <div class="item-title">Mercado</div>
+              <div class="item-subtitle">Você pagou • 10 de fevereiro</div>
+            </div>
+            <div class="item-amount amount-positive">R$ 250,00</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="informacoes-grupo-content" class="payment-content">
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Nome do grupo</label>
+            <input type="text" class="form-input" value="República" placeholder="Nome do grupo">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Criado em</label>
+            <input type="text" class="form-input" value="15 de janeiro de 2025" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Administradores</label>
+            <div class="item" style="padding-left: 0;">
+              <div class="item-avatar">MS</div>
+              <div class="item-details">
+                <div class="item-title">Você (Maria Silva)</div>
+                <div class="item-subtitle">Criador do grupo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn" style="margin-top: 20px; background-color: var(--success);">Salvar alterações</button>
+        <button class="btn" style="margin-top: 10px; background-color: var(--danger);">Sair do grupo</button>
+      </div>
+
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela para Adicionar Pessoa ao Grupo -->
+    <div id="adicionar-pessoa-grupo-screen" class="screen">
+      <div class="header">
+        <h1>
+          <span onclick="showScreen('grupo-detalhes-screen')" style="margin-right: 10px; cursor: pointer;">←</span>
+          Adicionar ao Grupo
+        </h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="search-amigos-grupo" placeholder="Procurar amigos...">
+      </div>
+
+      <div class="section-title">Amigos</div>
+
+      <div class="card">
+        <div class="item">
+          <div class="item-avatar">PL</div>
+          <div class="item-details">
+            <div class="item-title">Paulo Lima</div>
+            <div class="item-subtitle">+55 11 98765-4321</div>
+          </div>
+          <input type="checkbox" style="width: 20px; height: 20px;">
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">CM</div>
+          <div class="item-details">
+            <div class="item-title">Carlos Mendes</div>
+            <div class="item-subtitle">+55 11 91234-5678</div>
+          </div>
+          <input type="checkbox" style="width: 20px; height: 20px;">
+        </div>
+
+        <div class="item">
+          <div class="item-avatar">LS</div>
+          <div class="item-details">
+            <div class="item-title">Luciana Santos</div>
+            <div class="item-subtitle">+55 11 99876-5432</div>
+          </div>
+          <input type="checkbox" style="width: 20px; height: 20px;">
+        </div>
+      </div>
+
+      <div class="section-title">Convidar por</div>
+
+      <div class="card">
+        <div class="item" style="cursor: pointer;">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">📱</div>
+          <div class="item-details">
+            <div class="item-title">Número de telefone</div>
+            <div class="item-subtitle">Enviar convite por SMS</div>
+          </div>
+        </div>
+
+        <div class="item" style="cursor: pointer;">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">✉️</div>
+          <div class="item-details">
+            <div class="item-title">E-mail</div>
+            <div class="item-subtitle">Enviar convite por e-mail</div>
+          </div>
+        </div>
+
+        <div class="item" style="cursor: pointer;">
+          <div class="item-avatar" style="background-color: rgba(94, 96, 206, 0.1); color: var(--primary);">🔗</div>
+          <div class="item-details">
+            <div class="item-title">Link de convite</div>
+            <div class="item-subtitle">Compartilhar link do grupo</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" style="margin-top: 20px;">Adicionar selecionados (0)</button>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela para Adicionar Amigo -->
+    <div id="adicionar-amigo-screen" class="screen">
+      <div class="header">
+        <h1>
+          <span onclick="showScreen('amigos-screen')" style="margin-right: 10px; cursor: pointer;">←</span>
+          Adicionar Amigo
+        </h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Por contato</div>
+        <div class="tab">Por QR code</div>
+      </div>
+
+      <div id="contato-content" class="payment-content active">
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Telefone</label>
+            <input type="tel" class="form-input" placeholder="+55 (00) 00000-0000">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nome (opcional)</label>
+            <input type="text" class="form-input" placeholder="Nome do contato">
+          </div>
+
+          <button class="btn" style="margin-top: 10px;">Enviar convite</button>
+        </div>
+
+        <div class="section-title">Ou adicione por e-mail</div>
+
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input type="email" class="form-input" placeholder="email@exemplo.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nome (opcional)</label>
+            <input type="text" class="form-input" placeholder="Nome do contato">
+          </div>
+
+          <button class="btn" style="margin-top: 10px;">Enviar convite</button>
+        </div>
+      </div>
+
+      <div id="qrcode-content" class="payment-content">
+        <div class="card" style="text-align: center; padding: 30px 20px;">
+          <div style="margin-bottom: 20px; font-weight: bold; color: var(--text);">Seu código QR</div>
+
+          <div
+            style="width: 200px; height: 200px; margin: 0 auto 20px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 30px;">📱</div>
+          </div>
+
+          <div style="color: var(--text-light); margin-bottom: 20px;">
+            Peça para seu amigo escanear este código QR para te adicionar como amigo.
+          </div>
+
+          <button class="btn">Compartilhar código QR</button>
+        </div>
+
+        <div class="card" style="margin-top: 20px; text-align: center; padding: 20px;">
+          <button class="btn" style="background-color: var(--secondary);">Escanear código QR</button>
+          <div style="color: var(--text-light); margin-top: 10px; font-size: 14px;">
+            Escaneie o código QR de um amigo para adicioná-lo
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-padding"></div>
+    </div>
+
+
+    <!-- Tela de Adicionar Grupo -->
+    <div id="adicionar-grupo-screen" class="screen">
+      <div class="header">
+        <h1>Novo Grupo</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Nome do grupo</label>
+          <input type="text" class="form-input" placeholder="Ex: Viagem para a praia">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Emoji do grupo (opcional)</label>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              🏠</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              🍔</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              🏖️</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              🎁</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              🚗</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              🎮</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              ⚽</div>
+            <div class="emoji-option"
+              style="font-size: 24px; padding: 8px; cursor: pointer; background-color: rgba(0,0,0,0.05); border-radius: 8px;">
+              +</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Adicionar membros</div>
+
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="search-membros" placeholder="Procurar amigos...">
+      </div>
+
+      <div class="card">
+        <div class="checkbox-container amigo-item">
+          <div class="amigo-info">
+            <input type="checkbox" id="membro1" checked>
+            <label for="membro1">Você</label>
+          </div>
+          <div>Admin</div>
+        </div>
+
+        <div class="checkbox-container amigo-item">
+          <div class="amigo-info">
+            <input type="checkbox" id="membro2">
+            <label for="membro2">João Carlos</label>
+          </div>
+        </div>
+
+        <div class="checkbox-container amigo-item">
+          <div class="amigo-info">
+            <input type="checkbox" id="membro3">
+            <label for="membro3">Ana Maria</label>
+          </div>
+        </div>
+
+        <div class="checkbox-container amigo-item">
+          <div class="amigo-info">
+            <input type="checkbox" id="membro4">
+            <label for="membro4">Paulo Lima</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="form-label">Convidar por e-mail</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="email" class="form-input" placeholder="email@exemplo.com" style="flex: 1;">
+          <button class="btn" style="width: auto; padding: 12px 16px;">Convidar</button>
+        </div>
+      </div>
+
+      <button class="btn" style="margin-top: 20px;">Criar grupo</button>
+      <div class="scroll-padding"></div>
+    </div>
+
+
+    <!-- Tela de Registrar Pagamento -->
+    <div id="registrar-pagamento-screen" class="screen">
+      <div class="header">
+        <h1>Registrar Pagamento</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Você recebeu</div>
+        <div class="tab">Você pagou</div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">De quem?</label>
+          <select class="form-select">
+            <option>João Carlos</option>
+            <option>Ana Maria</option>
+            <option>Paulo Lima</option>
+            <option>Almoço de Sexta (grupo)</option>
+            <option>República (grupo)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Valor</label>
+          <input type="text" class="form-input" placeholder="R$ 0,00">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Data</label>
+          <input type="date" class="form-input" value="2025-03-19">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Método de pagamento</label>
+          <select class="form-select">
+            <option>Pix</option>
+            <option>Transferência bancária</option>
+            <option>Dinheiro</option>
+            <option>Cartão de crédito</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Observações (opcional)</label>
+          <input type="text" class="form-input" placeholder="Ex: Pagamento do almoço de sexta">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="item">
+          <div class="item-avatar">JC</div>
+          <div class="item-details">
+            <div class="item-title">Saldo atual com João</div>
+            <div class="item-subtitle">após este pagamento</div>
+          </div>
+          <div class="item-amount amount-positive">R$ 30,00</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn"
+          style="flex: 1; background-color: var(--background); color: var(--text); border: 1px solid rgba(0,0,0,0.1);"
+          onclick="showScreen('pagar-screen')">Cancelar</button>
+        <button class="btn" style="flex: 1;">Registrar pagamento</button>
+      </div>
+      <div class="scroll-padding"></div>
+    </div>
+
+    <!-- Tela de Configuração de Usuário -->
+    <div id="config-usuario-screen" class="screen">
+      <div class="header">
+        <h1>Configurações</h1>
+        <div class="user-avatar" onclick="showScreen('perfil-screen')">MS</div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Foto de perfil</label>
+          <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+            <div class="profile-avatar" style="width: 80px; height: 80px; font-size: 28px; margin: 0;">MS</div>
+            <button class="btn" style="width: auto;">Alterar foto</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-input" value="Maria Silva">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-input" value="maria.silva@email.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Telefone</label>
+          <input type="tel" class="form-input" value="(11) 98765-4321">
+        </div>
+      </div>
+
+      <div class="section-title">Preferências de conta</div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Moeda</label>
+          <select class="form-select">
+            <option selected>Real (R$)</option>
+            <option>Dólar (US$)</option>
+            <option>Euro (€)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Idioma</label>
+          <select class="form-select">
+            <option selected>Português</option>
+            <option>English</option>
+            <option>Español</option>
+          </select>
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="notif-email" checked>
+          <label for="notif-email">Receber notificações por e-mail</label>
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="notif-push" checked>
+          <label for="notif-push">Receber notificações push</label>
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="notif-lembretes" checked>
+          <label for="notif-lembretes">Lembretes de pagamento</label>
+        </div>
+      </div>
+
+      <div class="section-title">Privacidade</div>
+
+      <div class="card">
+        <div class="checkbox-container">
+          <input type="checkbox" id="privacy-find" checked>
+          <label for="privacy-find">Permitir que amigos me encontrem pelo número ou e-mail</label>
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="privacy-activity">
+          <label for="privacy-activity">Mostrar minha atividade recente para amigos</label>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn" style="flex: 1;">Salvar alterações</button>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button class="btn" style="background-color: var(--danger);">Excluir minha conta</button>
+      </div>
+      <div class="scroll-padding"></div>
+    </div>
+
+
+
+
+  </div>
+
+
+
+  <!-- Navegação inferior -->
+  <div class="nav">
+    <div class="nav-item active" onclick="showScreen('amigos-screen')">
+      <div class="nav-icon">👥</div>
+      <div>Amigos</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('grupos-screen')">
+      <div class="nav-icon">👪</div>
+      <div>Grupos</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('nova-despesa-screen')">
+      <div class="nav-icon">➕</div>
+      <div>Despesa</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('pagar-screen')">
+      <div class="nav-icon">💸</div>
+      <div>Pagar</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('perfil-screen')">
+      <div class="nav-icon">👤</div>
+      <div>Perfil</div>
+    </div>
+  </div>
+
+  <script>
+    function showScreen(screenId) {
+      // Ocultar todas as telas
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+
+      // Exibir a tela selecionada
+      document.getElementById(screenId).classList.add('active');
+
+      // Atualizar navegação
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Destacar item de navegação correspondente
+      const screenMap = {
+        'amigos-screen': 0,
+        'grupos-screen': 1,
+        'nova-despesa-screen': 2,
+        'pagar-screen': 3,
+        'perfil-screen': 4
+      };
+
+      const navItems = document.querySelectorAll('.nav-item');
+      if (screenMap[screenId] !== undefined) {
+        navItems[screenMap[screenId]].classList.add('active');
+      }
+    }
+
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        // Atualiza as classes ativas das abas
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Atualiza o conteúdo visível
+        const receberContent = document.getElementById('receber-content');
+        const pagarContent = document.getElementById('pagar-content');
+
+        if (index === 0) {
+          receberContent.classList.add('active');
+          pagarContent.classList.remove('active');
+        } else {
+          receberContent.classList.remove('active');
+          pagarContent.classList.add('active');
+        }
+      });
+    });
+
+    // Filtro de amigos no Nova Despesa
+    const searchInput = document.getElementById('search-amigos');
+    const amigosList = document.getElementById('amigos-list');
+
+    searchInput.addEventListener('keyup', function () {
+      const filter = searchInput.value.toLowerCase();
+      const checkboxes = amigosList.querySelectorAll('.checkbox-container');
+
+      checkboxes.forEach(container => {
+        const label = container.querySelector('label');
+        const text = label.textContent.toLowerCase();
+
+        if (text.includes(filter)) {
+          container.style.display = 'flex';
+        } else {
+          container.style.display = 'none';
+        }
+      });
+    });
+
+    // Opções de divisão
+    const splitOptions = document.querySelectorAll('.split-option');
+    splitOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        splitOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    let splitMode = 'equal'; // Padrão inicial
+
+    splitOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        splitOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+
+        const mode = option.querySelector('.split-option-title').textContent.trim().toLowerCase();
+
+        if (mode === 'igualmente') {
+          splitMode = 'equal';
+        } else if (mode === 'percentual') {
+          splitMode = 'percent';
+        } else if (mode === 'valores exatos') {
+          splitMode = 'exact';
+        }
+
+        updateDivision();
+      });
+    });
+
+    function onPercentInput(e, total, participants) {
+      handlePercentChange(total, participants);
+    }
+
+    function onExactInput(e, total, participants) {
+      handleExactChange(total, participants);
+    }
+
+    function updateDivision() {
+      const totalInput = document.querySelector('.form-group input[placeholder="R$ 0,00"]');
+      const totalStr = totalInput.value.replace('R$', '').replace(',', '.').trim();
+      const total = parseFloat(totalStr);
+
+      const checkboxes = document.querySelectorAll('#amigos-list .amigo-item');
+      const activeParticipants = [];
+
+      checkboxes.forEach(container => {
+        const checkbox = container.querySelector('input[type="checkbox"]');
+        const label = container.querySelector('label').textContent;
+        const input = container.querySelector('.division-input');
+        const valorCalculado = container.querySelector('.valor-calculado');
+        const inputUnit = container.querySelector('.input-unit');
+
+        // IMPORTANTE: Remove os dois possíveis listeners antes de adicionar o correto
+        input.removeEventListener('input', input._percentListener);
+        input.removeEventListener('input', input._exactListener);
+
+        if (checkbox.checked) {
+          activeParticipants.push({ container, label, input, valorCalculado, inputUnit });
+          input.disabled = false;
+        } else {
+          input.disabled = true;
+          input.value = '';
+          valorCalculado.textContent = '';
+        }
+      });
+
+      const participantsCount = activeParticipants.length;
+
+      if (participantsCount === 0 || isNaN(total) || total <= 0) {
+        clearWarnings();
+        return;
+      }
+
+      if (splitMode === 'equal') {
+        clearWarnings();
+        const perPerson = (total / participantsCount).toFixed(2);
+        activeParticipants.forEach(({ input, valorCalculado, inputUnit }) => {
+          input.value = '';
+          input.disabled = true;
+          input.classList.add('hidden');
+          inputUnit.textContent = '';
+          valorCalculado.textContent = `R$ ${perPerson}`;
+
+        });
+      }
+
+      if (splitMode === 'percent') {
+        clearWarnings();
+        activeParticipants.forEach(({ input, valorCalculado, inputUnit }) => {
+          input.disabled = false;
+          inputUnit.textContent = '%';
+          input.placeholder = '%';
+          input.classList.remove('hidden');
+          // Cria a função listener personalizada para esse input
+          input._percentListener = (e) => onPercentInput(e, total, activeParticipants);
+
+          // Adiciona o listener correto
+          input.addEventListener('input', input._percentListener);
+        });
+
+        handlePercentChange(total, activeParticipants);
+      }
+
+      if (splitMode === 'exact') {
+        clearWarnings();
+        activeParticipants.forEach(({ input, valorCalculado, inputUnit }) => {
+          input.disabled = false;
+          inputUnit.textContent = 'R$';
+          input.placeholder = 'R$';
+          input.classList.remove('hidden');
+          valorCalculado.textContent = '';
+
+          // Cria a função listener personalizada para esse input
+          input._exactListener = (e) => onExactInput(e, total, activeParticipants);
+
+          // Adiciona o listener correto
+          input.addEventListener('input', input._exactListener);
+        });
+
+        handleExactChange(total, activeParticipants);
+      }
+    }
+
+
+    function handlePercentChange(total, participants) {
+      let totalPercent = 0;
+
+      participants.forEach(({ input }) => {
+        const val = parseFloat(input.value) || 0;
+        totalPercent += val;
+      });
+
+      participants.forEach(({ input, valorCalculado }) => {
+        const percent = parseFloat(input.value) || 0;
+        const amount = ((percent / 100) * total).toFixed(2);
+        valorCalculado.textContent = `R$ ${amount}`;
+      });
+
+      showWarningPercent(totalPercent);
+    }
+
+    function handleExactChange(total, participants) {
+      let totalEntered = 0;
+
+      participants.forEach(({ input }) => {
+        const val = parseFloat(input.value) || 0;
+        totalEntered += val;
+      });
+
+      participants.forEach(({ input, valorCalculado }) => {
+        const val = parseFloat(input.value) || 0;
+        valorCalculado.textContent = `R$ ${val.toFixed(2)}`;
+      });
+
+      showWarningExact(totalEntered, total);
+    }
+
+    function showWarningPercent(totalPercent) {
+      let warning = getOrCreateWarning('percent-warning');
+
+      if (totalPercent < 100) {
+        warning.textContent = `⚠️ A soma está em ${totalPercent.toFixed(1)}%.`;
+      } else if (totalPercent > 100) {
+        warning.textContent = `❌ A soma ultrapassou 100%!`;
+      } else {
+        warning.textContent = '';
+      }
+    }
+
+    function showWarningExact(totalEntered, total) {
+      let warning = getOrCreateWarning('exact-warning');
+
+      if (totalEntered < total) {
+        warning.textContent = `⚠️ Falta distribuir R$ ${(total - totalEntered).toFixed(2)}.`;
+      } else if (totalEntered > total) {
+        warning.textContent = `❌ Valor excedeu em R$ ${(totalEntered - total).toFixed(2)}.`;
+      } else {
+        warning.textContent = '';
+      }
+    }
+
+    function clearWarnings() {
+      const warnings = document.querySelectorAll('.feedback-message');
+      warnings.forEach(w => w.remove());
+    }
+
+    function getOrCreateWarning(id) {
+      let warning = document.getElementById(id);
+
+      if (!warning) {
+        warning = document.createElement('div');
+        warning.id = id;
+        warning.classList.add('feedback-message');
+        document.querySelector('.split-options').appendChild(warning);
+      }
+
+      return warning;
+    }
+
+    const totalValueInput = document.querySelector('.form-group input[placeholder="R$ 0,00"]');
+    totalValueInput.addEventListener('input', () => {
+      updateDivision();
+    });
+
+    // Atualizar contador de selecionados
+    const checkboxes = document.querySelectorAll('#adicionar-pessoa-grupo-screen input[type="checkbox"]');
+    const addButton = document.querySelector('#adicionar-pessoa-grupo-screen .btn');
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const count = document.querySelectorAll('#adicionar-pessoa-grupo-screen input[type="checkbox"]:checked').length;
+        addButton.textContent = `Adicionar selecionados (${count})`;
+      });
+    });
+
+    // Script para alternar entre as abas do grupo
+    const grupoTabs = document.querySelectorAll('#grupo-detalhes-screen .tab');
+
+    grupoTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        // Atualiza as classes ativas das abas
+        grupoTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Atualiza o conteúdo visível
+        const membrosContent = document.getElementById('membros-grupo-content');
+        const transacoesContent = document.getElementById('transacoes-grupo-content');
+        const infoContent = document.getElementById('informacoes-grupo-content');
+
+        membrosContent.classList.remove('active');
+        transacoesContent.classList.remove('active');
+        infoContent.classList.remove('active');
+
+        if (index === 0) {
+          membrosContent.classList.add('active');
+        } else if (index === 1) {
+          transacoesContent.classList.add('active');
+        } else {
+          infoContent.classList.add('active');
+        }
+      });
+    });
+
+    // Script para alternar entre as abas de adicionar amigo
+    const amigoTabs = document.querySelectorAll('#adicionar-amigo-screen .tab');
+
+    amigoTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        // Atualiza as classes ativas das abas
+        amigoTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Atualiza o conteúdo visível
+        const contatoContent = document.getElementById('contato-content');
+        const qrcodeContent = document.getElementById('qrcode-content');
+
+        if (index === 0) {
+          contatoContent.classList.add('active');
+          qrcodeContent.classList.remove('active');
+        } else {
+          contatoContent.classList.remove('active');
+          qrcodeContent.classList.add('active');
+        }
+      });
+    });
+
+    // Funções para a tela de Adicionar Grupo
+    // Selecionar emoji do grupo
+    const emojiOptions = document.querySelectorAll('.emoji-option');
+    emojiOptions.forEach(option => {
+      option.addEventListener('click', function () {
+        emojiOptions.forEach(opt => opt.style.backgroundColor = 'rgba(0,0,0,0.05)');
+        this.style.backgroundColor = 'var(--primary)';
+        this.style.color = 'white';
+      });
+    });
+
+    // Filtrar membros na tela de adicionar grupo
+    const searchMembros = document.getElementById('search-membros');
+    if (searchMembros) {
+      searchMembros.addEventListener('keyup', function () {
+        const filter = searchMembros.value.toLowerCase();
+        const membros = document.querySelectorAll('#adicionar-grupo-screen .amigo-item');
+
+        membros.forEach(membro => {
+          const label = membro.querySelector('label');
+          const text = label.textContent.toLowerCase();
+
+          if (text.includes(filter)) {
+            membro.style.display = 'flex';
+          } else {
+            membro.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    // Funções para a tela de Registrar Pagamento
+    if (document.getElementById('registrar-pagamento-screen')) {
+      const pagamentoTabs = document.querySelectorAll('#registrar-pagamento-screen .tab');
+      pagamentoTabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+          pagamentoTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          // Alterar o título da página dependendo se é recebimento ou pagamento
+          const header = document.querySelector('#registrar-pagamento-screen .header h1');
+          header.textContent = index === 0 ? 'Registrar Recebimento' : 'Registrar Pagamento';
+
+          // Atualizar o rótulo do primeiro campo do formulário
+          const deQuemLabel = document.querySelector('#registrar-pagamento-screen .form-label');
+          deQuemLabel.textContent = index === 0 ? 'De quem?' : 'Para quem?';
+        });
+      });
+
+      // Atualizar saldo após inserir valor
+      const valorInput = document.querySelector('#registrar-pagamento-screen input[placeholder="R$ 0,00"]');
+      valorInput.addEventListener('input', function () {
+        const valor = parseFloat(this.value.replace('R$', '').replace(',', '.').trim()) || 0;
+        const saldoAtual = document.querySelector('#registrar-pagamento-screen .item-amount');
+        const pagamentoTabs = document.querySelectorAll('#registrar-pagamento-screen .tab');
+        const recebendo = pagamentoTabs[0].classList.contains('active');
+
+        const saldoAnterior = 75; // Valor base do saldo com João
+        const novoSaldo = recebendo ? saldoAnterior - valor : saldoAnterior + valor;
+
+        saldoAtual.textContent = `R$ ${novoSaldo.toFixed(2)}`;
+        if (novoSaldo > 0) {
+          saldoAtual.className = 'item-amount amount-positive';
+        } else if (novoSaldo < 0) {
+          saldoAtual.className = 'item-amount amount-negative';
+        } else {
+          saldoAtual.className = 'item-amount';
+        }
+      });
+    }
+
+  </script>
+</body>
+
+</html>
