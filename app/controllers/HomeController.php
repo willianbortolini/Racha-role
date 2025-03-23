@@ -19,7 +19,7 @@ class HomeController extends Controller
     {
         if (!isset($_SESSION['id'])) {
             $dados["view"] = "Home/Index";
-            $this->load("templateBootstrap", $dados);
+            $this->load("template", $dados);
         }else{
             if (isset($_SESSION['group_id'])) {
                 $usuarios_grupos = new \stdClass();
