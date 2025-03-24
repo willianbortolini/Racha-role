@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Aniversário!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f4f8;
+        }
+
+        .card {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            z-index: 2;
+        }
+
+        .card-back {
+            background: linear-gradient(to bottom right, #f3e7e9, #d3e0ea);
+            transform: rotateY(180deg);
+            text-align: center;
+            color: #333;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-front h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .balloon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .card-back .heart {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ff6b6b;
+        }
+
+        .card-back h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .card-back p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .card-back .signature {
+            font-family: 'Dancing Script', cursive;
+            color: #ff6b6b;
+            font-size: 1.3rem;
+            margin-top: 15px;
+        }
+
+        .card-back .doodle {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 2rem;
+            color: #4ecdc4;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 400px) {
+            .card {
+                width: 300px;
+                height: 650px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card-inner">
+            <div class="card-front">
+                <div class="balloon">🎈</div>
+                <h1>Feliz Aniversário!</h1>
+            </div>
+            <div class="card-back">
+                <div class="heart">❤️</div>
+                <h2>Querida Bruna</h2>
+                <p>Espero que este dia seja tão especial quanto você! Mesmo não podendo estar presente fisicamente, quero que saiba o quanto você significa para mim.</p>
+                <p>Nossa amizade é uma das coisas mais preciosas da minha vida. Cada momento que compartilhamos, cada risada, cada conversa, tudo isso forma memórias que guardo com muito carinho.</p>
+                <p>Que este ano traga para você muitas realizações, alegrias e momentos incríveis. Você merece todo o amor e felicidade do mundo!</p>
+                <div class="signature">Will e Rafa</div>
+                <div class="doodle">✿</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animação de confete
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#feca57', '#ff9ff3'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `-10px`;
+                confetti.style.borderRadius = '50%';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear ${Math.random() * 2}s infinite`;
+                document.body.appendChild(confetti);
+            }
+        }
+
+        createConfetti();
+
+        // Animação de queda do confete
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
