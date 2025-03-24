@@ -7,6 +7,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap');
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             display: flex;
@@ -15,6 +19,7 @@
             min-height: 100vh;
             margin: 0;
             background-color: #f0f4f8;
+            overscroll-behavior: contain;
         }
 
         .card {
@@ -49,7 +54,6 @@
             align-items: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             padding: 20px;
-            box-sizing: border-box;
         }
 
         .card-front {
@@ -63,10 +67,16 @@
             transform: rotateY(180deg);
             text-align: center;
             color: #333;
-            overflow-y: auto;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .card-back-content {
+            overflow-y: auto;
+            max-height: 100%;
+            padding-right: 10px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .card-front h1 {
@@ -132,12 +142,16 @@
                 <h1>Feliz Aniversário!</h1>
             </div>
             <div class="card-back">
-                <div class="heart">❤️</div>
-                <h2>Querida [Nome]</h2>
-                <p>Espero que este dia seja tão especial quanto você! Mesmo não podendo estar presente fisicamente, quero que saiba o quanto você significa para mim.</p>
-                <p>Nossa amizade é uma das coisas mais preciosas da minha vida. Cada momento que compartilhamos, cada risada, cada conversa, tudo isso forma memórias que guardo com muito carinho.</p>
-                <p>Que este ano traga para você muitas realizações, alegrias e momentos incríveis. Você merece todo o amor e felicidade do mundo!</p>
-                <div class="signature">[Seu Nome]</div>
+                <div class="card-back-content">
+                    <div class="heart">❤️</div>
+                    <h2>Querida [Nome]</h2>
+                    <p>Espero que este dia seja tão especial quanto você! Mesmo não podendo estar presente fisicamente, quero que saiba o quanto você significa para mim.</p>
+                    <p>Nossa amizade é uma das coisas mais preciosas da minha vida. Cada momento que compartilhamos, cada risada, cada conversa, tudo isso forma memórias que guardo com muito carinho.</p>
+                    <p>Que este ano traga para você muitas realizações, alegrias e momentos incríveis. Você merece todo o amor e felicidade do mundo!</p>
+                    <p>Vamos sempre celebrar nossa amizade, independente da distância. Cada momento que passamos juntos é único e especial.</p>
+                    <p>Sei que você vai ter um dia incrível, cheio de sorrisos, abraços e muita alegria!</p>
+                    <div class="signature">[Seu Nome]</div>
+                </div>
                 <div class="doodle">✿</div>
             </div>
         </div>
