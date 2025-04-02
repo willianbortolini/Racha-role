@@ -13,7 +13,7 @@ class WhatswebhookController extends Controller
         // === CONFIGURAÇÕES ===
         $verify_token = '2aA@93*dsL1!kjshdA'; // usado no GET para validar webhook
         $access_token = 'EAATUEkbDcR4BOZCKLZCZAWJD44ci4nZCMSWZBrLXvTuJutR4PASaxST0ZA9AZCjF41DdMnNd6G6xyuF5kPlRcwh2VLPtadxJMIdrb6TzUZCOCDZAuROMNhoPARCqzBWKVixl10h9qa8ZCahRtaKraG5IMfrOCZCAMlJ7eDL6i8QuWGNFZB5033UApvxeXoMdmuYfcZBTx04YZCJe4TraPW2hXayaVSUWKRkYKZAhyYeg3PrJw6S3eEZD';      // token de acesso da API do WhatsApp
-        $phone_number_id = '1359074868556062'; // ID do número, algo tipo 123456789012345
+        $phone_number_id = '609565928907843'; // ID do número, algo tipo 123456789012345
 
         // === VERIFICAÇÃO DO WEBHOOK ===
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
